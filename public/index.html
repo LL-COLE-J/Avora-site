@@ -64,65 +64,73 @@
 <div style="flex:1; min-width:300px; display:flex; justify-content:center;">
 
   <div style="
-    width:460px;
+    width:420px;
     background:#111827;
-    border-radius:20px;
+    border-radius:22px;
     padding:20px;
     box-shadow:0 30px 60px rgba(0,0,0,0.5);
   ">
 
-    <!-- TOP BAR -->
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <div style="font-weight:600;">Spring Gala 2026</div>
-      <div style="font-size:12px; color:#9ca3af;">Live</div>
+    <!-- EVENT HEADER -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:18px; font-weight:600;">Spring Gala</div>
+      <div style="font-size:13px; color:#9ca3af;">Live • 128 Guests Checked In</div>
     </div>
 
-    <!-- MAIN METRICS -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px;">
-
-      <div style="background:#0f172a; padding:18px; border-radius:14px;">
-        <div style="font-size:12px; color:#6b7280;">Total Raised</div>
-        <div style="font-size:26px; font-weight:700;">$18,450</div>
-      </div>
-
-      <div style="background:#0f172a; padding:18px; border-radius:14px;">
-        <div style="font-size:12px; color:#6b7280;">Guests Checked In</div>
-        <div style="font-size:26px; font-weight:700;">128</div>
-      </div>
-
-      <div style="background:#0f172a; padding:18px; border-radius:14px;">
-        <div style="font-size:12px; color:#6b7280;">Auction Activity</div>
-        <div style="font-size:26px; font-weight:700;">12 Items</div>
-      </div>
-
-      <div style="background:#0f172a; padding:18px; border-radius:14px;">
-        <div style="font-size:12px; color:#6b7280;">Check-In Rate</div>
-        <div style="font-size:26px; font-weight:700;">76%</div>
-      </div>
-
+    <!-- PRIMARY ACTION -->
+    <div style="
+      background:#6366f1;
+      border-radius:16px;
+      padding:18px;
+      text-align:center;
+      font-size:18px;
+      font-weight:600;
+      margin-bottom:16px;
+    ">
+      Check In Guest
     </div>
 
-    <!-- SIMPLE TREND BAR (visual but not overdesigned) -->
-    <div style="background:#0f172a; padding:16px; border-radius:14px; margin-bottom:16px;">
-      <div style="font-size:12px; color:#6b7280; margin-bottom:10px;">Donations Trend</div>
-      <div style="display:flex; gap:6px; align-items:flex-end; height:60px;">
-        <div style="width:10px; height:30%; background:#6366f1;"></div>
-        <div style="width:10px; height:50%; background:#6366f1;"></div>
-        <div style="width:10px; height:40%; background:#6366f1;"></div>
-        <div style="width:10px; height:70%; background:#6366f1;"></div>
-        <div style="width:10px; height:90%; background:#6366f1;"></div>
-      </div>
+    <!-- SEARCH BAR -->
+    <div style="
+      background:#0f172a;
+      border-radius:12px;
+      padding:12px;
+      margin-bottom:16px;
+      color:#6b7280;
+      font-size:14px;
+    ">
+      Search guest name...
     </div>
 
-    <!-- LIVE ACTIVITY -->
-    <div style="font-size:13px; color:#9ca3af;">
-      <div style="margin-bottom:8px; font-weight:600; color:white;">Live Activity</div>
-      John D. checked in<br>
-      Bid placed – $250<br>
-      Table 6 seated<br>
-      Donation – $500
+    <!-- QUICK STATUS -->
+    <div style="display:flex; justify-content:space-between; margin-bottom:16px; font-size:13px; color:#9ca3af;">
+      <div>Tables: 18</div>
+      <div>Auction: Active</div>
+      <div>Donations: Open</div>
+    </div>
+
+    <!-- RECENT CHECK-INS -->
+    <div>
+      <div style="font-size:14px; margin-bottom:8px;">Recent Check-Ins</div>
+
+      <div style="display:flex; flex-direction:column; gap:8px; font-size:13px;">
+
+        <div style="background:#0f172a; padding:10px; border-radius:10px;">
+          John Davis • Table 8
+        </div>
+
+        <div style="background:#0f172a; padding:10px; border-radius:10px;">
+          Sarah Mitchell • Table 3
+        </div>
+
+        <div style="background:#0f172a; padding:10px; border-radius:10px;">
+          Corporate Group • Table 12
+        </div>
+
+      </div>
     </div>
 
   </div>
 
+</div>
 </div>
