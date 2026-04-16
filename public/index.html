@@ -61,57 +61,64 @@
   </div>
 
   <!-- RIGHT SIDE -->
-  <div style="flex:1; min-width:300px; display:flex; justify-content:center;">
+ <div style="flex:1; min-width:300px; display:flex; justify-content:center;">
 
   <div style="
-    width:420px;
+    width:360px;
+    height:520px;
     background:#111827;
-    border-radius:16px;
+    border-radius:28px;
     padding:20px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+    box-shadow:0 30px 60px rgba(0,0,0,0.5);
   ">
 
-    <!-- HEADER -->
-    <div style="margin-bottom:16px;">
-      <div style="font-size:14px; color:#9ca3af;">Event</div>
-      <div style="font-size:18px; font-weight:600;">Spring Gala 2026</div>
+    <!-- TOP BAR -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <div style="font-weight:600;">Spring Gala</div>
+      <div style="font-size:12px; color:#9ca3af;">7:42 PM</div>
     </div>
 
-    <!-- STATS -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+    <!-- MAIN ACTION -->
+    <div style="
+      background:#6366f1;
+      padding:20px;
+      border-radius:16px;
+      text-align:center;
+      font-size:18px;
+      font-weight:600;
+      margin-bottom:16px;
+    ">
+      Check In Guest
+    </div>
+
+    <!-- SECONDARY ACTIONS -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
       
-      <div style="background:#0f172a; padding:12px; border-radius:10px;">
-        <div style="font-size:12px; color:#6b7280;">Guests Checked In</div>
-        <div style="font-size:20px; font-weight:600;">128</div>
+      <div style="background:#0f172a; padding:16px; border-radius:14px; text-align:center;">
+        Start Auction
       </div>
 
-      <div style="background:#0f172a; padding:12px; border-radius:10px;">
-        <div style="font-size:12px; color:#6b7280;">Auction Items</div>
-        <div style="font-size:20px; font-weight:600;">12 Active</div>
+      <div style="background:#0f172a; padding:16px; border-radius:14px; text-align:center;">
+        View Tables
       </div>
 
-      <div style="background:#0f172a; padding:12px; border-radius:10px;">
-        <div style="font-size:12px; color:#6b7280;">Total Raised</div>
-        <div style="font-size:20px; font-weight:600;">$18,450</div>
+      <div style="background:#0f172a; padding:16px; border-radius:14px; text-align:center;">
+        Donations
       </div>
 
-      <div style="background:#0f172a; padding:12px; border-radius:10px;">
-        <div style="font-size:12px; color:#6b7280;">Check-In Rate</div>
-        <div style="font-size:20px; font-weight:600;">76%</div>
+      <div style="background:#0f172a; padding:16px; border-radius:14px; text-align:center;">
+        Reports
       </div>
 
     </div>
 
-    <!-- ACTIVITY -->
-    <div>
-      <div style="font-size:14px; margin-bottom:8px;">Recent Activity</div>
-
-      <div style="font-size:13px; color:#9ca3af; line-height:1.6;">
-        ✔ John D. checked in<br>
-        ✔ Bid placed on “Wine Basket” ($250)<br>
-        ✔ Donation received ($500)<br>
-        ✔ Table 8 fully seated
-      </div>
+    <!-- LIVE FEED -->
+    <div style="font-size:13px; color:#9ca3af;">
+      <div style="margin-bottom:8px; font-weight:600; color:white;">Live Activity</div>
+      John D. checked in<br>
+      Bid placed – $250<br>
+      Table 6 seated<br>
+      Donation – $500
     </div>
 
   </div>
