@@ -64,73 +64,76 @@
 <div style="flex:1; min-width:300px; display:flex; justify-content:center;">
 
   <div style="
-    width:420px;
+    width:460px;
     background:#111827;
-    border-radius:22px;
-    padding:20px;
+    border-radius:20px;
+    padding:22px;
     box-shadow:0 30px 60px rgba(0,0,0,0.5);
   ">
 
-    <!-- EVENT HEADER -->
-    <div style="margin-bottom:16px;">
-      <div style="font-size:18px; font-weight:600;">Spring Gala</div>
-      <div style="font-size:13px; color:#9ca3af;">Live • 128 Guests Checked In</div>
+    <!-- HEADER -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <div style="font-weight:600;">Spring Gala</div>
+      <div style="font-size:12px; color:#9ca3af;">Live</div>
     </div>
 
-    <!-- PRIMARY ACTION -->
-    <div style="
-      background:#6366f1;
-      border-radius:16px;
-      padding:18px;
-      text-align:center;
-      font-size:18px;
-      font-weight:600;
-      margin-bottom:16px;
-    ">
-      Check In Guest
-    </div>
+    <!-- PRIMARY METRICS -->
+    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
 
-    <!-- SEARCH BAR -->
-    <div style="
-      background:#0f172a;
-      border-radius:12px;
-      padding:12px;
-      margin-bottom:16px;
-      color:#6b7280;
-      font-size:14px;
-    ">
-      Search guest name...
-    </div>
-
-    <!-- QUICK STATUS -->
-    <div style="display:flex; justify-content:space-between; margin-bottom:16px; font-size:13px; color:#9ca3af;">
-      <div>Tables: 18</div>
-      <div>Auction: Active</div>
-      <div>Donations: Open</div>
-    </div>
-
-    <!-- RECENT CHECK-INS -->
-    <div>
-      <div style="font-size:14px; margin-bottom:8px;">Recent Check-Ins</div>
-
-      <div style="display:flex; flex-direction:column; gap:8px; font-size:13px;">
-
-        <div style="background:#0f172a; padding:10px; border-radius:10px;">
-          John Davis • Table 8
-        </div>
-
-        <div style="background:#0f172a; padding:10px; border-radius:10px;">
-          Sarah Mitchell • Table 3
-        </div>
-
-        <div style="background:#0f172a; padding:10px; border-radius:10px;">
-          Corporate Group • Table 12
-        </div>
-
+      <div>
+        <div style="font-size:12px; color:#6b7280;">Total Raised</div>
+        <div style="font-size:28px; font-weight:700;">$18,450</div>
       </div>
+
+      <div>
+        <div style="font-size:12px; color:#6b7280;">Guests</div>
+        <div style="font-size:18px;">128 / 165</div>
+      </div>
+
+      <div>
+        <div style="font-size:12px; color:#6b7280;">Engagement</div>
+        <div style="font-size:18px;">72%</div>
+      </div>
+
+    </div>
+
+    <!-- PROGRESS BAR (Guests Checked In) -->
+    <div style="margin-bottom:18px;">
+      <div style="font-size:12px; color:#6b7280; margin-bottom:6px;">Check-In Progress</div>
+      <div style="background:#0f172a; height:8px; border-radius:6px; overflow:hidden;">
+        <div style="width:78%; height:100%; background:#6366f1;"></div>
+      </div>
+    </div>
+
+    <!-- INTERACTION VISUAL -->
+    <div style="background:#0f172a; border-radius:14px; padding:16px; margin-bottom:16px;">
+      <div style="font-size:12px; color:#6b7280; margin-bottom:10px;">Live Interaction</div>
+
+      <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px;">
+        <span>Auction Bids</span>
+        <span>42</span>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px;">
+        <span>Donations</span>
+        <span>18</span>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; font-size:13px;">
+        <span>Active Users</span>
+        <span>96</span>
+      </div>
+    </div>
+
+    <!-- MICRO TREND (subtle, not flashy) -->
+    <div style="display:flex; gap:6px; align-items:flex-end; height:50px;">
+      <div style="width:8px; height:30%; background:#6366f1;"></div>
+      <div style="width:8px; height:45%; background:#6366f1;"></div>
+      <div style="width:8px; height:60%; background:#6366f1;"></div>
+      <div style="width:8px; height:75%; background:#6366f1;"></div>
+      <div style="width:8px; height:90%; background:#6366f1;"></div>
     </div>
 
   </div>
 
-</div>
 </div>
