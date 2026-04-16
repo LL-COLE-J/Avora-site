@@ -42,92 +42,123 @@
 
   <!-- HERO -->
   <div style="
-  background:radial-gradient(circle at 70% 30%, rgba(99,102,241,0.15), transparent 40%), #0b1220;
-  padding:80px 20px;
+  background:radial-gradient(circle at 75% 25%, rgba(99,102,241,0.18), transparent 40%), #050a18;
+  padding:90px 20px 70px;
 ">
 
   <div class="container" style="display:flex; align-items:center; gap:60px; flex-wrap:wrap;">
 
     <!-- LEFT -->
     <div style="flex:1; min-width:320px;">
-      <h1 style="font-size:56px; line-height:1.1;">
+
+      <div style="color:#6366f1; font-size:13px; letter-spacing:1px; margin-bottom:12px;">
+        THE OPERATING SYSTEM FOR LIVE EVENTS
+      </div>
+
+      <h1 style="font-size:58px; line-height:1.05;">
         Run the Event.<br>
         <span style="color:#6366f1;">Control Everything.</span>
       </h1>
 
-      <p style="max-width:500px; margin-top:16px;">
-        Avora gives you real-time control of every moving part—check-in, auctions, donations, and guest engagement—so you can focus on what actually matters.
+      <p style="max-width:520px; margin-top:18px;">
+        Avora gives you real-time control of check-in, auctions, donations, and engagement—so your team can execute flawlessly.
       </p>
 
-      <div style="margin-top:24px;">
-        <a href="#" class="btn">Request Early Access</a>
-        <a href="#" class="btn" style="margin-left:10px; background:#374151;">View Demo</a>
+      <div style="margin-top:28px;">
+        <a href="#" class="btn">Book a Demo</a>
+        <a href="#" class="btn" style="margin-left:10px; background:#1f2937;">See How It Works</a>
       </div>
+
     </div>
 
-    <!-- RIGHT (PRODUCT PANEL) -->
+    <!-- RIGHT (EVENTOS PANEL STYLE) -->
     <div style="flex:1; display:flex; justify-content:center;">
 
       <div style="
-        width:560px;
-        background:linear-gradient(145deg, #0f172a, #020617);
-        border-radius:20px;
-        padding:20px;
-        box-shadow:0 60px 120px rgba(0,0,0,0.8);
-        transform:perspective(1200px) rotateY(-8deg) rotateX(3deg);
+        width:640px;
+        background:linear-gradient(145deg, #0b1220, #020617);
+        border-radius:22px;
+        padding:22px;
+        box-shadow:0 80px 140px rgba(0,0,0,0.85);
+        transform:perspective(1400px) rotateY(-10deg) rotateX(3deg);
+        border:1px solid rgba(255,255,255,0.06);
       ">
 
+        <!-- TOP NAV -->
+        <div style="display:flex; gap:18px; margin-bottom:16px; font-size:13px;">
+          <div style="color:white;">Overview</div>
+          <div style="color:#9ca3af;">Check-In</div>
+          <div style="color:#9ca3af;">Auction</div>
+          <div style="color:#9ca3af;">Donations</div>
+          <div style="color:#9ca3af;">Reports</div>
+        </div>
+
         <!-- KPI ROW -->
-        <div style="display:flex; gap:12px; margin-bottom:14px;">
+        <div style="display:flex; gap:12px; margin-bottom:16px;">
 
-          <div style="flex:1; background:#111827; padding:14px; border-radius:12px;">
-            <div style="font-size:12px; color:#6b7280;">Raised</div>
-            <div style="font-size:20px; font-weight:600;">$42,380</div>
+          <div style="flex:1; background:#0f172a; padding:14px; border-radius:12px;">
+            <div style="font-size:12px; color:#6b7280;">Attendees</div>
+            <div style="font-size:20px;">1,248</div>
           </div>
 
-          <div style="flex:1; background:#111827; padding:14px; border-radius:12px;">
+          <div style="flex:1; background:#0f172a; padding:14px; border-radius:12px;">
             <div style="font-size:12px; color:#6b7280;">Checked In</div>
-            <div style="font-size:20px;">214</div>
+            <div style="font-size:20px;">1,103</div>
           </div>
 
-          <div style="flex:1; background:#111827; padding:14px; border-radius:12px;">
-            <div style="font-size:12px; color:#6b7280;">Engagement</div>
-            <div style="font-size:20px;">78%</div>
+          <div style="flex:1; background:#0f172a; padding:14px; border-radius:12px;">
+            <div style="font-size:12px; color:#6b7280;">Total Raised</div>
+            <div style="font-size:20px;">$342,780</div>
+          </div>
+
+          <div style="flex:1; background:#0f172a; padding:14px; border-radius:12px;">
+            <div style="font-size:12px; color:#6b7280;">Items Sold</div>
+            <div style="font-size:20px;">156</div>
           </div>
 
         </div>
 
-        <!-- MAIN CHART -->
-        <div style="
-          background:#111827;
-          border-radius:12px;
-          padding:14px;
-          margin-bottom:12px;
-        ">
-          <div style="font-size:12px; color:#6b7280; margin-bottom:8px;">Live Revenue</div>
+        <!-- MAIN GRID -->
+        <div style="display:flex; gap:14px;">
 
-          <div style="display:flex; align-items:flex-end; gap:6px; height:80px;">
-            <div style="width:8px; height:30%; background:#6366f1;"></div>
-            <div style="width:8px; height:50%; background:#6366f1;"></div>
-            <div style="width:8px; height:65%; background:#6366f1;"></div>
-            <div style="width:8px; height:85%; background:#6366f1;"></div>
-            <div style="width:8px; height:100%; background:#6366f1;"></div>
-          </div>
-        </div>
+          <!-- LEFT: LINE CHART -->
+          <div style="
+            flex:2;
+            background:#0f172a;
+            border-radius:12px;
+            padding:14px;
+          ">
+            <div style="font-size:12px; color:#6b7280; margin-bottom:8px;">Live Activity</div>
 
-        <!-- ACTIVITY -->
-        <div style="display:flex; gap:10px;">
-
-          <div style="flex:2; background:#111827; padding:12px; border-radius:12px; font-size:13px;">
-            <div style="margin-bottom:6px; color:#9ca3af;">Live Activity</div>
-            VIP Check-in • Table 4<br>
-            Bid Placed • $1,200<br>
-            Donation • $500
+            <div style="height:100px; position:relative;">
+              <div style="
+                position:absolute;
+                width:100%;
+                height:2px;
+                background:linear-gradient(90deg, #6366f1, transparent);
+                top:60%;
+              "></div>
+            </div>
           </div>
 
-          <div style="flex:1; background:#111827; padding:12px; border-radius:12px;">
-            <div style="font-size:12px; color:#6b7280;">Auction</div>
-            <div style="font-size:18px;">Active</div>
+          <!-- RIGHT: PIE + STATS -->
+          <div style="flex:1; display:flex; flex-direction:column; gap:12px;">
+
+            <div style="background:#0f172a; padding:12px; border-radius:12px;">
+              <div style="font-size:12px; color:#6b7280;">Auctions</div>
+              <div style="font-size:18px;">72%</div>
+            </div>
+
+            <div style="background:#0f172a; padding:12px; border-radius:12px;">
+              <div style="font-size:12px; color:#6b7280;">Donations</div>
+              <div style="font-size:18px;">18%</div>
+            </div>
+
+            <div style="background:#0f172a; padding:12px; border-radius:12px;">
+              <div style="font-size:12px; color:#6b7280;">Tickets</div>
+              <div style="font-size:18px;">10%</div>
+            </div>
+
           </div>
 
         </div>
