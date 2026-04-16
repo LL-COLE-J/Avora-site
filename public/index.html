@@ -64,103 +64,73 @@
 <div style="flex:1; min-width:300px; display:flex; justify-content:center;">
 
   <div style="
-    width:520px;
-    height:360px;
-    background:#0b1220;
+    width:560px;
+    background:linear-gradient(145deg, #0b1220, #0f172a);
     border-radius:18px;
-    display:flex;
-    overflow:hidden;
-    box-shadow:0 40px 80px rgba(0,0,0,0.6);
+    padding:18px;
+    box-shadow:0 50px 100px rgba(0,0,0,0.7);
+    transform:perspective(1200px) rotateY(-6deg) rotateX(2deg);
   ">
 
-    <!-- SIDEBAR -->
-    <div style="
-      width:140px;
-      background:#0f172a;
-      padding:14px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      font-size:13px;
-      color:#9ca3af;
-    ">
-      <div style="color:white; font-weight:600;">Overview</div>
-      <div>Check-In</div>
-      <div>Auction</div>
-      <div>Donations</div>
-      <div>Guests</div>
-      <div>Reports</div>
+    <!-- TOP NAV -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <div style="font-weight:600;">Overview</div>
+      <div style="font-size:12px; color:#9ca3af;">Spring Gala • Live</div>
     </div>
 
-    <!-- MAIN AREA -->
-    <div style="flex:1; padding:16px;">
+    <!-- KPI ROW -->
+    <div style="display:flex; gap:10px; margin-bottom:14px;">
 
-      <!-- TOP ROW -->
-      <div style="display:flex; justify-content:space-between; margin-bottom:14px;">
+      <div style="flex:1; background:#111827; padding:12px; border-radius:12px;">
+        <div style="font-size:11px; color:#6b7280;">Attendees</div>
+        <div style="font-size:18px; font-weight:600;">128</div>
+      </div>
 
-        <div style="background:#111827; padding:12px; border-radius:12px; width:32%;">
-          <div style="font-size:11px; color:#6b7280;">Raised</div>
-          <div style="font-size:18px; font-weight:600;">$18,450</div>
-        </div>
+      <div style="flex:1; background:#111827; padding:12px; border-radius:12px;">
+        <div style="font-size:11px; color:#6b7280;">Checked In</div>
+        <div style="font-size:18px;">103</div>
+      </div>
 
-        <div style="background:#111827; padding:12px; border-radius:12px; width:32%;">
-          <div style="font-size:11px; color:#6b7280;">Guests</div>
-          <div style="font-size:18px;">128 / 165</div>
-        </div>
+      <div style="flex:1; background:#111827; padding:12px; border-radius:12px;">
+        <div style="font-size:11px; color:#6b7280;">Total Raised</div>
+        <div style="font-size:18px;">$18,450</div>
+      </div>
 
-        <div style="background:#111827; padding:12px; border-radius:12px; width:32%;">
-          <div style="font-size:11px; color:#6b7280;">Engagement</div>
-          <div style="font-size:18px;">72%</div>
+      <div style="flex:1; background:#111827; padding:12px; border-radius:12px;">
+        <div style="font-size:11px; color:#6b7280;">Items</div>
+        <div style="font-size:18px;">12</div>
+      </div>
+
+    </div>
+
+    <!-- MAIN GRID -->
+    <div style="display:flex; gap:10px;">
+
+      <!-- LEFT PANEL -->
+      <div style="flex:2; background:#111827; border-radius:12px; padding:12px;">
+
+        <div style="font-size:12px; color:#6b7280; margin-bottom:8px;">Live Activity</div>
+
+        <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+          <div>✔ VIP Check-in — Table 12</div>
+          <div>✔ Auction Bid — $2,100</div>
+          <div>✔ Donation — $500</div>
+          <div>✔ Item Sold — $3,000</div>
         </div>
 
       </div>
 
-      <!-- CHART AREA -->
-      <div style="
-        background:#111827;
-        border-radius:12px;
-        padding:12px;
-        height:120px;
-        margin-bottom:12px;
-      ">
-        <div style="font-size:11px; color:#6b7280; margin-bottom:6px;">Live Donations</div>
-        <div style="display:flex; align-items:flex-end; gap:6px; height:70px;">
-          <div style="width:8px; height:30%; background:#6366f1;"></div>
-          <div style="width:8px; height:45%; background:#6366f1;"></div>
-          <div style="width:8px; height:60%; background:#6366f1;"></div>
-          <div style="width:8px; height:75%; background:#6366f1;"></div>
-          <div style="width:8px; height:90%; background:#6366f1;"></div>
-        </div>
-      </div>
+      <!-- RIGHT PANEL -->
+      <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
 
-      <!-- ACTIVITY + ACTION -->
-      <div style="display:flex; gap:10px;">
-
-        <div style="
-          flex:1;
-          background:#111827;
-          padding:10px;
-          border-radius:12px;
-          font-size:12px;
-          color:#9ca3af;
-        ">
-          <div style="color:white; margin-bottom:6px;">Activity</div>
-          Check-in • Table 8<br>
-          Bid • $250<br>
-          Donation • $500
+        <div style="background:#111827; border-radius:12px; padding:12px;">
+          <div style="font-size:11px; color:#6b7280;">Auction Split</div>
+          <div style="font-size:16px;">72%</div>
         </div>
 
-        <div style="
-          width:110px;
-          background:#6366f1;
-          border-radius:12px;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          font-size:13px;
-          font-weight:600;
-        ">
-          Export
+        <div style="background:#111827; border-radius:12px; padding:12px;">
+          <div style="font-size:11px; color:#6b7280;">Donations</div>
+          <div style="font-size:16px;">18%</div>
         </div>
 
       </div>
