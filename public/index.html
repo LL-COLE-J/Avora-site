@@ -206,110 +206,118 @@ body {
       <div style="font-size:11px; color:#6b7280;">LIVE EVENT</div>
     </div>
 
-    <!-- KPI ROW -->
-    <div style="display:flex; gap:10px; margin-bottom:12px;">
-      <div style="flex:1; background:#0f172a; padding:10px; border-radius:10px;">
-        <div style="font-size:11px; color:#6b7280;">Raised</div>
-        <div style="font-size:18px; font-weight:700;">$128K</div>
-      </div>
-      <div style="flex:1; background:#0f172a; padding:10px; border-radius:10px;">
-        <div style="font-size:11px; color:#6b7280;">Checked In</div>
-        <div style="font-size:18px; font-weight:700;">842</div>
-      </div>
-      <div style="flex:1; background:#0f172a; padding:10px; border-radius:10px;">
-        <div style="font-size:11px; color:#6b7280;">Bids</div>
-        <div style="font-size:18px; font-weight:700;">214</div>
-      </div>
+   <!-- MAIN GRID -->
+<div style="display:flex; gap:12px; height:300px;">
+
+  <!-- SIDEBAR (REAL ACTIONS) -->
+  <div style="
+    width:120px;
+    background:#0b1220;
+    border-radius:12px;
+    padding:12px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    font-size:12px;
+  ">
+    <div style="color:#6366f1;">+ New Event</div>
+    <div style="color:#9ca3af;">Check-In</div>
+    <div style="color:#9ca3af;">Auctions</div>
+    <div style="color:#9ca3af;">Donations</div>
+    <div style="color:#9ca3af;">Guests</div>
+
+    <div style="margin-top:auto; color:#6b7280; font-size:11px;">
+      Export Data
+    </div>
+  </div>
+
+  <!-- MAIN PANEL -->
+  <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
+
+    <!-- LIVE STRIP -->
+    <div style="
+      background:#0f172a;
+      border-radius:10px;
+      padding:10px;
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    ">
+      <span style="color:#22c55e;">● LIVE</span>
+      <span style="color:#9ca3af;">12 actions / min</span>
     </div>
 
-    <!-- MAIN GRID -->
-    <div style="display:flex; gap:12px; height:280px;">
+    <!-- REAL-TIME ACTIVITY -->
+    <div style="
+      background:#0f172a;
+      border-radius:12px;
+      padding:12px;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      font-size:12px;
+    ">
+      <div style="font-weight:600;">Live Activity</div>
 
-      <!-- SIDEBAR -->
-      <div style="
-        width:90px;
-        background:#0b1220;
-        border-radius:12px;
-        padding:10px;
-        display:flex;
-        flex-direction:column;
-        gap:10px;
-      ">
-        <!-- icon style blocks -->
-        <div style="height:30px; background:#6366f1; border-radius:8px;"></div>
-        <div style="height:30px; background:#1f2937; border-radius:8px;"></div>
-        <div style="height:30px; background:#1f2937; border-radius:8px;"></div>
-        <div style="height:30px; background:#1f2937; border-radius:8px;"></div>
-      </div>
-
-      <!-- MAIN CONTENT -->
-      <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
-
-        <!-- CHART -->
-        <div style="
-          background:#0f172a;
-          border-radius:12px;
-          padding:10px;
-          height:110px;
-        ">
-          <div style="font-size:12px; margin-bottom:5px;">Donations Trend</div>
-
-          <div style="
-            height:60px;
-            background:linear-gradient(to top, rgba(99,102,241,0.3), transparent);
-            border-radius:6px;
-          "></div>
-        </div>
-
-        <!-- PEOPLE + ACTIVITY -->
-        <div style="display:flex; gap:10px; flex:1;">
-
-          <!-- PEOPLE -->
-          <div style="
-            flex:1;
-            background:#0f172a;
-            border-radius:12px;
-            padding:10px;
-          ">
-            <div style="font-size:12px; margin-bottom:6px;">Guests</div>
-
-            <div style="display:flex; gap:6px; margin-bottom:8px;">
-              <div style="width:28px; height:28px; background:#6366f1; border-radius:50%;"></div>
-              <div style="width:28px; height:28px; background:#22c55e; border-radius:50%;"></div>
-              <div style="width:28px; height:28px; background:#f59e0b; border-radius:50%;"></div>
-            </div>
-
-            <div style="font-size:11px; color:#9ca3af;">
-              Sarah K.<br>
-              Michael R.<br>
-              Donor VIP
-            </div>
-          </div>
-
-          <!-- ACTIVITY -->
-          <div style="
-            flex:1;
-            background:#0f172a;
-            border-radius:12px;
-            padding:10px;
-          ">
-            <div style="font-size:12px; margin-bottom:6px;">Live Feed</div>
-
-            <div style="font-size:11px; color:#9ca3af;">
-              ✔ Check-in completed<br>
-              ✔ $500 donation<br>
-              ✔ Auction bid ↑<br>
-              ✔ Table filled
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
+      <div>✔ Sarah K checked in</div>
+      <div>💰 $500 donation — Table 4</div>
+      <div>🔨 Auction bid — Item #12 ↑</div>
+      <div>👤 VIP Guest arrived</div>
+      <div>💰 $1,200 pledge confirmed</div>
     </div>
 
   </div>
+
+  <!-- RIGHT PANEL (FOCUS METRICS) -->
+  <div style="
+    width:170px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  ">
+
+    <div style="
+      background:#0f172a;
+      padding:10px;
+      border-radius:10px;
+      font-size:12px;
+    ">
+      <div style="color:#6b7280;">Raised</div>
+      <div style="font-size:18px; font-weight:700;">$128,450</div>
+    </div>
+
+    <div style="
+      background:#0f172a;
+      padding:10px;
+      border-radius:10px;
+      font-size:12px;
+    ">
+      <div style="color:#6b7280;">Checked In</div>
+      <div style="font-size:18px; font-weight:700;">842</div>
+    </div>
+
+    <!-- MINI TREND -->
+    <div style="
+      background:#0f172a;
+      border-radius:10px;
+      height:80px;
+      position:relative;
+    ">
+      <div style="
+        position:absolute;
+        bottom:0;
+        left:0;
+        right:0;
+        height:60%;
+        background:linear-gradient(to top, rgba(99,102,241,0.4), transparent);
+      "></div>
+    </div>
+
+  </div>
+
+</div>
 
 </div>
 </body>
