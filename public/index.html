@@ -206,10 +206,10 @@ body {
       <div style="font-size:11px; color:#6b7280;">LIVE EVENT</div>
     </div>
 
-   <!-- MAIN GRID -->
+ <!-- MAIN GRID -->
 <div style="display:flex; gap:12px; height:300px;">
 
-  <!-- SIDEBAR (REAL ACTIONS) -->
+  <!-- SIDEBAR -->
   <div style="
     width:120px;
     background:#0b1220;
@@ -217,7 +217,7 @@ body {
     padding:12px;
     display:flex;
     flex-direction:column;
-    gap:12px;
+    gap:14px;
     font-size:12px;
   ">
     <div style="color:#6366f1;">+ New Event</div>
@@ -244,11 +244,21 @@ body {
       justify-content:space-between;
       align-items:center;
     ">
-      <span style="color:#22c55e;">● LIVE</span>
+      <span style="color:#22c55e; display:flex; align-items:center; gap:6px;">
+        <span style="
+          width:8px;
+          height:8px;
+          background:#22c55e;
+          border-radius:50%;
+          animation:pulse 1.5s infinite;
+        "></span>
+        LIVE
+      </span>
+
       <span style="color:#9ca3af;">12 actions / min</span>
     </div>
 
-    <!-- REAL-TIME ACTIVITY -->
+    <!-- ACTIVITY FEED -->
     <div style="
       background:#0f172a;
       border-radius:12px;
@@ -263,16 +273,16 @@ body {
 
       <div>✔ Sarah K checked in</div>
       <div>💰 $500 donation — Table 4</div>
-      <div>🔨 Auction bid — Item #12 ↑</div>
-      <div>👤 VIP Guest arrived</div>
+      <div>🔨 Bid placed — Item #12</div>
+      <div>👤 VIP guest arrived</div>
       <div>💰 $1,200 pledge confirmed</div>
     </div>
 
   </div>
 
-  <!-- RIGHT PANEL (FOCUS METRICS) -->
+  <!-- RIGHT PANEL -->
   <div style="
-    width:170px;
+    width:180px;
     display:flex;
     flex-direction:column;
     gap:10px;
@@ -280,30 +290,29 @@ body {
 
     <div style="
       background:#0f172a;
-      padding:10px;
+      padding:12px;
       border-radius:10px;
-      font-size:12px;
     ">
-      <div style="color:#6b7280;">Raised</div>
-      <div style="font-size:18px; font-weight:700;">$128,450</div>
+      <div style="color:#6b7280; font-size:12px;">Raised</div>
+      <div style="font-size:20px; font-weight:700;">$128,450</div>
     </div>
 
     <div style="
       background:#0f172a;
-      padding:10px;
+      padding:12px;
       border-radius:10px;
-      font-size:12px;
     ">
-      <div style="color:#6b7280;">Checked In</div>
-      <div style="font-size:18px; font-weight:700;">842</div>
+      <div style="color:#6b7280; font-size:12px;">Checked In</div>
+      <div style="font-size:20px; font-weight:700;">842</div>
     </div>
 
-    <!-- MINI TREND -->
+    <!-- ANIMATED TREND -->
     <div style="
       background:#0f172a;
       border-radius:10px;
       height:80px;
       position:relative;
+      overflow:hidden;
     ">
       <div style="
         position:absolute;
@@ -312,12 +321,26 @@ body {
         right:0;
         height:60%;
         background:linear-gradient(to top, rgba(99,102,241,0.4), transparent);
+        animation:rise 2.5s ease-in-out infinite alternate;
       "></div>
     </div>
 
   </div>
 
 </div>
+
+<style>
+@keyframes pulse {
+  0% { opacity:0.3; transform:scale(0.9); }
+  50% { opacity:1; transform:scale(1.2); }
+  100% { opacity:0.3; transform:scale(0.9); }
+}
+
+@keyframes rise {
+  from { height:40%; }
+  to { height:70%; }
+}
+</style>
 
 </div>
 </body>
