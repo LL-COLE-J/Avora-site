@@ -267,7 +267,7 @@ border:1px solid rgba(99,102,241,0.08);
   <!-- 🔥 PREMIUM LIVE BAR -->
   <div style="
     background:linear-gradient(to right, rgba(99,102,241,0.12), transparent);
-    border:1px solid rgba(99,102,241,0.2);
+   border:1px solid rgba(99,102,241,0.12);
     border-radius:10px;
     padding:10px 12px;
     margin-bottom:10px;
@@ -321,22 +321,16 @@ transform-origin:bottom;
 
     <!-- GRAPH -->
     <div style="
-      height:120px;
-      position:relative;
-      border-radius:8px;
-      overflow:hidden;
-    ">
-      <div style="
-        height:100%;
-        background:linear-gradient(to top, rgba(99,102,241,0.3), transparent);
-        clip-path: polygon(
-          0% 70%,10% 60%,20% 65%,30% 50%,40% 60%,
-          50% 40%,60% 55%,70% 35%,80% 50%,90% 30%,100% 45%,
-          100% 100%,0% 100%
-          animation:rise 1.4s ease;
-transform-origin:bottom;
-        );
-      "></div>
+  height:100%;
+  background:linear-gradient(to top, rgba(99,102,241,0.3), transparent);
+  clip-path: polygon(
+    0% 70%,10% 60%,20% 65%,30% 50%,40% 60%,
+    50% 40%,60% 55%,70% 35%,80% 50%,90% 30%,100% 45%,
+    100% 100%,0% 100%
+  );
+  animation:rise 1.4s ease;
+  transform-origin:bottom;
+"></div>
     </div>
 
     <!-- STATS -->
