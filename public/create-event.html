@@ -64,40 +64,62 @@ button {
 <button id="createBtn">Create Event</button>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+<!-- FIREBASE INIT -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  // Set today's date safely
-  const dateInput = document.getElementById('eventDate');
-  if (dateInput) {
-    dateInput.valueAsDate = new Date();
-  }
+const firebaseConfig = {
+  apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
+  authDomain: "avora-fc8b4.firebaseapp.com",
+  projectId: "avora-fc8b4",
+  storageBucket: "avora-fc8b4.firebasestorage.app",
+  messagingSenderId: "520572013150",
+  appId: "1:520572013150:web:a7efe5fce0a4e26df342cf"
+};
 
-  // Attach button click
-  const btn = document.getElementById('createBtn');
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  btn.addEventListener("click", function () {
+console.log("🔥 Firebase connected");
+
+// Set today's date
+const dateInput = document.getElementById('eventDate');
+if (dateInput) {
+  dateInput.valueAsDate = new Date();
+}
+
+const btn = document.getElementById('createBtn');
+
+btn.addEventListener("click", async function () {
 
     btn.innerText = "Creating...";
     btn.disabled = true;
 
-    const event = {
-      name: document.getElementById('eventName').value,
-      date: document.getElementById('eventDate').value,
-      guests: document.getElementById('guestCount').value,
-      checkedIn: 0
-    };
+    try {
+      const eventData = {
+        name: document.getElementById('eventName').value,
+        date: document.getElementById('eventDate').value,
+        guestCount: Number(document.getElementById('guestCount').value),
+        revenue: 0,
+        createdAt: new Date()
+      };
 
-    localStorage.setItem("avora_event", JSON.stringify(event));
+      const docRef = await addDoc(collection(db, "events"), eventData);
 
-    setTimeout(() => {
-      window.location.href = "/dashboard.html";
-    }, 500);
+      console.log("✅ Event created:", docRef.id);
 
-  });
+      // Redirect with real event ID
+      window.location.href = `/dashboard.html?eventId=${docRef.id}`;
+
+    } catch (error) {
+      console.error("❌ Error creating event:", error);
+      btn.innerText = "Error - Retry";
+      btn.disabled = false;
+    }
+
 
 });
 </script>
-
 </body>
 </html>
