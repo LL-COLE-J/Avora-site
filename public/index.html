@@ -183,69 +183,126 @@ body {
   <div class="hero-right">
 
   <div style="
-    width:600px;
-    height:380px;
+    width:620px;
+    height:400px;
     background:#020617;
-    border-radius:18px;
+    border-radius:20px;
     transform:perspective(1000px) rotateY(-8deg) rotateX(2deg);
-    box-shadow:0 50px 120px rgba(0,0,0,0.8);
-    padding:20px;
+    box-shadow:0 60px 140px rgba(0,0,0,0.85);
+    padding:18px;
     position:relative;
     overflow:hidden;
   ">
 
-    <!-- TOP STATS -->
-    <div style="display:flex; gap:12px; margin-bottom:15px;">
-      <div style="flex:1; background:#0f172a; padding:12px; border-radius:10px;">
-        <div style="font-size:12px; color:#6b7280;">Raised</div>
-        <div style="font-size:20px; font-weight:700;">$128,450</div>
+    <!-- TOP BAR -->
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+      
+      <!-- AVORA inside tablet -->
+      <div style="display:flex; align-items:center; gap:8px;">
+        <img src="logo-icon.png" style="width:22px;">
+        <span style="font-size:12px; color:#9ca3af;">AVORA</span>
       </div>
 
-      <div style="flex:1; background:#0f172a; padding:12px; border-radius:10px;">
-        <div style="font-size:12px; color:#6b7280;">Checked In</div>
-        <div style="font-size:20px; font-weight:700;">842</div>
-      </div>
+      <div style="font-size:11px; color:#6b7280;">LIVE EVENT</div>
+    </div>
 
-      <div style="flex:1; background:#0f172a; padding:12px; border-radius:10px;">
-        <div style="font-size:12px; color:#6b7280;">Engagement</div>
-        <div style="font-size:20px; font-weight:700;">76%</div>
+    <!-- KPI ROW -->
+    <div style="display:flex; gap:10px; margin-bottom:12px;">
+      <div style="flex:1; background:#0f172a; padding:10px; border-radius:10px;">
+        <div style="font-size:11px; color:#6b7280;">Raised</div>
+        <div style="font-size:18px; font-weight:700;">$128K</div>
+      </div>
+      <div style="flex:1; background:#0f172a; padding:10px; border-radius:10px;">
+        <div style="font-size:11px; color:#6b7280;">Checked In</div>
+        <div style="font-size:18px; font-weight:700;">842</div>
+      </div>
+      <div style="flex:1; background:#0f172a; padding:10px; border-radius:10px;">
+        <div style="font-size:11px; color:#6b7280;">Bids</div>
+        <div style="font-size:18px; font-weight:700;">214</div>
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div style="display:flex; gap:15px; height:260px;">
+    <!-- MAIN GRID -->
+    <div style="display:flex; gap:12px; height:280px;">
 
-      <!-- LEFT MENU -->
+      <!-- SIDEBAR -->
       <div style="
         width:90px;
         background:#0b1220;
         border-radius:12px;
         padding:10px;
+        display:flex;
+        flex-direction:column;
+        gap:10px;
       ">
-        <div style="margin-bottom:10px; font-size:12px; color:#6b7280;">Menu</div>
-        <div style="height:8px; background:#6366f1; margin-bottom:8px; border-radius:4px;"></div>
-        <div style="height:8px; background:#1f2937; margin-bottom:8px; border-radius:4px;"></div>
-        <div style="height:8px; background:#1f2937; margin-bottom:8px; border-radius:4px;"></div>
+        <!-- icon style blocks -->
+        <div style="height:30px; background:#6366f1; border-radius:8px;"></div>
+        <div style="height:30px; background:#1f2937; border-radius:8px;"></div>
+        <div style="height:30px; background:#1f2937; border-radius:8px;"></div>
+        <div style="height:30px; background:#1f2937; border-radius:8px;"></div>
       </div>
 
-      <!-- MAIN PANEL -->
-      <div style="flex:1; background:#0f172a; border-radius:12px; padding:15px;">
+      <!-- MAIN CONTENT -->
+      <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
 
-        <div style="font-size:14px; margin-bottom:10px;">Live Activity</div>
-
-        <!-- fake graph -->
+        <!-- CHART -->
         <div style="
-          height:100px;
-          background:linear-gradient(to top, rgba(99,102,241,0.2), transparent);
-          border-radius:8px;
-          margin-bottom:15px;
-        "></div>
+          background:#0f172a;
+          border-radius:12px;
+          padding:10px;
+          height:110px;
+        ">
+          <div style="font-size:12px; margin-bottom:5px;">Donations Trend</div>
 
-        <!-- activity feed -->
-        <div style="font-size:12px; color:#9ca3af;">
-          <div>✔ Guest checked in</div>
-          <div>✔ Donation received</div>
-          <div>✔ Auction bid placed</div>
+          <div style="
+            height:60px;
+            background:linear-gradient(to top, rgba(99,102,241,0.3), transparent);
+            border-radius:6px;
+          "></div>
+        </div>
+
+        <!-- PEOPLE + ACTIVITY -->
+        <div style="display:flex; gap:10px; flex:1;">
+
+          <!-- PEOPLE -->
+          <div style="
+            flex:1;
+            background:#0f172a;
+            border-radius:12px;
+            padding:10px;
+          ">
+            <div style="font-size:12px; margin-bottom:6px;">Guests</div>
+
+            <div style="display:flex; gap:6px; margin-bottom:8px;">
+              <div style="width:28px; height:28px; background:#6366f1; border-radius:50%;"></div>
+              <div style="width:28px; height:28px; background:#22c55e; border-radius:50%;"></div>
+              <div style="width:28px; height:28px; background:#f59e0b; border-radius:50%;"></div>
+            </div>
+
+            <div style="font-size:11px; color:#9ca3af;">
+              Sarah K.<br>
+              Michael R.<br>
+              Donor VIP
+            </div>
+          </div>
+
+          <!-- ACTIVITY -->
+          <div style="
+            flex:1;
+            background:#0f172a;
+            border-radius:12px;
+            padding:10px;
+          ">
+            <div style="font-size:12px; margin-bottom:6px;">Live Feed</div>
+
+            <div style="font-size:11px; color:#9ca3af;">
+              ✔ Check-in completed<br>
+              ✔ $500 donation<br>
+              ✔ Auction bid ↑<br>
+              ✔ Table filled
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -255,6 +312,5 @@ body {
   </div>
 
 </div>
-
 </body>
 </html>
