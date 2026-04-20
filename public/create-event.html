@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Event - Avora</title>
+
+<style>
+body {
+  margin:0;
+  font-family:-apple-system, BlinkMacSystemFont, sans-serif;
+  background:#050a18;
+  color:#e5e7eb;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.card {
+  background:#0f172a;
+  padding:30px;
+  border-radius:12px;
+  width:320px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+
+h2 {
+  margin-bottom:20px;
+}
+
+input {
+  width:100%;
+  padding:10px;
+  margin-bottom:12px;
+  border-radius:6px;
+  border:none;
+  background:#020617;
+  color:white;
+}
+
+button {
+  width:100%;
+  padding:12px;
+  background:#6366f1;
+  border:none;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Create Event</h2>
+
+  <input id="eventName" value="Pink Gala 2026">
+  <input id="eventDate" type="date">
+  <input id="guestCount" value="150">
+
+  <button onclick="createEvent()">Create Event</button>
+</div>
+
+<script>
+function createEvent() {
+  const event = {
+    name: document.getElementById('eventName').value,
+    date: document.getElementById('eventDate').value,
+    guests: document.getElementById('guestCount').value,
+    checkedIn: 0
+  };
+
+  localStorage.setItem("avora_event", JSON.stringify(event));
+
+  window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>
