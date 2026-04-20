@@ -6,6 +6,13 @@
 <title>Avora | Run the Event</title>
 
 <style>
+
+@keyframes pulse {
+  0% { opacity:0.4; transform:scale(0.9); }
+  50% { opacity:1; transform:scale(1.25); }
+  100% { opacity:0.4; transform:scale(0.9); }
+}
+  
 body {
   margin:0;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -142,11 +149,6 @@ body {
   margin-top:25px;
   display:flex;
   gap:12px;
-}
-@keyframes pulse {
-  0% { opacity:0.4; transform:scale(0.9); }
-  50% { opacity:1; transform:scale(1.25); }
-  100% { opacity:0.4; transform:scale(0.9); }
 }
 
   
