@@ -182,51 +182,76 @@ body {
   <!-- RIGHT -->
   <div class="hero-right">
 
-  <!-- dashboard layer -->
   <div style="
-    position:absolute;
-    width:540px;
-    height:340px;
-    background:linear-gradient(145deg, #111827, #020617);
-    border-radius:20px;
-    transform:rotate(-6deg);
-    opacity:0.7;
-    box-shadow:0 40px 100px rgba(0,0,0,0.8);
+    width:600px;
+    height:380px;
+    background:#020617;
+    border-radius:18px;
+    transform:perspective(1000px) rotateY(-8deg) rotateX(2deg);
+    box-shadow:0 50px 120px rgba(0,0,0,0.8);
+    padding:20px;
+    position:relative;
     overflow:hidden;
   ">
-    <!-- fake UI glow line -->
-    <div style="
-      position:absolute;
-      top:20px;
-      left:20px;
-      right:20px;
-      height:4px;
-      background:linear-gradient(to right, #6366f1, transparent);
-      border-radius:4px;
-      opacity:0.6;
-    "></div>
 
-    <!-- fake chart pulse -->
-    <div style="
-      position:absolute;
-      bottom:30px;
-      left:30px;
-      width:200px;
-      height:80px;
-      background:radial-gradient(circle, rgba(99,102,241,0.3), transparent 70%);
-    "></div>
-  </div>
+    <!-- TOP STATS -->
+    <div style="display:flex; gap:12px; margin-bottom:15px;">
+      <div style="flex:1; background:#0f172a; padding:12px; border-radius:10px;">
+        <div style="font-size:12px; color:#6b7280;">Raised</div>
+        <div style="font-size:20px; font-weight:700;">$128,450</div>
+      </div>
 
-  <!-- glow + logo -->
-  <div style="
-    width:440px;
-    height:440px;
-    background:radial-gradient(circle, rgba(99,102,241,0.35), transparent 70%);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-  ">
-    <img src="logo-icon.png" style="width:220px; opacity:0.95;">
+      <div style="flex:1; background:#0f172a; padding:12px; border-radius:10px;">
+        <div style="font-size:12px; color:#6b7280;">Checked In</div>
+        <div style="font-size:20px; font-weight:700;">842</div>
+      </div>
+
+      <div style="flex:1; background:#0f172a; padding:12px; border-radius:10px;">
+        <div style="font-size:12px; color:#6b7280;">Engagement</div>
+        <div style="font-size:20px; font-weight:700;">76%</div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div style="display:flex; gap:15px; height:260px;">
+
+      <!-- LEFT MENU -->
+      <div style="
+        width:90px;
+        background:#0b1220;
+        border-radius:12px;
+        padding:10px;
+      ">
+        <div style="margin-bottom:10px; font-size:12px; color:#6b7280;">Menu</div>
+        <div style="height:8px; background:#6366f1; margin-bottom:8px; border-radius:4px;"></div>
+        <div style="height:8px; background:#1f2937; margin-bottom:8px; border-radius:4px;"></div>
+        <div style="height:8px; background:#1f2937; margin-bottom:8px; border-radius:4px;"></div>
+      </div>
+
+      <!-- MAIN PANEL -->
+      <div style="flex:1; background:#0f172a; border-radius:12px; padding:15px;">
+
+        <div style="font-size:14px; margin-bottom:10px;">Live Activity</div>
+
+        <!-- fake graph -->
+        <div style="
+          height:100px;
+          background:linear-gradient(to top, rgba(99,102,241,0.2), transparent);
+          border-radius:8px;
+          margin-bottom:15px;
+        "></div>
+
+        <!-- activity feed -->
+        <div style="font-size:12px; color:#9ca3af;">
+          <div>✔ Guest checked in</div>
+          <div>✔ Donation received</div>
+          <div>✔ Auction bid placed</div>
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
 </div>
