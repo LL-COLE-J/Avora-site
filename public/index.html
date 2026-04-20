@@ -9,15 +9,15 @@
 
 @keyframes pulse {
   0% { opacity:0.4; transform:scale(0.9); }
-  50% { opacity:1; transform:scale(1.25); }
+  50% { opacity:1; transform:scale(1.2); }
   100% { opacity:0.4; transform:scale(0.9); }
 }
 
-  @keyframes rise {
+@keyframes rise {
   from { transform:scaleY(0.7); opacity:0.6; }
   to { transform:scaleY(1); opacity:1; }
 }
-  
+
 body {
   margin:0;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -25,14 +25,12 @@ body {
   color:#e5e7eb;
 }
 
-/* CONTAINER */
 .container {
   max-width:1200px;
   margin:auto;
   padding:40px 20px;
 }
 
-/* NAV */
 .nav {
   display:flex;
   justify-content:space-between;
@@ -58,10 +56,6 @@ body {
   text-decoration:none;
 }
 
-.nav-links a:hover {
-  color:white;
-}
-
 .btn {
   padding:10px 18px;
   border-radius:8px;
@@ -79,7 +73,6 @@ body {
   color:white;
 }
 
-/* HERO */
 .hero {
   display:flex;
   align-items:center;
@@ -88,7 +81,6 @@ body {
   flex-wrap:wrap;
 }
 
-/* LEFT */
 .hero-left {
   flex:1;
   min-width:300px;
@@ -97,8 +89,6 @@ body {
 .hero-left h1 {
   font-size:56px;
   line-height:1.1;
-  letter-spacing:-1px;
-  margin-bottom:20px;
 }
 
 .hero-left span {
@@ -107,108 +97,34 @@ body {
 
 .hero-left p {
   color:#9ca3af;
-  line-height:1.6;
-  max-width:520px;
+  font-size:18px;
+  line-height:1.7;
 }
 
-/* RIGHT */
 .hero-right {
   flex:1;
-  min-width:300px;
-  position:relative;
   display:flex;
   justify-content:center;
-  align-items:center;
 }
 
-/* DASHBOARD BACK (EVENTOS FEEL) */
-.dashboard-bg {
-  position:absolute;
-  width:520px;
-  height:320px;
-  background:linear-gradient(145deg, #0f172a, #020617);
-  border-radius:20px;
-  transform:rotate(-6deg);
-  opacity:0.6;
-  box-shadow:0 40px 80px rgba(0,0,0,0.6);
-}
-
-/* GLOW */
-.glow {
-  width:420px;
+/* TABLET */
+.tablet {
+  width:640px;
   height:420px;
-  background:radial-gradient(circle, rgba(99,102,241,0.25), transparent 70%);
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  background:linear-gradient(145deg, #020617, #030a1a);
+  border-radius:24px;
+  transform:perspective(1200px) rotateY(-10deg) rotateX(3deg);
+  box-shadow:
+    0 80px 180px rgba(0,0,0,0.9),
+    inset 0 0 80px rgba(99,102,241,0.08);
+  border:1px solid rgba(99,102,241,0.08);
+  padding:18px;
+  position:relative;
+  overflow:hidden;
 }
 
-/* LOGO ICON */
-.logo-icon {
-  width:180px;
-  opacity:0.95;
-}
-
-/* BUTTON ROW */
-.cta {
-  margin-top:25px;
-  display:flex;
-  gap:12px;
-}
-
-  
-</style>
-</head>
-
-<body>
-
-<!-- NAV -->
-<div class="container nav">
-  <div class="logo">AVORA</div>
-
-  <div class="nav-links">
-    <a href="#">Features</a>
-    <a href="#">How It Works</a>
-    <a href="#" class="btn btn-primary">Request Access</a>
-  </div>
-</div>
-
-<!-- HERO -->
-<div class="container hero">
-
-  <!-- LEFT -->
-  <div class="hero-left">
-    <h1>
-      Run Your Entire Event<br>
-      <span>Without the Chaos</span>
-    </h1>
-
-    <p style="font-size:18px; line-height:1.7; max-width:520px;">
-      Avora gives you real-time control of check-in, auctions, donations, and engagement—so your team can execute flawlessly.
-    </p>
-
-    <div class="cta">
-      <a href="#" class="btn btn-primary">Book a Demo</a>
-      <a href="#" class="btn btn-secondary">See How It Works</a>
-    </div>
-  </div>
-
-  <!-- RIGHT -->
-  <div class="hero-right">
-
-  <div style="
-   width:640px;
-height:420px;
-background:linear-gradient(145deg, #020617, #030a1a);
-border-radius:24px;
-transform:perspective(1200px) rotateY(-10deg) rotateX(3deg);
-box-shadow:
-  0 80px 180px rgba(0,0,0,0.9),
-  inset 0 0 80px rgba(99,102,241,0.08);
-border:1px solid rgba(99,102,241,0.08);
-  ">
-
-    <div style="
+/* glow */
+.glow {
   position:absolute;
   top:-40px;
   right:-60px;
@@ -216,26 +132,10 @@ border:1px solid rgba(99,102,241,0.08);
   height:300px;
   background:radial-gradient(circle, rgba(99,102,241,0.25), transparent 70%);
   filter:blur(40px);
-  pointer-events:none;
-"></div>
+}
 
-    <!-- TOP BAR -->
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-      
-      <!-- AVORA inside tablet -->
-      <div style="display:flex; align-items:center; gap:8px;">
-        <img src="logo-icon.png" style="width:22px;">
-        <span style="font-size:12px; color:#9ca3af;">AVORA</span>
-      </div>
-
-      <div style="font-size:11px; color:#6b7280;">LIVE EVENT</div>
-    </div>
-
- <!-- MAIN GRID -->
-<div style="display:flex; gap:12px; height:300px;">
-
-  <!-- SIDEBAR -->
- <div style="
+/* sidebar */
+.sidebar {
   width:130px;
   background:linear-gradient(180deg, #0b1220, #070d18);
   border-radius:14px;
@@ -245,181 +145,184 @@ border:1px solid rgba(99,102,241,0.08);
   gap:16px;
   font-size:12px;
   border:1px solid rgba(99,102,241,0.08);
-  box-shadow:inset 0 0 20px rgba(99,102,241,0.05);
-">
+}
 
-  <div style="color:#6366f1; font-weight:600;">+ New Event</div>
-
-  <div style="color:#9ca3af;">Check-In</div>
-  <div style="color:#9ca3af;">Auctions</div>
-  <div style="color:#9ca3af;">Donations</div>
-  <div style="color:#9ca3af;">Guests</div>
-
-  <div style="margin-top:auto; font-size:11px; color:#6b7280;">
-    Export Data
-  </div>
-
-</div>
-
-<!-- MAIN PANEL -->
-<div style="flex:1; display:flex; flex-direction:column;">
-
-  <!-- 🔥 PREMIUM LIVE BAR -->
-  <div style="
-    background:linear-gradient(to right, rgba(99,102,241,0.12), transparent);
-   border:1px solid rgba(99,102,241,0.12);
-    border-radius:10px;
-    padding:10px 12px;
-    margin-bottom:10px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-  ">
-
-    <div style="display:flex; align-items:center; gap:8px;">
-      <div style="
-        width:8px;
-        height:8px;
-        border-radius:50%;
-        background:#22c55e;
-        box-shadow:0 0 10px rgba(34,197,94,0.8);
-        animation:pulse 1.6s infinite;
-transform-origin:bottom;
-      "></div>
-
-      <span style="font-size:12px; font-weight:600; color:#22c55e;">
-        LIVE
-      </span>
-    </div>
-
-    <div style="font-size:11px; color:#9ca3af;">
-      12 actions / min
-    </div>
-
-  </div>
-
-  <!-- MAIN CONTENT -->
-  <div style="
-  background:linear-gradient(180deg, #0f172a, #020617);
-  border:1px solid rgba(99,102,241,0.06);
-  box-shadow:inset 0 0 30px rgba(99,102,241,0.05);
-  border-radius:12px;
-  padding:16px;
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-">
-
-    <!-- PEOPLE -->
-    <div style="display:flex; align-items:center; gap:8px;">
-      <div style="width:26px; height:26px; border-radius:50%; background:#6366f1;"></div>
-      <div style="width:26px; height:26px; border-radius:50%; background:#22c55e;"></div>
-      <div style="width:26px; height:26px; border-radius:50%; background:#f59e0b;"></div>
-      <div style="font-size:11px; color:#9ca3af;">128 active guests</div>
-    </div>
-
-    <!-- GRAPH -->
-    <div style="
-  height:100%;
-  background:linear-gradient(to top, rgba(99,102,241,0.3), transparent);
-  clip-path: polygon(
-    0% 70%,10% 60%,20% 65%,30% 50%,40% 60%,
-    50% 40%,60% 55%,70% 35%,80% 50%,90% 30%,100% 45%,
-    100% 100%,0% 100%
-  );
-  animation:rise 1.4s ease;
-  transform-origin:bottom;
-"></div>
-    </div>
-
-    <!-- STATS -->
-    <div style="display:flex; justify-content:space-between; font-size:12px;">
-      <div>
-        <div style="color:#6b7280;">Donations</div>
-        <div style="color:#22c55e;">$8,420</div>
-      </div>
-
-      <div>
-        <div style="color:#6b7280;">Bids</div>
-        <div style="color:#f59e0b;">42 active</div>
-      </div>
-
-      <div>
-        <div style="color:#6b7280;">Check-ins</div>
-        <div style="color:#6366f1;">+18</div>
-      </div>
-    </div>
-
-  </div>
-
-</div>
-  <!-- RIGHT PANEL -->
-  <div style="
-    width:180px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-  ">
-
-    <div style="
+/* cards */
+.card {
   background:linear-gradient(180deg, #0f172a, #020617);
   border:1px solid rgba(99,102,241,0.08);
   box-shadow:0 10px 30px rgba(0,0,0,0.4);
   padding:12px;
   border-radius:10px;
-">
-  <div style="color:#6b7280; font-size:12px;">Raised</div>
-  <div style="font-size:20px; font-weight:700;">$128,450</div>
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container nav">
+  <div class="logo">AVORA</div>
+  <div class="nav-links">
+    <a href="#">Features</a>
+    <a href="#">How It Works</a>
+    <a href="#" class="btn btn-primary">Request Access</a>
+  </div>
 </div>
 
-<div style="
-  background:linear-gradient(180deg, #0f172a, #020617);
-  border:1px solid rgba(99,102,241,0.08);
-  box-shadow:0 10px 30px rgba(0,0,0,0.4);
-  padding:12px;
-  border-radius:10px;
-">
-  <div style="color:#6b7280; font-size:12px;">Checked In</div>
-  <div style="font-size:20px; font-weight:700;">842</div>
-</div>
+<div class="container hero">
 
-    <div style="
-  background:linear-gradient(180deg, #0f172a, #020617);
-  border:1px solid rgba(99,102,241,0.08);
-  box-shadow:0 10px 30px rgba(0,0,0,0.4);
-  padding:12px;
-  border-radius:10px;
-">
+  <!-- LEFT -->
+  <div class="hero-left">
+    <h1>
+      Run Your Entire Event<br>
+      <span>Without the Chaos</span>
+    </h1>
 
+    <p>
+      Avora gives you real-time control of check-in, auctions, donations, and engagement—so your team can execute flawlessly.
+    </p>
 
-    <div style="
-      background:#0f172a;
-      border-radius:10px;
-      height:80px;
-      position:relative;
-      overflow:hidden;
-    ">
+    <div style="margin-top:20px;">
+      <a href="#" class="btn btn-primary">Book a Demo</a>
+      <a href="#" class="btn btn-secondary">See How It Works</a>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="hero-right">
+
+    <div class="tablet">
+
+      <div class="glow"></div>
+
+      <!-- TOP -->
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <div style="display:flex; gap:8px;">
+          <img src="logo-icon.png" style="width:22px;">
+          <span style="font-size:12px; color:#9ca3af;">AVORA</span>
+        </div>
+        <div style="font-size:11px; color:#6b7280;">LIVE EVENT</div>
+      </div>
+
+      <!-- GRID -->
+      <div style="display:flex; gap:14px; height:300px;">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+          <div style="color:#6366f1;">+ New Event</div>
+          <div>Check-In</div>
+          <div>Auctions</div>
+          <div>Donations</div>
+          <div>Guests</div>
+          <div style="margin-top:auto; font-size:11px;">Export</div>
+        </div>
+
+        <!-- MAIN -->
+        <div style="flex:1; display:flex; flex-direction:column;">
+
+          <!-- LIVE -->
+          <div style="
+            background:linear-gradient(to right, rgba(99,102,241,0.12), transparent);
+            border:1px solid rgba(99,102,241,0.12);
+            border-radius:10px;
+            padding:10px;
+            margin-bottom:14px;
+            display:flex;
+            justify-content:space-between;
+          ">
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div style="
+                width:8px;
+                height:8px;
+                background:#22c55e;
+                border-radius:50%;
+                box-shadow:0 0 8px rgba(34,197,94,0.6);
+                animation:pulse 1.6s infinite;
+              "></div>
+              <span style="font-size:12px; color:#22c55e;">LIVE</span>
+            </div>
+            <div style="font-size:11px; color:#9ca3af;">12 actions / min</div>
+          </div>
+
+          <!-- MAIN PANEL -->
+          <div style="
+            background:linear-gradient(180deg, #0f172a, #020617);
+            border:1px solid rgba(99,102,241,0.06);
+            border-radius:12px;
+            padding:16px;
+            flex:1;
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+          ">
+
+            <!-- PEOPLE -->
+            <div style="display:flex; gap:8px;">
+              <div style="width:26px;height:26px;border-radius:50%;background:#6366f1;"></div>
+              <div style="width:26px;height:26px;border-radius:50%;background:#22c55e;"></div>
+              <div style="width:26px;height:26px;border-radius:50%;background:#f59e0b;"></div>
+            </div>
+
+            <!-- GRAPH -->
             <div style="
-        position:absolute;
-        bottom:0;
-        left:0;
-        right:0;
-        height:60%;
-        background:linear-gradient(to top, rgba(99,102,241,0.4), transparent);
-      "></div>
+              height:120px;
+              overflow:hidden;
+              border-radius:8px;
+            ">
+              <div style="
+                height:100%;
+                background:linear-gradient(to top, rgba(99,102,241,0.3), transparent);
+                clip-path: polygon(
+                  0% 70%,10% 60%,20% 65%,30% 50%,40% 60%,
+                  50% 40%,60% 55%,70% 35%,80% 50%,90% 30%,100% 45%,
+                  100% 100%,0% 100%
+                );
+                animation:rise 1.4s ease;
+                transform-origin:bottom;
+              "></div>
+            </div>
 
-    </div> <!-- small graph box -->
+            <!-- STATS -->
+            <div style="display:flex; justify-content:space-between;">
+              <div>
+                <div style="color:#6b7280;">Donations</div>
+                <div>$8,420</div>
+              </div>
+              <div>
+                <div style="color:#6b7280;">Bids</div>
+                <div>42</div>
+              </div>
+              <div>
+                <div style="color:#6b7280;">Check-ins</div>
+                <div>+18</div>
+              </div>
+            </div>
 
-  </div> <!-- RIGHT PANEL -->
+          </div>
 
-</div> <!-- MAIN GRID -->
+        </div>
 
-</div> <!-- TABLET -->
+        <!-- RIGHT -->
+        <div style="width:180px; display:flex; flex-direction:column; gap:10px;">
+          <div class="card">
+            <div style="color:#6b7280;">Raised</div>
+            <div>$128,450</div>
+          </div>
+          <div class="card">
+            <div style="color:#6b7280;">Guests</div>
+            <div>842</div>
+          </div>
+          <div class="card" style="height:80px;"></div>
+        </div>
 
-</div> <!-- HERO RIGHT -->
+      </div>
 
-</div> <!-- HERO -->
+    </div>
+
+  </div>
+
+</div>
 
 </body>
 </html>
