@@ -143,6 +143,13 @@ body {
   display:flex;
   gap:12px;
 }
+@keyframes pulse {
+  0% { opacity:0.4; transform:scale(0.9); }
+  50% { opacity:1; transform:scale(1.25); }
+  100% { opacity:0.4; transform:scale(0.9); }
+}
+
+  
 </style>
 </head>
 
@@ -231,67 +238,101 @@ body {
     </div>
   </div>
 
-  <!-- MAIN PANEL -->
-  <div style="flex:1; display:flex; flex-direction:column;">
 
-    <div style="
-      background:#0f172a;
-      border-radius:12px;
-      padding:12px;
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    ">
+<!-- MAIN PANEL -->
+<div style="flex:1; display:flex; flex-direction:column;">
 
-      <!-- PEOPLE -->
-      <div style="display:flex; align-items:center; gap:8px;">
-        <div style="width:26px; height:26px; border-radius:50%; background:#6366f1;"></div>
-        <div style="width:26px; height:26px; border-radius:50%; background:#22c55e;"></div>
-        <div style="width:26px; height:26px; border-radius:50%; background:#f59e0b;"></div>
-        <div style="font-size:11px; color:#9ca3af;">128 active guests</div>
-      </div>
+  <!-- 🔥 PREMIUM LIVE BAR -->
+  <div style="
+    background:linear-gradient(to right, rgba(99,102,241,0.12), transparent);
+    border:1px solid rgba(99,102,241,0.2);
+    border-radius:10px;
+    padding:10px 12px;
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  ">
 
-      <!-- GRAPH -->
+    <div style="display:flex; align-items:center; gap:8px;">
       <div style="
-        height:90px;
-        position:relative;
-        border-radius:8px;
-        overflow:hidden;
-      ">
-        <div style="
-          height:100%;
-          background:linear-gradient(to top, rgba(99,102,241,0.3), transparent);
-          clip-path: polygon(
-            0% 70%,10% 60%,20% 65%,30% 50%,40% 60%,
-            50% 40%,60% 55%,70% 35%,80% 50%,90% 30%,100% 45%,
-            100% 100%,0% 100%
-          );
-        "></div>
-      </div>
+        width:8px;
+        height:8px;
+        border-radius:50%;
+        background:#22c55e;
+        box-shadow:0 0 10px rgba(34,197,94,0.8);
+        animation:pulse 1.6s infinite;
+      "></div>
 
-      <!-- STATS -->
-      <div style="display:flex; justify-content:space-between; font-size:12px;">
-        <div>
-          <div style="color:#6b7280;">Donations</div>
-          <div style="color:#22c55e;">$8,420</div>
-        </div>
+      <span style="font-size:12px; font-weight:600; color:#22c55e;">
+        LIVE
+      </span>
+    </div>
 
-        <div>
-          <div style="color:#6b7280;">Bids</div>
-          <div style="color:#f59e0b;">42 active</div>
-        </div>
-
-        <div>
-          <div style="color:#6b7280;">Check-ins</div>
-          <div style="color:#6366f1;">+18</div>
-        </div>
-      </div>
-
+    <div style="font-size:11px; color:#9ca3af;">
+      12 actions / min
     </div>
 
   </div>
 
+  <!-- MAIN CONTENT -->
+  <div style="
+    background:#0f172a;
+    border-radius:12px;
+    padding:12px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  ">
+
+    <!-- PEOPLE -->
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div style="width:26px; height:26px; border-radius:50%; background:#6366f1;"></div>
+      <div style="width:26px; height:26px; border-radius:50%; background:#22c55e;"></div>
+      <div style="width:26px; height:26px; border-radius:50%; background:#f59e0b;"></div>
+      <div style="font-size:11px; color:#9ca3af;">128 active guests</div>
+    </div>
+
+    <!-- GRAPH -->
+    <div style="
+      height:90px;
+      position:relative;
+      border-radius:8px;
+      overflow:hidden;
+    ">
+      <div style="
+        height:100%;
+        background:linear-gradient(to top, rgba(99,102,241,0.3), transparent);
+        clip-path: polygon(
+          0% 70%,10% 60%,20% 65%,30% 50%,40% 60%,
+          50% 40%,60% 55%,70% 35%,80% 50%,90% 30%,100% 45%,
+          100% 100%,0% 100%
+        );
+      "></div>
+    </div>
+
+    <!-- STATS -->
+    <div style="display:flex; justify-content:space-between; font-size:12px;">
+      <div>
+        <div style="color:#6b7280;">Donations</div>
+        <div style="color:#22c55e;">$8,420</div>
+      </div>
+
+      <div>
+        <div style="color:#6b7280;">Bids</div>
+        <div style="color:#f59e0b;">42 active</div>
+      </div>
+
+      <div>
+        <div style="color:#6b7280;">Check-ins</div>
+        <div style="color:#6366f1;">+18</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
   <!-- RIGHT PANEL -->
   <div style="
     width:180px;
@@ -325,21 +366,15 @@ body {
         height:60%;
         background:linear-gradient(to top, rgba(99,102,241,0.4), transparent);
       "></div>
+      
     </div>
 
   </div>
 
 </div>
-@keyframes pulse {
-  0% { opacity:0.3; transform:scale(0.9); }
-  50% { opacity:1; transform:scale(1.2); }
-  100% { opacity:0.3; transform:scale(0.9); }
-}
 
-@keyframes rise {
-  from { height:40%; }
-  to { height:70%; }
-}
+    
+
 </style>
 
 </div>
