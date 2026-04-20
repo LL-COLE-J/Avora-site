@@ -1,202 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avora | Event & Fundraising Platform</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avora | Run the Event</title>
 
-  <style>
-    body { margin:0; font-family: Arial, sans-serif; background:#0f172a; color:#e5e7eb; }
-    .container { max-width:1100px; margin:auto; padding:40px 20px; }
-    h1 { font-size:48px; margin-bottom:10px; line-height:1.2; }
-    h2 { font-size:28px; margin-bottom:10px; }
-    p { color:#9ca3af; line-height:1.6; }
-    .btn { display:inline-block; padding:12px 24px; background:#6366f1; color:white; text-decoration:none; border-radius:8px; margin-top:15px; }
-    input { padding:12px; border-radius:6px; border:none; }
-  </style>
+<style>
+body {
+  margin:0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: radial-gradient(circle at 70% 30%, #0b1b3a, #050a18 60%);
+  color:#e5e7eb;
+}
+
+/* CONTAINER */
+.container {
+  max-width:1200px;
+  margin:auto;
+  padding:40px 20px;
+}
+
+/* NAV */
+.nav {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #1f2937;
+  padding-bottom:20px;
+}
+
+.logo {
+  font-weight:700;
+  font-size:22px;
+  letter-spacing:1px;
+}
+
+.nav-links {
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+.nav-links a {
+  color:#9ca3af;
+  text-decoration:none;
+}
+
+.nav-links a:hover {
+  color:white;
+}
+
+.btn {
+  padding:10px 18px;
+  border-radius:8px;
+  text-decoration:none;
+  font-size:14px;
+}
+
+.btn-primary {
+  background:#6366f1;
+  color:white;
+}
+
+.btn-secondary {
+  background:#374151;
+  color:white;
+}
+
+/* HERO */
+.hero {
+  display:flex;
+  align-items:center;
+  gap:60px;
+  padding:80px 0;
+  flex-wrap:wrap;
+}
+
+/* LEFT */
+.hero-left {
+  flex:1;
+  min-width:300px;
+}
+
+.hero-left h1 {
+  font-size:56px;
+  line-height:1.1;
+  letter-spacing:-1px;
+  margin-bottom:20px;
+}
+
+.hero-left span {
+  color:#6366f1;
+}
+
+.hero-left p {
+  color:#9ca3af;
+  line-height:1.6;
+  max-width:520px;
+}
+
+/* RIGHT */
+.hero-right {
+  flex:1;
+  min-width:300px;
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* DASHBOARD BACK (EVENTOS FEEL) */
+.dashboard-bg {
+  position:absolute;
+  width:520px;
+  height:320px;
+  background:linear-gradient(145deg, #0f172a, #020617);
+  border-radius:20px;
+  transform:rotate(-6deg);
+  opacity:0.6;
+  box-shadow:0 40px 80px rgba(0,0,0,0.6);
+}
+
+/* GLOW */
+.glow {
+  width:420px;
+  height:420px;
+  background:radial-gradient(circle, rgba(99,102,241,0.25), transparent 70%);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* LOGO ICON */
+.logo-icon {
+  width:180px;
+  opacity:0.95;
+}
+
+/* BUTTON ROW */
+.cta {
+  margin-top:25px;
+  display:flex;
+  gap:12px;
+}
+</style>
 </head>
 
 <body>
 
 <!-- NAV -->
-<div class="container" style="display:flex; align-items:center; justify-content:space-between; padding-bottom:20px; border-bottom:1px solid #1f2937;">
-  
-  <a href="/" style="text-decoration:none;">
-    <span style="font-weight:700; font-size:22px; color:white; letter-spacing:1px;">AVORA</span>
-  </a>
+<div class="container nav">
+  <div class="logo">AVORA</div>
 
-  <div style="display:flex; align-items:center; gap:20px;">
-    <a href="#" style="color:#9ca3af; text-decoration:none;">Features</a>
-    <a href="#" style="color:#9ca3af; text-decoration:none;">How It Works</a>
-    <a href="#contact" style="padding:8px 16px; background:#6366f1; color:white; border-radius:6px; text-decoration:none;">Request Access</a>
+  <div class="nav-links">
+    <a href="#">Features</a>
+    <a href="#">How It Works</a>
+    <a href="#" class="btn btn-primary">Request Access</a>
   </div>
-
 </div>
 
 <!-- HERO -->
-<div style="
-  background:radial-gradient(circle at 75% 25%, rgba(99,102,241,0.18), transparent 40%), #050a18;
-  padding:90px 20px 70px;
-">
+<div class="container hero">
 
-  <div class="container" style="display:flex; align-items:center; gap:60px; flex-wrap:wrap; overflow:visible;">
+  <!-- LEFT -->
+  <div class="hero-left">
+    <h1>
+      Run Your Entire Event<br>
+      <span>Without the Chaos</span>
+    </h1>
 
-    <!-- LEFT -->
-    <div style="flex:1; min-width:320px;">
+    <p>
+      Avora gives you real-time control of check-in, auctions, donations, and engagement—so your team can execute flawlessly.
+    </p>
 
-      <div style="color:#6366f1; font-size:13px; letter-spacing:1px; margin-bottom:12px;">
-        THE OPERATING SYSTEM FOR LIVE EVENTS
-      </div>
-
-      <h1 style="font-size:58px; line-height:1.05;">
-        Run the Event.<br>
-        <span style="color:#6366f1;">Control Everything.</span>
-      </h1>
-
-      <p style="max-width:520px; margin-top:18px;">
-        Avora gives you real-time control of check-in, auctions, donations, and engagement—so your team can execute flawlessly.
-      </p>
-
-      <div style="margin-top:28px;">
-        <a href="#" class="btn">Book a Demo</a>
-        <a href="#" class="btn" style="margin-left:10px; background:#1f2937;">See How It Works</a>
-      </div>
-
+    <div class="cta">
+      <a href="#" class="btn btn-primary">Book a Demo</a>
+      <a href="#" class="btn btn-secondary">See How It Works</a>
     </div>
+  </div>
 
-    <!-- RIGHT (YOUR DASHBOARD) -->
-    <div style="flex:1; display:flex; justify-content:flex-end;">
+  <!-- RIGHT -->
+  <div class="hero-right">
 
-      <div style="
-        width:640px;
-        background:linear-gradient(145deg, #0b1220, #020617);
-        border-radius:22px;
-        padding:22px;
-        box-shadow:0 80px 140px rgba(0,0,0,0.85);
-        transform:perspective(1400px) rotateY(-10deg) rotateX(3deg);
-        border:1px solid rgba(255,255,255,0.06);
-      ">
+    <!-- background dashboard -->
+    <div class="dashboard-bg"></div>
 
-        <!-- TOP NAV -->
-        <div style="display:flex; gap:18px; margin-bottom:16px; font-size:13px;">
-          <div style="color:white;">Overview</div>
-          <div style="color:#9ca3af;">Check-In</div>
-          <div style="color:#9ca3af;">Auction</div>
-          <div style="color:#9ca3af;">Donations</div>
-          <div style="color:#9ca3af;">Reports</div>
-        </div>
-
-        <!-- KPI ROW -->
-        <div style="display:flex; gap:12px; margin-bottom:16px;">
-          <div style="flex:1; background:#0f172a; padding:14px; border-radius:12px;">
-            <div style="font-size:12px; color:#6b7280;">Attendees</div>
-            <div style="font-size:20px;">1,248</div>
-          </div>
-          <div style="flex:1; background:#0f172a; padding:14px; border-radius:12px;">
-            <div style="font-size:12px; color:#6b7280;">Checked In</div>
-            <div style="font-size:20px;">1,103</div>
-          </div>
-          <div style="flex:1; background:#0f172a; padding:14px; border-radius:12px;">
-            <div style="font-size:12px; color:#6b7280;">Total Raised</div>
-            <div style="font-size:20px;">$342,780</div>
-          </div>
-          <div style="flex:1; background:#0f172a; padding:14px; border-radius:12px;">
-            <div style="font-size:12px; color:#6b7280;">Items Sold</div>
-            <div style="font-size:20px;">156</div>
-          </div>
-        </div>
-
-        <!-- MAIN GRID -->
-        <div style="display:flex; gap:14px;">
-
-          <div style="flex:2; background:#0f172a; border-radius:12px; padding:14px;">
-            <div style="font-size:12px; color:#6b7280; margin-bottom:8px;">Live Activity</div>
-            <div style="height:100px;"></div>
-          </div>
-
-          <div style="flex:1; display:flex; flex-direction:column; gap:12px;">
-            <div style="background:#0f172a; padding:12px; border-radius:12px;">
-              <div style="font-size:12px; color:#6b7280;">Auctions</div>
-              <div style="font-size:18px;">72%</div>
-            </div>
-            <div style="background:#0f172a; padding:12px; border-radius:12px;">
-              <div style="font-size:12px; color:#6b7280;">Donations</div>
-              <div style="font-size:18px;">18%</div>
-            </div>
-            <div style="background:#0f172a; padding:12px; border-radius:12px;">
-              <div style="font-size:12px; color:#6b7280;">Tickets</div>
-              <div style="font-size:18px;">10%</div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
+    <!-- glow + logo -->
+    <div class="glow">
+      <img src="logo-icon.png" class="logo-icon">
     </div>
 
   </div>
+
 </div>
-
-<!-- DIVIDER -->
-<div style="
-  height:1px;
-  background:linear-gradient(to right, transparent, #1f2937, transparent);
-"></div>
-
-<!-- CTA -->
-<div id="contact" style="
-  padding:80px 20px;
-  text-align:center;
-  background:#050a18;
-">
-
-  <div class="container" style="max-width:600px;">
-
-    <h2 style="font-size:34px;">Get Early Access</h2>
-
-    <p style="margin-bottom:30px;">
-      We’re onboarding our first events now.
-    </p>
-
-    <form onsubmit="submitForm(event)" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-      
-      <input 
-        id="email"
-        type="email" 
-        placeholder="Enter your email"
-        required
-        style="width:260px;"
-      >
-
-      <button class="btn">
-        Request Access
-      </button>
-
-    </form>
-
-    <p style="margin-top:10px; font-size:12px; color:#6b7280;">
-      Limited early onboarding
-    </p>
-
-  </div>
-</div>
-
-<script>
-function submitForm(e) {
-  e.preventDefault();
-
-  const email = document.getElementById("email").value;
-
-  fetch("YOUR_GOOGLE_SCRIPT_URL_HERE", {
-    method: "POST",
-    body: JSON.stringify({ email }),
-  })
-  .then(() => {
-    alert("You're in. We'll reach out soon.");
-  });
-}
-</script>
 
 </body>
 </html>
