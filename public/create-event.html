@@ -65,27 +65,38 @@ button {
 </div>
 
 <script>
-// Set today's date AFTER page loads
-document.getElementById('eventDate').valueAsDate = new Date();
+document.addEventListener("DOMContentLoaded", function () {
 
-function createEvent() {
+  // Set today's date safely
+  const dateInput = document.getElementById('eventDate');
+  if (dateInput) {
+    dateInput.valueAsDate = new Date();
+  }
+
+  // Attach button click
   const btn = document.getElementById('createBtn');
-  btn.innerText = "Creating...";
-  btn.disabled = true;
 
-  const event = {
-    name: document.getElementById('eventName').value,
-    date: document.getElementById('eventDate').value,
-    guests: document.getElementById('guestCount').value,
-    checkedIn: 0
-  };
+  btn.addEventListener("click", function () {
 
-  localStorage.setItem("avora_event", JSON.stringify(event));
+    btn.innerText = "Creating...";
+    btn.disabled = true;
 
-  setTimeout(() => {
-    window.location.href = "/dashboard.html";
-  }, 500);
-}
+    const event = {
+      name: document.getElementById('eventName').value,
+      date: document.getElementById('eventDate').value,
+      guests: document.getElementById('guestCount').value,
+      checkedIn: 0
+    };
+
+    localStorage.setItem("avora_event", JSON.stringify(event));
+
+    setTimeout(() => {
+      window.location.href = "/dashboard.html";
+    }, 500);
+
+  });
+
+});
 </script>
 
 </body>
