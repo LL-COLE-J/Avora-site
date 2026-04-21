@@ -57,6 +57,9 @@ button {
   <button onclick="signup()">Sign Up</button>
 </div>
 
+</div>
+
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { 
   getAuth, 
@@ -106,7 +109,7 @@ window.signup = async function () {
   } catch (err) {
     alert(err.message);
   }
-};</script>
-
+};
+</script>
 </body>
 </html>
