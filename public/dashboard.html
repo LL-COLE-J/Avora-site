@@ -218,11 +218,25 @@ onSnapshot(ref, (snap) => {
     `;
   }
 });
+
+// GUESTS MODULE
+row.innerHTML += `
+  <div class="card col clickable" onclick="goToGuests()">
+    <div>Guests</div>
+    <div class="stat">Manage</div>
+    <div style="color:var(--text-muted); margin-top:8px;">Add / Edit List</div>
+  </div>
+`;
+  
   // ACTIONS
 window.addRevenue = async function () {
   await updateDoc(ref, {
     revenue: increment(100)
   });
+};
+
+  window.goToGuests = function () {
+  window.location.href = "guests.html?eventId=" + eventId;
 };
 
 window.checkInGuest = async function () {
