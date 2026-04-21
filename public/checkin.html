@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check-In - Avora</title>
+
+<style>
+:root {
+  --bg-main:#050a18;
+  --bg-card:#0f172a;
+  --accent:#6366f1;
+  --accent-glow:rgba(99,102,241,0.4);
+  --text-main:#e5e7eb;
+  --text-muted:#9ca3af;
+  --border-soft:rgba(255,255,255,0.08);
+}
+
+body {
+  margin:0;
+  font-family:-apple-system, BlinkMacSystemFont, sans-serif;
+  background:var(--bg-main);
+  color:var(--text-main);
+}
+
+/* NAV */
+.nav {
+  display:flex;
+  justify-content:space-between;
+  padding:20px;
+  border-bottom:1px solid var(--border-soft);
+}
+
+.logo { cursor:pointer; font-weight:700; }
+
+/* LAYOUT */
+.container {
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+}
+
+/* SEARCH */
+.search {
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid var(--border-soft);
+  background:#020617;
+  color:white;
+  font-size:16px;
+  margin-bottom:20px;
+}
+
+/* RESULTS */
+.result {
+  background:var(--bg-card);
+  padding:16px;
+  border-radius:12px;
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  cursor:pointer;
+  transition:0.15s;
+}
+
+.result:hover {
+  box-shadow:0 0 12px var(--accent-glow);
+}
+
+/* MODAL */
+.modal {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:var(--bg-card);
+  border-top-left-radius:16px;
+  border-top-right-radius:16px;
+  padding:20px;
+  box-shadow:0 -10px 40px rgba(0,0,0,0.6);
+  display:none;
+}
+
+.modal.active { display:block; }
+
+.button {
+  width:100%;
+  padding:14px;
+  margin-top:15px;
+  border:none;
+  border-radius:12px;
+  background:var(--accent);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+  <div class="logo" onclick="goHome()">AVORA</div>
+</div>
+
+<div class="container">
+
+  <h2>Check-In</h2>
+
+  <input id="search" class="search" placeholder="Search guest name...">
+
+  <div id="results"></div>
+
+</div>
+
+<!-- GUEST MODAL -->
+<div id="guestModal" class="modal">
+  <h3 id="guestName"></h3>
+  <p id="guestStatus" style="color:var(--text-muted)"></p>
+
+  <button id="checkInBtn" class="button">Check In</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
+  authDomain: "avora-fc8b4.firebaseapp.com",
+  projectId: "avora-fc8b4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const params = new URLSearchParams(window.location.search);
+const eventId = params.get("eventId");
+
+const ref = doc(db, "events", eventId);
+
+/* ---------------------------
+   TEMP GUEST DATA (DEMO)
+--------------------------- */
+let guests = Array.from({ length: 150 }, (_, i) => ({
+  id: i,
+  name: "Guest " + (i + 1),
+  checkedIn: false
+}));
+
+/* ---------------------------
+   UI ELEMENTS
+--------------------------- */
+const results = document.getElementById("results");
+const searchInput = document.getElementById("search");
+
+const modal = document.getElementById("guestModal");
+const guestName = document.getElementById("guestName");
+const guestStatus = document.getElementById("guestStatus");
+const checkInBtn = document.getElementById("checkInBtn");
+
+let activeGuest = null;
+
+/* ---------------------------
+   SEARCH + RENDER
+--------------------------- */
+function renderResults(filter="") {
+  results.innerHTML = "";
+
+  guests
+    .filter(g => g.name.toLowerCase().includes(filter.toLowerCase()))
+    .slice(0, 20) // limit results (important)
+    .forEach(guest => {
+
+      const div = document.createElement("div");
+      div.className = "result";
+
+      div.innerHTML = `
+        <span>${guest.name}</span>
+        <span>${guest.checkedIn ? "✔" : ""}</span>
+      `;
+
+      div.onclick = () => openGuest(guest);
+
+      results.appendChild(div);
+    });
+}
+
+searchInput.addEventListener("input", () => {
+  renderResults(searchInput.value);
+});
+
+/* ---------------------------
+   GUEST MODAL
+--------------------------- */
+function openGuest(guest) {
+  activeGuest = guest;
+
+  guestName.innerText = guest.name;
+  guestStatus.innerText = guest.checkedIn ? "Checked In" : "Not Checked In";
+
+  checkInBtn.disabled = guest.checkedIn;
+  checkInBtn.innerText = guest.checkedIn ? "Already Checked In" : "Check In";
+
+  modal.classList.add("active");
+}
+
+/* ---------------------------
+   CHECK-IN ACTION
+--------------------------- */
+checkInBtn.onclick = async () => {
+  if (!activeGuest || activeGuest.checkedIn) return;
+
+  activeGuest.checkedIn = true;
+
+  await updateDoc(ref, {
+    checkedIn: increment(1)
+  });
+
+  modal.classList.remove("active");
+  renderResults(searchInput.value);
+};
+
+/* ---------------------------
+   NAV
+--------------------------- */
+window.goHome = function () {
+  window.location.href = "index.html";
+};
+
+/* INIT */
+renderResults();
+</script>
+
+</body>
+</html>
