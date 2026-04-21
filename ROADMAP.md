@@ -15,10 +15,10 @@
 ## PHASE 2 — PLANNER OS (CURRENT)
 
 ### Step 1 — Auth
-- [ ] Fix login persistence
-- [ ] Protect all pages (redirect if not logged in)
-- [ ] Add logout
-- [ ] Redirect login → events.html
+- [ X] Fix login persistence
+- [ X] Protect all pages (redirect if not logged in)
+- [X ] Add logout
+- [ X] Redirect login → events.html
 
 ---
 
