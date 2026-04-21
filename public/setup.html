@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setup Event - Avora</title>
+
+<style>
+:root {
+  --bg-main: #050a18;
+  --bg-card: #0f172a;
+  --accent: #6366f1;
+  --accent-glow: rgba(99,102,241,0.4);
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --border-soft: rgba(255,255,255,0.08);
+}
+
+body {
+  margin:0;
+  font-family:-apple-system, BlinkMacSystemFont, sans-serif;
+  background:var(--bg-main);
+  color:var(--text-main);
+}
+
+.container {
+  max-width:600px;
+  margin:80px auto;
+  padding:20px;
+}
+
+.card {
+  background:var(--bg-card);
+  padding:24px;
+  border-radius:14px;
+  border:1px solid var(--border-soft);
+}
+
+.module {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px;
+  border-radius:10px;
+  margin-top:10px;
+  background:rgba(255,255,255,0.02);
+}
+
+button {
+  margin-top:20px;
+  width:100%;
+  padding:12px;
+  background:var(--accent);
+  border:none;
+  border-radius:10px;
+  color:white;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="card">
+
+    <h2>Choose Modules</h2>
+    <p style="color:var(--text-muted)">Select what you want for this event</p>
+
+    <div class="module">
+      <span>Check-In</span>
+      <input type="checkbox" id="checkIn" checked>
+    </div>
+
+    <div class="module">
+      <span>Silent Auction</span>
+      <input type="checkbox" id="auction">
+    </div>
+
+    <div class="module">
+      <span>Donations</span>
+      <input type="checkbox" id="donations">
+    </div>
+
+    <button id="continueBtn">Continue →</button>
+
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Get eventId from URL
+const params = new URLSearchParams(window.location.search);
+const eventId = params.get("eventId");
+
+const btn = document.getElementById("continueBtn");
+
+btn.addEventListener("click", async () => {
+
+  const modules = {
+    checkIn: document.getElementById("checkIn").checked,
+    auction: document.getElementById("auction").checked,
+    donations: document.getElementById("donations").checked
+  };
+
+  await updateDoc(doc(db, "events", eventId), {
+    modules: modules
+  });
+
+  // go to dashboard
+  window.location.href = `/dashboard.html?eventId=${eventId}`;
+});
+</script>
+
+</body>
+</html>
