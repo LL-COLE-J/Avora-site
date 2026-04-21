@@ -152,9 +152,17 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  const auth = getAuth(app);
-import { getFirestore, doc, onSnapshot } from "...";
-import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { 
+  getFirestore, 
+  doc, 
+  onSnapshot 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+import { 
+  getAuth, 
+  onAuthStateChanged, 
+  signOut 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
@@ -165,107 +173,105 @@ const firebaseConfig = {
   appId: "1:520572013150:web:a7efe5fce0a4e26df342cf"
 };
 
+// INIT FIRST
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-// Get eventId
-const params = new URLSearchParams(window.location.search);
-const eventId = params.get("eventId");
-
-if (!eventId) {
-  document.body.innerHTML = "<h2 style='padding:20px;'>No event ID</h2>";
-  throw new Error("No eventId");
-}
-const ref = doc(db, "events", eventId);
-
-// REAL-TIME LISTENER
-onSnapshot(ref, (snap) => {
-  const data = snap.data();
-  if (!data) return;
-
-  const modules = data.modules || {
-    checkIn: true,
-    donations: true,
-    auction: false
-  };
-
-  const row = document.getElementById("modulesRow");
-  row.innerHTML = "";
-
-  // Event info
-  document.getElementById("eventName").innerText = data.name;
-  document.getElementById("eventDate").innerText = data.date || "";
-
-  // CHECK-IN MODULE
-  if (modules.checkIn) {
-    row.innerHTML += `
-      <div class="card col clickable" onclick="goToCheckIn()">
-        <div>Guests Checked In</div>
-        <div class="stat">${data.checkedIn || 0}</div>
-        <div style="color:var(--text-muted); margin-top:8px;">Tap to open</div>
-      </div>
-    `;
+// AUTH PROTECTION
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "./login.html";
+    return;
   }
 
-  // DONATIONS MODULE
-  if (modules.donations) {
-    row.innerHTML += `
-      <div class="card col">
-        <div>Revenue</div>
-        <div class="stat">$${data.revenue || 0}</div>
-      </div>
-    `;
-  }
-
-  // AUCTION MODULE
-  if (modules.auction) {
-    row.innerHTML += `
-      <div class="card col">
-        <div>Silent Auction</div>
-        <div class="stat">Coming Soon</div>
-        <button disabled>Setup Auction</button>
-      </div>
-    `;
-  }
-
-  // GUESTS MODULE
-  row.innerHTML += `
-    <div class="card col clickable" onclick="goToGuests()">
-      <div>Guests</div>
-      <div class="stat">Manage</div>
-      <div style="color:var(--text-muted); margin-top:8px;">Add / Edit List</div>
-    </div>
-  `;
+  initDashboard(); // only run app AFTER auth
 });
 
+// MAIN APP
+function initDashboard() {
 
-  
-  // ACTIONS
-window.addRevenue = async function () {
-  await updateDoc(ref, {
-    revenue: increment(100)
+  const params = new URLSearchParams(window.location.search);
+  const eventId = params.get("eventId");
+
+  if (!eventId) {
+    document.body.innerHTML = "<h2 style='padding:20px;'>No event ID</h2>";
+    throw new Error("No eventId");
+  }
+
+  const ref = doc(db, "events", eventId);
+
+  onSnapshot(ref, (snap) => {
+    const data = snap.data();
+    if (!data) return;
+
+    const modules = data.modules || {
+      checkIn: true,
+      donations: true,
+      auction: false
+    };
+
+    const row = document.getElementById("modulesRow");
+    row.innerHTML = "";
+
+    document.getElementById("eventName").innerText = data.name;
+    document.getElementById("eventDate").innerText = data.date || "";
+
+    if (modules.checkIn) {
+      row.innerHTML += `
+        <div class="card col clickable" onclick="goToCheckIn()">
+          <div>Guests Checked In</div>
+          <div class="stat">${data.checkedIn || 0}</div>
+          <div style="color:var(--text-muted); margin-top:8px;">Tap to open</div>
+        </div>
+      `;
+    }
+
+    if (modules.donations) {
+      row.innerHTML += `
+        <div class="card col">
+          <div>Revenue</div>
+          <div class="stat">$${data.revenue || 0}</div>
+        </div>
+      `;
+    }
+
+    if (modules.auction) {
+      row.innerHTML += `
+        <div class="card col">
+          <div>Silent Auction</div>
+          <div class="stat">Coming Soon</div>
+          <button disabled>Setup Auction</button>
+        </div>
+      `;
+    }
+
+    row.innerHTML += `
+      <div class="card col clickable" onclick="goToGuests()">
+        <div>Guests</div>
+        <div class="stat">Manage</div>
+        <div style="color:var(--text-muted); margin-top:8px;">Add / Edit List</div>
+      </div>
+    `;
   });
-};
+}
 
-  window.goToGuests = function () {
+// NAV
+window.goToGuests = function () {
+  const eventId = new URLSearchParams(window.location.search).get("eventId");
   window.location.href = "./guests.html?eventId=" + eventId;
 };
 
-window.checkInGuest = async function () {
-  await updateDoc(ref, {
-    checkedIn: increment(1)
-  });
-};
-
-  window.goToCheckIn = function () {
+window.goToCheckIn = function () {
+  const eventId = new URLSearchParams(window.location.search).get("eventId");
   window.location.href = "./checkin.html?eventId=" + eventId;
 };
 
+// LOGOUT
 window.logout = async function () {
   await signOut(auth);
   window.location.href = "./login.html";
 };
-
 </script>
 
   <script>
