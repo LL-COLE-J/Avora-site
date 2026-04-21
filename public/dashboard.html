@@ -108,6 +108,16 @@ button:hover {
   color:var(--text-muted);
   text-decoration:none;
 }
+
+ .card.clickable {
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.card.clickable:hover {
+  transform:translateY(-2px);
+  box-shadow:0 0 15px var(--accent-glow);
+} 
   
 </style>
 </head>
@@ -161,6 +171,14 @@ onSnapshot(ref, (snap) => {
   const data = snap.data();
   if (!data) return;
 
+  if (!data.modules) {
+    data.modules = {
+      checkIn: true,
+      donations: true,
+      auction: false
+    };
+  }
+
   const row = document.getElementById("modulesRow");
   row.innerHTML = "";
 
@@ -169,30 +187,28 @@ onSnapshot(ref, (snap) => {
   document.getElementById("eventDate").innerText = data.date || "";
 
   // CHECK-IN MODULE
-  if (data.modules?.checkIn) {
+  if (data.modules.checkIn) {
     row.innerHTML += `
-      <div class="card col">
+      <div class="card col clickable" onclick="goToCheckIn()">
         <div>Guests Checked In</div>
         <div class="stat">${data.checkedIn || 0}</div>
+        <div style="color:var(--text-muted); margin-top:8px;">Tap to open</div>
       </div>
     `;
   }
 
-  
-
   // DONATIONS MODULE
-  if (data.modules?.donations) {
+  if (data.modules.donations) {
     row.innerHTML += `
       <div class="card col">
         <div>Revenue</div>
         <div class="stat">$${data.revenue || 0}</div>
-
       </div>
     `;
   }
 
   // AUCTION MODULE
-  if (data.modules?.auction) {
+  if (data.modules.auction) {
     row.innerHTML += `
       <div class="card col">
         <div>Silent Auction</div>
@@ -202,7 +218,6 @@ onSnapshot(ref, (snap) => {
     `;
   }
 });
-
   // ACTIONS
 window.addRevenue = async function () {
   await updateDoc(ref, {
@@ -214,6 +229,10 @@ window.checkInGuest = async function () {
   await updateDoc(ref, {
     checkedIn: increment(1)
   });
+};
+
+  window.goToCheckIn = function () {
+  window.location.href = "checkin.html?eventId=" + eventId;
 };
 
 
