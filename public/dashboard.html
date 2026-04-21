@@ -160,49 +160,50 @@ const ref = doc(db, "events", eventId);
 onSnapshot(ref, (snap) => {
   const data = snap.data();
   if (!data) return;
-  const row = document.getElementById("modulesRow");
-row.innerHTML = "";
 
+  const row = document.getElementById("modulesRow");
+  row.innerHTML = "";
+
+  // Event info
   document.getElementById("eventName").innerText = data.name;
   document.getElementById("eventDate").innerText = data.date || "";
-  document.getElementById("checkedIn").innerText = data.checkedIn || 0;
-  document.getElementById("revenue").innerText = "$" + (data.revenue || 0);
-});
 
   // CHECK-IN MODULE
-if (data.modules?.checkIn) {
-  row.innerHTML += `
-    <div class="card col">
-      <div>Guests Checked In</div>
-      <div class="stat">${data.checkedIn || 0}</div>
-      <button onclick="checkInGuest()">+ Check In Guest</button>
-    </div>
-  `;
-}
+  if (data.modules?.checkIn) {
+    row.innerHTML += `
+      <div class="card col">
+        <div>Guests Checked In</div>
+        <div class="stat">${data.checkedIn || 0}</div>
+      </div>
+    `;
+  }
 
-// DONATIONS MODULE
-if (data.modules?.donations) {
-  row.innerHTML += `
-    <div class="card col">
-      <div>Revenue</div>
-      <div class="stat">$${data.revenue || 0}</div>
-      <button onclick="addRevenue()">+ Add $100</button>
-    </div>
-  `;
-}
+  
 
-// AUCTION MODULE (placeholder)
-if (data.modules?.auction) {
-  row.innerHTML += `
-    <div class="card col">
-      <div>Silent Auction</div>
-      <div class="stat">Coming Soon</div>
-      <button disabled>Setup Auction</button>
-    </div>
-  `;
-}
+  // DONATIONS MODULE
+  if (data.modules?.donations) {
+    row.innerHTML += `
+      <div class="card col">
+        <div>Revenue</div>
+        <div class="stat">$${data.revenue || 0}</div>
 
-// ACTIONS
+      </div>
+    `;
+  }
+
+  // AUCTION MODULE
+  if (data.modules?.auction) {
+    row.innerHTML += `
+      <div class="card col">
+        <div>Silent Auction</div>
+        <div class="stat">Coming Soon</div>
+        <button disabled>Setup Auction</button>
+      </div>
+    `;
+  }
+});
+
+  // ACTIONS
 window.addRevenue = async function () {
   await updateDoc(ref, {
     revenue: increment(100)
@@ -214,6 +215,8 @@ window.checkInGuest = async function () {
     checkedIn: increment(1)
   });
 };
+
+
 
 </script>
 
