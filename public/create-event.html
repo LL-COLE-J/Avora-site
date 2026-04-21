@@ -50,6 +50,32 @@ button {
   color:white;
   cursor:pointer;
 }
+
+.page {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:calc(100vh - 80px);
+}
+
+  .nav {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px;
+  border-bottom:1px solid var(--border-soft);
+}
+
+.logo {
+  font-weight:700;
+  cursor:pointer;
+}
+
+.nav-links a {
+  color:var(--text-muted);
+  text-decoration:none;
+}
+  
 </style>
 </head>
 
@@ -107,6 +133,12 @@ btn.addEventListener("click", async () => {
   // ✅ GO TO SETUP
   window.location.href = `/setup.html?eventId=${docRef.id}`;
 });
+</script>
+
+  <script>
+function goHome() {
+  window.location.href = "index.html";
+}
 </script>
 
 </body>
