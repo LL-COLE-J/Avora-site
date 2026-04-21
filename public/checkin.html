@@ -124,7 +124,14 @@ body {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { 
+  getFirestore, 
+  doc, 
+  collection, 
+  onSnapshot, 
+  updateDoc, 
+  increment 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
@@ -139,15 +146,22 @@ const params = new URLSearchParams(window.location.search);
 const eventId = params.get("eventId");
 
 const ref = doc(db, "events", eventId);
+  const guestRef = collection(db, "events", eventId, "guests");
 
-/* ---------------------------
-   TEMP GUEST DATA (DEMO)
---------------------------- */
-let guests = Array.from({ length: 150 }, (_, i) => ({
-  id: i,
-  name: "Guest " + (i + 1),
-  checkedIn: false
-}));
+let guests = [];
+
+onSnapshot(guestRef, (snap) => {
+  guests = [];
+
+  snap.forEach(doc => {
+    guests.push({
+      id: doc.id,
+      ...doc.data()
+    });
+  });
+
+  renderResults(searchInput.value);
+});
 
 /* ---------------------------
    UI ELEMENTS
@@ -212,14 +226,17 @@ function openGuest(guest) {
 checkInBtn.onclick = async () => {
   if (!activeGuest || activeGuest.checkedIn) return;
 
-  activeGuest.checkedIn = true;
+  const guestDoc = doc(db, "events", eventId, "guests", activeGuest.id);
+
+  await updateDoc(guestDoc, {
+    checkedIn: true
+  });
 
   await updateDoc(ref, {
     checkedIn: increment(1)
   });
 
   modal.classList.remove("active");
-  renderResults(searchInput.value);
 };
 
 /* ---------------------------
