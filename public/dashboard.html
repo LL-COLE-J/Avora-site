@@ -28,6 +28,7 @@ body {
   max-width:900px;
   margin:auto;
   padding:40px 20px;
+  margin-top:20px;
 }
 
 /* Card */
@@ -89,13 +90,38 @@ button:hover {
   font-size:28px;
   margin-top:10px;
 }
+
+.nav {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px;
+  border-bottom:1px solid var(--border-soft);
+}
+
+.logo {
+  font-weight:700;
+  cursor:pointer;
+}
+
+.nav-links a {
+  color:var(--text-muted);
+  text-decoration:none;
+}
+  
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="nav">
+  <div class="logo" onclick="goHome()">AVORA</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+  </div>
+</div>
 
+<div class="container">
   <h1 id="eventName">Loading...</h1>
   <p id="eventDate"></p>
 
@@ -167,6 +193,12 @@ window.checkInGuest = async function () {
   });
 };
 
+</script>
+
+  <script>
+function goHome() {
+  window.location.href = "index.html";
+}
 </script>
 
 </body>
