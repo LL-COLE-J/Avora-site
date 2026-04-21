@@ -1,1 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guests - Avora</title>
 
+<style>
+:root {
+  --bg-main:#050a18;
+  --bg-card:#0f172a;
+  --accent:#6366f1;
+  --text-main:#e5e7eb;
+  --text-muted:#9ca3af;
+  --border-soft:rgba(255,255,255,0.08);
+}
+
+body {
+  margin:0;
+  font-family:-apple-system;
+  background:var(--bg-main);
+  color:var(--text-main);
+}
+
+.nav {
+  display:flex;
+  justify-content:space-between;
+  padding:20px;
+  border-bottom:1px solid var(--border-soft);
+}
+
+.container {
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+}
+
+.card {
+  background:var(--bg-card);
+  padding:14px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+input {
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:10px;
+  border:1px solid var(--border-soft);
+  background:#020617;
+  color:white;
+}
+
+button {
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+  <div onclick="goBack()">← Back</div>
+  <div>Guests</div>
+</div>
+
+<div class="container">
+
+  <h2>Guest List</h2>
+
+  <input id="guestName" placeholder="Guest name">
+  <button onclick="addGuest()">Add Guest</button>
+
+  <div id="guestList"></div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
+  authDomain: "avora-fc8b4.firebaseapp.com",
+  projectId: "avora-fc8b4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const params = new URLSearchParams(window.location.search);
+const eventId = params.get("eventId");
+
+const guestRef = collection(db, "events", eventId, "guests");
+
+const list = document.getElementById("guestList");
+
+window.addGuest = async function () {
+  const name = document.getElementById("guestName").value.trim();
+  if (!name) return;
+
+  await addDoc(guestRef, {
+    name,
+    checkedIn:false
+  });
+
+  document.getElementById("guestName").value = "";
+};
+
+// REAL-TIME LIST
+onSnapshot(guestRef, (snap) => {
+  list.innerHTML = "";
+
+  snap.forEach(doc => {
+    const g = doc.data();
+
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+      ${g.name}
+      <span style="float:right; color:var(--text-muted)">
+        ${g.checkedIn ? "✔" : ""}
+      </span>
+    `;
+
+    list.appendChild(div);
+  });
+});
+
+window.goBack = function () {
+  window.history.back();
+};
+</script>
+
+</body>
+</html>
