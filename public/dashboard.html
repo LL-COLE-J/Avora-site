@@ -217,9 +217,8 @@ onSnapshot(ref, (snap) => {
       </div>
     `;
   }
-});
 
-// GUESTS MODULE
+  // GUESTS MODULE
 row.innerHTML += `
   <div class="card col clickable" onclick="goToGuests()">
     <div>Guests</div>
@@ -227,6 +226,10 @@ row.innerHTML += `
     <div style="color:var(--text-muted); margin-top:8px;">Add / Edit List</div>
   </div>
 `;
+  
+});
+
+
   
   // ACTIONS
 window.addRevenue = async function () {
