@@ -127,20 +127,7 @@ button:hover {
 
   <div class="row" id="modulesRow"></div>
 
-    <div class="card col">
-      <div>Guests Checked In</div>
-      <div class="stat" id="checkedIn">0</div>
-      <button onclick="checkInGuest()">+ Check In Guest</button>
-    </div>
-
-    <div class="card col">
-      <div>Revenue</div>
-      <div class="stat" id="revenue">$0</div>
-      <button onclick="addRevenue()">+ Add $100</button>
-    </div>
-
-  </div>
-
+  
 </div>
 
 <script type="module">
@@ -173,12 +160,47 @@ const ref = doc(db, "events", eventId);
 onSnapshot(ref, (snap) => {
   const data = snap.data();
   if (!data) return;
+  const row = document.getElementById("modulesRow");
+row.innerHTML = "";
 
   document.getElementById("eventName").innerText = data.name;
   document.getElementById("eventDate").innerText = data.date || "";
   document.getElementById("checkedIn").innerText = data.checkedIn || 0;
   document.getElementById("revenue").innerText = "$" + (data.revenue || 0);
 });
+
+  // CHECK-IN MODULE
+if (data.modules?.checkIn) {
+  row.innerHTML += `
+    <div class="card col">
+      <div>Guests Checked In</div>
+      <div class="stat">${data.checkedIn || 0}</div>
+      <button onclick="checkInGuest()">+ Check In Guest</button>
+    </div>
+  `;
+}
+
+// DONATIONS MODULE
+if (data.modules?.donations) {
+  row.innerHTML += `
+    <div class="card col">
+      <div>Revenue</div>
+      <div class="stat">$${data.revenue || 0}</div>
+      <button onclick="addRevenue()">+ Add $100</button>
+    </div>
+  `;
+}
+
+// AUCTION MODULE (placeholder)
+if (data.modules?.auction) {
+  row.innerHTML += `
+    <div class="card col">
+      <div>Silent Auction</div>
+      <div class="stat">Coming Soon</div>
+      <button disabled>Setup Auction</button>
+    </div>
+  `;
+}
 
 // ACTIONS
 window.addRevenue = async function () {
