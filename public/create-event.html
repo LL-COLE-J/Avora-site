@@ -132,8 +132,8 @@ btn.addEventListener("click", async () => {
 
   const docRef = await addDoc(collection(db, "events"), eventData);
 
-  // ✅ GO TO SETUP
-  window.location.href = `/setup.html?eventId=${docRef.id}`;
+  
+  window.location.href = "setup.html?eventId=" + docRef.id;
 });
 </script>
 
