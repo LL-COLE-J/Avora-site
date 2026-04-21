@@ -23,7 +23,7 @@
 ---
 
 ### Step 2 — Event Ownership
-- [ ] Add `ownerId` to events
+- [X ] Add `ownerId` to events
 - [ ] Attach event to logged-in user
 - [ ] Restrict queries to ownerId
 - [ ] Prevent cross-user access
@@ -173,5 +173,14 @@
 
 👉 Phase 2 — Planner OS  
 👉 Step 1 — Auth
+V## CURRENT STATUS
 
+Phase 2 — Planner OS
+
+✅ Step 1 — Auth (working)
+✅ Step 2 — Event Ownership (ownerId working)
+⬜ Step 3 — Events Page (in progress)
+
+## NEXT STEP
+→ Finish events.html + redirect flow
 ---
