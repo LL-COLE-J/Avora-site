@@ -98,12 +98,13 @@ btn.addEventListener("click", async function () {
 
     try {
       const eventData = {
-        name: document.getElementById('eventName').value,
-        date: document.getElementById('eventDate').value,
-        guestCount: Number(document.getElementById('guestCount').value),
-        revenue: 0,
-        createdAt: new Date()
-      };
+  name: document.getElementById('eventName').value,
+  date: document.getElementById('eventDate').value,
+  guestCount: Number(document.getElementById('guestCount').value),
+  checkedIn: 0,        // 👈 ADD THIS LINE
+  revenue: 0,
+  createdAt: new Date()
+};
 
       const docRef = await addDoc(collection(db, "events"), eventData);
 
