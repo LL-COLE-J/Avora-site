@@ -127,7 +127,7 @@ button:hover {
 <div class="nav">
   <div class="logo" onclick="goHome()">AVORA</div>
   <div class="nav-links">
-    <a href="index.html">Home</a>
+    <a href="./index.html">Home</a>
   </div>
 </div>
 
@@ -162,8 +162,8 @@ const eventId = params.get("eventId");
 
 if (!eventId) {
   document.body.innerHTML = "<h2 style='padding:20px;'>No event ID</h2>";
+  throw new Error("No eventId");
 }
-
 const ref = doc(db, "events", eventId);
 
 // REAL-TIME LISTENER
@@ -171,13 +171,11 @@ onSnapshot(ref, (snap) => {
   const data = snap.data();
   if (!data) return;
 
-  if (!data.modules) {
-    data.modules = {
-      checkIn: true,
-      donations: true,
-      auction: false
-    };
-  }
+  const modules = data.modules || {
+    checkIn: true,
+    donations: true,
+    auction: false
+  };
 
   const row = document.getElementById("modulesRow");
   row.innerHTML = "";
@@ -187,7 +185,7 @@ onSnapshot(ref, (snap) => {
   document.getElementById("eventDate").innerText = data.date || "";
 
   // CHECK-IN MODULE
-  if (data.modules.checkIn) {
+  if (modules.checkIn) {
     row.innerHTML += `
       <div class="card col clickable" onclick="goToCheckIn()">
         <div>Guests Checked In</div>
@@ -198,7 +196,7 @@ onSnapshot(ref, (snap) => {
   }
 
   // DONATIONS MODULE
-  if (data.modules.donations) {
+  if (modules.donations) {
     row.innerHTML += `
       <div class="card col">
         <div>Revenue</div>
@@ -208,7 +206,7 @@ onSnapshot(ref, (snap) => {
   }
 
   // AUCTION MODULE
-  if (data.modules.auction) {
+  if (modules.auction) {
     row.innerHTML += `
       <div class="card col">
         <div>Silent Auction</div>
@@ -219,14 +217,13 @@ onSnapshot(ref, (snap) => {
   }
 
   // GUESTS MODULE
-row.innerHTML += `
-  <div class="card col clickable" onclick="goToGuests()">
-    <div>Guests</div>
-    <div class="stat">Manage</div>
-    <div style="color:var(--text-muted); margin-top:8px;">Add / Edit List</div>
-  </div>
-`;
-  
+  row.innerHTML += `
+    <div class="card col clickable" onclick="goToGuests()">
+      <div>Guests</div>
+      <div class="stat">Manage</div>
+      <div style="color:var(--text-muted); margin-top:8px;">Add / Edit List</div>
+    </div>
+  `;
 });
 
 
@@ -239,7 +236,7 @@ window.addRevenue = async function () {
 };
 
   window.goToGuests = function () {
-  window.location.href = "guests.html?eventId=" + eventId;
+  window.location.href = "./guests.html?eventId=" + eventId;
 };
 
 window.checkInGuest = async function () {
@@ -249,7 +246,7 @@ window.checkInGuest = async function () {
 };
 
   window.goToCheckIn = function () {
-  window.location.href = "checkin.html?eventId=" + eventId;
+  window.location.href = "./checkin.html?eventId=" + eventId;
 };
 
 
@@ -258,7 +255,7 @@ window.checkInGuest = async function () {
 
   <script>
 function goHome() {
-  window.location.href = "index.html";
+  window.location.href = "./index.html";
 }
 </script>
 
