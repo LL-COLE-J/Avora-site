@@ -83,7 +83,7 @@ button {
 <div class="nav">
   <div class="logo" onclick="goHome()">AVORA</div>
   <div class="nav-links">
-    <a href="index.html">Home</a>
+    <a href="./index.html">Home</a>
   </div>
 </div>
 
@@ -135,22 +135,30 @@ const btn = document.getElementById("continueBtn");
 
 btn.addEventListener("click", async () => {
 
-  console.log("Redirecting to dashboard with eventId:", eventId);
+  try {
 
-  const modules = {
-    checkIn: document.getElementById("checkIn").checked,
-    auction: document.getElementById("auction").checked,
-    donations: document.getElementById("donations").checked
-  };
+    if (!eventId) {
+      alert("Missing event ID");
+      return;
+    }
 
-  await updateDoc(doc(db, "events", eventId), {
-    modules: modules
-  });
+    const modules = {
+      checkIn: document.getElementById("checkIn").checked,
+      auction: document.getElementById("auction").checked,
+      donations: document.getElementById("donations").checked
+    };
 
-  window.location.href = "dashboard.html?eventId=" + eventId;
+    await updateDoc(doc(db, "events", eventId), {
+      modules: modules
+    });
 
-console.log("eventId from URL:", eventId);
-  
+    window.location.href = "./dashboard.html?eventId=" + eventId;
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to continue");
+  }
+
 });
 </script>
 
