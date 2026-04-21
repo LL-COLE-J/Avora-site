@@ -157,10 +157,10 @@ let guests = [];
 onSnapshot(guestRef, (snap) => {
   guests = [];
 
-  snap.forEach(doc => {
+  snap.forEach(d => {
     guests.push({
-      id: doc.id,
-      ...doc.data()
+      id: d.id,
+      ...d.data()
     });
   });
 
