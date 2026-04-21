@@ -7,11 +7,10 @@
 
 <style>
 
-  :root {
+:root {
   --bg-main: #050a18;
   --bg-card: #0f172a;
   --accent: #6366f1;
-  --accent-glow: rgba(99,102,241,0.4);
   --text-main: #e5e7eb;
   --text-muted: #9ca3af;
   --border-soft: rgba(255,255,255,0.08);
@@ -46,7 +45,6 @@ body {
   justify-content:space-between;
   align-items:center;
   border-bottom:1px solid var(--border-soft);
-color:var(--text-muted);
   padding-bottom:20px;
 }
 
@@ -63,21 +61,20 @@ color:var(--text-muted);
 }
 
 .nav-links a {
- .nav-links a {
   color:var(--text-muted);
+  text-decoration:none;
 }
 
+/* Buttons - Pad V1 (simple, no glow) */
 .btn {
   padding:10px 18px;
-  border-radius:10px;
+  border-radius:8px;
   text-decoration:none;
   font-size:14px;
-  transition:0.2s;
-  display:inline-block;
 }
 
 .btn-primary {
-  background:var(--accent);
+  background:#6366f1;
   color:white;
 }
 
@@ -85,14 +82,6 @@ color:var(--text-muted);
   background:#374151;
   color:white;
 }
-
-/* Hover (this is what you're missing) */
-.btn:hover {
-  box-shadow:0 0 12px var(--accent-glow);
-  transform:translateY(-1px);
-}
-
-
 
 .hero {
   display:flex;
@@ -205,7 +194,7 @@ color:var(--text-muted);
     </p>
 
     <div style="margin-top:20px;">
-     <a href="create-event.html" class="btn btn-primary">Run Live Demo</a>
+      <a href="create-event.html" class="btn btn-primary">Run Live Demo</a>
       <a href="create-event.html" class="btn btn-secondary">Try It Now</a>
     </div>
   </div>
