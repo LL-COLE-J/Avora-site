@@ -144,9 +144,11 @@ const db = getFirestore(app);
 
 const params = new URLSearchParams(window.location.search);
 const eventId = params.get("eventId");
-  if (!eventId) {
-  document.body.innerHTML = "<h2 style='padding:20px;'>No event ID</h2>";
 
+if (!eventId) {
+  document.body.innerHTML = "<h2 style='padding:20px;'>No event ID</h2>";
+  throw new Error("No eventId");
+}
 const ref = doc(db, "events", eventId);
   const guestRef = collection(db, "events", eventId, "guests");
 
@@ -245,7 +247,7 @@ checkInBtn.onclick = async () => {
    NAV
 --------------------------- */
 window.goHome = function () {
-  window.location.href = "index.html";
+  window.location.href = "./index.html";
 };
 
 /* INIT */
