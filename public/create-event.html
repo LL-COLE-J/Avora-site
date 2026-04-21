@@ -85,7 +85,7 @@ button {
 <div class="nav">
   <div class="logo" onclick="goHome()">AVORA</div>
   <div class="nav-links">
-    <a href="index.html">Home</a>
+    <a href="./index.html">Home</a>
   </div>
 </div>
 
@@ -118,22 +118,31 @@ const btn = document.getElementById('createBtn');
 
 btn.addEventListener("click", async () => {
 
-  btn.innerText = "Creating...";
-  btn.disabled = true;
+  try {
 
-  const eventData = {
-    name: document.getElementById('eventName').value,
-    date: document.getElementById('eventDate').value,
-    guestCount: Number(document.getElementById('guestCount').value),
-    checkedIn: 0,
-    revenue: 0,
-    createdAt: new Date()
-  };
+    btn.innerText = "Creating...";
+    btn.disabled = true;
 
-  const docRef = await addDoc(collection(db, "events"), eventData);
+    const eventData = {
+      name: document.getElementById('eventName').value,
+      date: document.getElementById('eventDate').value,
+      guestCount: Number(document.getElementById('guestCount').value),
+      checkedIn: 0,
+      revenue: 0,
+      createdAt: new Date()
+    };
 
-  
-  window.location.href = "./setup.html?eventId=" + docRef.id;
+    const docRef = await addDoc(collection(db, "events"), eventData);
+
+    window.location.href = "./setup.html?eventId=" + docRef.id;
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to create event");
+    btn.innerText = "Create Event";
+    btn.disabled = false;
+  }
+
 });
 </script>
 
