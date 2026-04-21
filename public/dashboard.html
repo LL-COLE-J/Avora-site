@@ -128,6 +128,7 @@ button:hover {
   <div class="logo" onclick="goHome()">AVORA</div>
   <div class="nav-links">
     <a href="./index.html">Home</a>
+     <button onclick="logout()" style="width:auto; padding:8px 12px;">Logout</button>
   </div>
 </div>
 
@@ -151,7 +152,9 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, onSnapshot, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  const auth = getAuth(app);
+import { getFirestore, doc, onSnapshot } from "...";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
@@ -258,7 +261,10 @@ window.checkInGuest = async function () {
   window.location.href = "./checkin.html?eventId=" + eventId;
 };
 
-
+window.logout = async function () {
+  await signOut(auth);
+  window.location.href = "./login.html";
+};
 
 </script>
 
