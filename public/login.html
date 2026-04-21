@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Avora</title>
+
+<style>
+body {
+  background:#050a18;
+  color:white;
+  font-family:-apple-system;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.card {
+  background:#0f172a;
+  padding:30px;
+  border-radius:12px;
+  width:300px;
+}
+
+input {
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:8px;
+  border:none;
+  background:#020617;
+  color:white;
+}
+
+button {
+  width:100%;
+  padding:12px;
+  background:#6366f1;
+  border:none;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Login</h2>
+
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+  <button onclick="signup()">Sign Up</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.login = async function () {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  await signInWithEmailAndPassword(auth, email, password);
+
+  window.location.href = "index.html";
+};
+
+window.signup = async function () {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  await createUserWithEmailAndPassword(auth, email, password);
+
+  window.location.href = "index.html";
+};
+</script>
+
+</body>
+</html>
