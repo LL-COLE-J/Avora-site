@@ -3,87 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard - Avora</title>
+<title>Avora Dashboard</title>
 
 <style>
 body {
   margin:0;
   font-family:-apple-system, BlinkMacSystemFont, sans-serif;
-  background: radial-gradient(circle at 70% 30%, #0b1b3a, #050a18 60%);
+  background:#050a18;
   color:#e5e7eb;
 }
 
 .container {
-  max-width:1100px;
+  max-width:900px;
   margin:auto;
   padding:40px 20px;
 }
 
-.header {
-  font-size:28px;
-  margin-bottom:30px;
-}
-
-.sub {
-  color:#9ca3af;
-  margin-bottom:20px;
-}
-
-.grid {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap:20px;
+h1 {
+  margin-bottom:10px;
 }
 
 .card {
-  background:linear-gradient(180deg, #0f172a, #020617);
-  border:1px solid rgba(99,102,241,0.08);
-  border-radius:12px;
+  background:#0f172a;
   padding:20px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+  border-radius:12px;
+  margin-top:20px;
 }
 
-.label {
-  color:#9ca3af;
-  font-size:14px;
+.stat {
+  font-size:28px;
+  margin-top:10px;
 }
 
-.value {
-  font-size:26px;
-  margin-top:8px;
-}
-
-.live {
+.row {
   display:flex;
-  align-items:center;
-  gap:8px;
-  margin-bottom:20px;
+  gap:20px;
 }
 
-.dot {
-  width:8px;
-  height:8px;
-  background:#22c55e;
-  border-radius:50%;
-  box-shadow:0 0 8px rgba(34,197,94,0.6);
-  animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity:0.4; transform:scale(0.9); }
-  50% { opacity:1; transform:scale(1.2); }
-  100% { opacity:0.4; transform:scale(0.9); }
-}
-
-.btn {
-  margin-top:30px;
-  padding:14px 22px;
-  background:#6366f1;
-  border:none;
-  border-radius:10px;
-  color:white;
-  cursor:pointer;
-  font-size:14px;
+.col {
+  flex:1;
 }
 </style>
 </head>
@@ -92,52 +50,63 @@ body {
 
 <div class="container">
 
-  <div class="header" id="eventName">Loading Event...</div>
-  <div class="sub" id="eventDate"></div>
+  <h1 id="eventName">Loading...</h1>
+  <p id="eventDate"></p>
 
-  <div class="live">
-    <div class="dot"></div>
-    <div style="color:#22c55e;">Live Event Running</div>
+  <div class="row">
+    <div class="card col">
+      <div>Guests</div>
+      <div class="stat" id="guestCount">0</div>
+    </div>
+
+    <div class="card col">
+      <div>Revenue</div>
+      <div class="stat" id="revenue">$0</div>
+    </div>
   </div>
-
-  <div class="grid">
-
-    <div class="card">
-      <div class="label">Guests</div>
-      <div class="value" id="guestCount">0</div>
-    </div>
-
-    <div class="card">
-      <div class="label">Checked In</div>
-      <div class="value" id="checkedIn">0</div>
-    </div>
-
-    <div class="card">
-      <div class="label">Auction Revenue</div>
-      <div class="value">$12,450</div>
-    </div>
-
-  </div>
-
-  <button class="btn" onclick="goToCheckIn()">Open Check-In</button>
 
 </div>
 
-<script>
-const event = JSON.parse(localStorage.getItem("avora_event"));
+<!-- FIREBASE + DATA -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-if (!event) {
-  document.getElementById("eventName").innerText = "No Event Found";
-} else {
-  document.getElementById("eventName").innerText = event.name;
-  document.getElementById("eventDate").innerText = event.date || "";
-  document.getElementById("guestCount").innerText = event.guests;
-  document.getElementById("checkedIn").innerText = event.checkedIn;
+const firebaseConfig = {
+  apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
+  authDomain: "avora-fc8b4.firebaseapp.com",
+  projectId: "avora-fc8b4",
+  storageBucket: "avora-fc8b4.firebasestorage.app",
+  messagingSenderId: "520572013150",
+  appId: "1:520572013150:web:a7efe5fce0a4e26df342cf"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+console.log("🔥 Dashboard connected");
+
+// Get eventId from URL
+const params = new URLSearchParams(window.location.search);
+const eventId = params.get("eventId");
+
+if (!eventId) {
+  document.body.innerHTML = "<h2 style='padding:20px;'>No event ID provided</h2>";
 }
 
-function goToCheckIn() {
-  window.location.href = "/checkin.html"; // next step
-}
+// Listen to event (REAL-TIME)
+const ref = doc(db, "events", eventId);
+
+onSnapshot(ref, (snap) => {
+  const data = snap.data();
+
+  if (!data) return;
+
+  document.getElementById("eventName").innerText = data.name;
+  document.getElementById("eventDate").innerText = data.date || "";
+  document.getElementById("guestCount").innerText = data.guestCount;
+  document.getElementById("revenue").innerText = "$" + (data.revenue || 0);
+});
 </script>
 
 </body>
