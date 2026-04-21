@@ -148,7 +148,7 @@ saveBtn.onclick = async () => {
   const newName = input.value.trim();
   if (!newName) return;
 
-  await updateDoc(doc(db, "events", eventId, "guests", doc.id), {
+  await updateDoc(doc(db, "events", eventId, "guests", d.id), {
     name: newName
   });
 };
@@ -157,6 +157,7 @@ saveBtn.onclick = async () => {
 deleteBtn.onclick = async () => {
   if (!confirm("Delete this guest?")) return;
 
+  await deleteDoc(doc(db, "events", eventId, "guests", d.id));
 };
 
     list.appendChild(div);
