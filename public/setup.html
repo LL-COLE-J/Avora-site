@@ -116,9 +116,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_DOMAIN",
-  projectId: "YOUR_PROJECT",
+  apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
+  authDomain: "avora-fc8b4.firebaseapp.com",
+  projectId: "avora-fc8b4",
+  storageBucket: "avora-fc8b4.firebasestorage.app",
+  messagingSenderId: "520572013150",
+  appId: "1:520572013150:web:a7efe5fce0a4e26df342cf"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -130,7 +133,8 @@ const eventId = params.get("eventId");
 
 const btn = document.getElementById("continueBtn");
 
-btn.addEventListener("click", async () => {
+
+  console.log("Redirecting to dashboard with eventId:", eventId);
 
   const modules = {
     checkIn: document.getElementById("checkIn").checked,
@@ -142,6 +146,8 @@ btn.addEventListener("click", async () => {
     modules: modules
   });
 
+  btn.addEventListener("click", async () => {
+
   // go to dashboard
 window.location.href = "dashboard.html?eventId=" + eventId;
 });
@@ -149,7 +155,7 @@ window.location.href = "dashboard.html?eventId=" + eventId;
 
   <script>
 
-    console.log("Redirecting to dashboard with eventId:", eventId);
+    
 function goHome() {
   window.location.href = "index.html";
 }
