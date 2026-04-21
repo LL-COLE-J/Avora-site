@@ -91,7 +91,7 @@ import {
   doc, 
   updateDoc, 
   deleteDoc 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";;
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
@@ -125,8 +125,8 @@ window.addGuest = async function () {
 onSnapshot(guestRef, (snap) => {
   list.innerHTML = "";
 
-  snap.forEach(doc => {
-    const g = doc.data();
+  snap.forEach(d => {
+  const g = d.data();
 
     const div = document.createElement("div");
 div.className = "card";
@@ -157,7 +157,6 @@ saveBtn.onclick = async () => {
 deleteBtn.onclick = async () => {
   if (!confirm("Delete this guest?")) return;
 
-  await deleteDoc(doc(db, "events", eventId, "guests", doc.id));
 };
 
     list.appendChild(div);
