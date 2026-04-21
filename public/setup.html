@@ -127,12 +127,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Get eventId from URL
+// Get eventId
 const params = new URLSearchParams(window.location.search);
 const eventId = params.get("eventId");
 
 const btn = document.getElementById("continueBtn");
 
+btn.addEventListener("click", async () => {
 
   console.log("Redirecting to dashboard with eventId:", eventId);
 
@@ -146,14 +147,9 @@ const btn = document.getElementById("continueBtn");
     modules: modules
   });
 
-  btn.addEventListener("click", async () => {
-
-  // go to dashboard
-window.location.href = "dashboard.html?eventId=" + eventId;
+  window.location.href = "dashboard.html?eventId=" + eventId;
 });
 </script>
-
-  <script>
 
     
 function goHome() {
