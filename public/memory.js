@@ -1,6 +1,7 @@
 // memory.js
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "./firebase";
+
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { db } from "./firebase.js";
 
 export async function getMemory() {
   const snap = await getDoc(doc(db, "agent_memory", "avora_main"));
