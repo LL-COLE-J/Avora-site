@@ -147,8 +147,7 @@ button:hover {
 <script type="module">
 import { db, auth } from "./firebase.js";
 import { getMemory } from "./memory.js";
-
-import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 // AUTH
@@ -171,17 +170,17 @@ async function initDashboard() {
     throw new Error("No eventId");
   }
 
-  // ✅ LOAD MEMORY
+  // 🔥 LOAD MEMORY
   const memory = await getMemory();
   console.log("MEMORY:", memory);
 
+  // 🔥 SET NEXT STEP TEXT
   if (memory) {
     const nextStepEl = document.getElementById("nextStepText");
 
     if (nextStepEl) {
       nextStepEl.innerText = memory.current_state.next_task;
 
-      // OPTIONAL: show remaining
       const remaining = memory.roadmap.filter(r => r.status !== "complete");
       if (remaining.length > 0) {
         nextStepEl.innerText += ` (${remaining.length} remaining)`;
@@ -189,7 +188,55 @@ async function initDashboard() {
     }
   }
 
-  // ✅ LOAD EVENT
+  // 🔥 BUTTON LOGIC (CORRECT PLACE)
+  const btn = document.getElementById("completeStepBtn");
+
+  if (btn && memory) {
+    btn.onclick = async () => {
+      console.log("CLICKED COMPLETE");
+
+      try {
+        btn.innerText = "Updating...";
+        btn.disabled = true;
+
+        // 1. Mark current module complete
+        const updatedRoadmap = memory.roadmap.map(step => {
+          if (step.name === memory.current_state.module) {
+            return { ...step, status: "complete" };
+          }
+          return step;
+        });
+
+        // 2. Find next incomplete step
+        const next = updatedRoadmap.find(s => s.status !== "complete");
+
+        // 3. Build new state
+        const newState = {
+          module: next ? next.name : "complete",
+          last_task: memory.current_state.next_task,
+          next_task: next ? next.name : "All steps complete",
+          status: next ? "in_progress" : "complete"
+        };
+
+        // 4. Update Firestore
+        const memRef = doc(db, "agent_memory", "avora_main");
+
+        await updateDoc(memRef, {
+          roadmap: updatedRoadmap,
+          current_state: newState
+        });
+
+        btn.innerText = "Done";
+
+      } catch (err) {
+        console.error(err);
+        btn.innerText = "Error";
+        btn.disabled = false;
+      }
+    };
+  }
+
+  // 🔥 LOAD EVENT DATA
   const ref = doc(db, "events", eventId);
 
   onSnapshot(ref, (snap) => {
