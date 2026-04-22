@@ -239,6 +239,10 @@ function openGuest(guest) {
 checkInBtn.onclick = async () => {
   if (!activeGuest || activeGuest.checkedIn) return;
 
+  // 🔒 lock button immediately
+  checkInBtn.disabled = true;
+  checkInBtn.innerText = "Checking In...";
+
   const guestDoc = doc(db, "events", eventId, "guests", activeGuest.id);
 
   await updateDoc(guestDoc, {
@@ -249,9 +253,18 @@ checkInBtn.onclick = async () => {
     checkedIn: increment(1)
   });
 
-  modal.classList.remove("active");
-};
+  // ✅ update UI instantly
+  checkInBtn.innerText = "Checked In";
+  guestStatus.innerText = "Checked In";
 
+  // 🧠 update local state (important)
+  activeGuest.checkedIn = true;
+
+  // close modal after short delay (feels smooth)
+  setTimeout(() => {
+    modal.classList.remove("active");
+  }, 500);
+};
 /* ---------------------------
    NAV
 --------------------------- */
