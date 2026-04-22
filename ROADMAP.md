@@ -168,7 +168,10 @@
 - [ ] System stable under load
 
 ---
-
+{
+  "name": "event planner module",
+  "status": "pending"
+}
 ## CURRENT POSITION
 
 👉 Phase 2 — Planner OS  
