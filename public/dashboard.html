@@ -270,5 +270,13 @@ function goHome() {
 }
 </script>
 
+  <script type="module">
+  import { getMemory } from "./memory.js";
+
+  const memory = await getMemory();
+
+  console.log("MEMORY:", memory);
+</script>
+
 </body>
 </html>
