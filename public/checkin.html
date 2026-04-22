@@ -101,7 +101,8 @@ body {
 <body>
 
 <div class="nav">
-  <div class="logo" onclick="goHome()">AVORA</div>
+  <div class="logo" onclick="goBack()">← Guests</div>
+  <div>Check-In</div>
 </div>
 
 <div class="container">
@@ -210,7 +211,9 @@ function renderResults(filter="") {
 
       div.innerHTML = `
         <span>${guest.name}</span>
-        <span>${guest.checkedIn ? "✔" : ""}</span>
+       <span style="color:${guest.checkedIn ? '#22c55e' : '#9ca3af'}">
+  ${guest.checkedIn ? "✔ Checked In" : "Pending"}
+</span>
       `;
 
       div.onclick = () => openGuest(guest);
@@ -294,6 +297,13 @@ window.addGuest = async function () {
   });
 
   nameInput.value = "";
+};
+
+  window.goBack = function () {
+  const params = new URLSearchParams(window.location.search);
+  const eventId = params.get("eventId");
+
+  window.location.href = "./guests.html?eventId=" + eventId;
 };
   
 </script>
