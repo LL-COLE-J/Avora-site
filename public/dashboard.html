@@ -23,7 +23,6 @@ body {
   color:var(--text-main);
 }
 
-/* Layout */
 .container {
   max-width:900px;
   margin:auto;
@@ -31,7 +30,6 @@ body {
   margin-top:20px;
 }
 
-/* Card */
 .card {
   background:var(--bg-card);
   padding:24px;
@@ -40,7 +38,6 @@ body {
   box-shadow:0 20px 60px rgba(0,0,0,0.5);
 }
 
-/* Inputs */
 input {
   width:100%;
   padding:12px;
@@ -58,7 +55,6 @@ input:focus {
   box-shadow:0 0 10px var(--accent-glow);
 }
 
-/* Buttons */
 button {
   width:100%;
   padding:12px;
@@ -75,7 +71,6 @@ button:hover {
   transform:translateY(-1px);
 }
 
-/* Grid */
 .row {
   display:flex;
   gap:20px;
@@ -85,7 +80,6 @@ button:hover {
   flex:1;
 }
 
-/* Stats */
 .stat {
   font-size:28px;
   margin-top:10px;
@@ -109,7 +103,7 @@ button:hover {
   text-decoration:none;
 }
 
- .card.clickable {
+.card.clickable {
   cursor:pointer;
   transition:0.2s;
 }
@@ -117,8 +111,7 @@ button:hover {
 .card.clickable:hover {
   transform:translateY(-2px);
   box-shadow:0 0 15px var(--accent-glow);
-} 
-  
+}
 </style>
 </head>
 
@@ -128,7 +121,7 @@ button:hover {
   <div class="logo" onclick="goHome()">AVORA</div>
   <div class="nav-links">
     <a href="./index.html">Home</a>
-     <button onclick="logout()" style="width:auto; padding:8px 12px;">Logout</button>
+    <button onclick="logout()" style="width:auto; padding:8px 12px;">Logout</button>
   </div>
 </div>
 
@@ -136,32 +129,24 @@ button:hover {
   <h1 id="eventName">Loading...</h1>
   <p id="eventDate"></p>
 
+  <!-- ✅ MEMORY CARD -->
   <div id="nextStepCard" class="card" style="margin-bottom:20px;">
-  <div style="color:var(--text-muted)">Next Step</div>
-  <div id="nextStepText" class="stat">Loading...</div>
-</div>
+    <div style="color:var(--text-muted)">Next Step</div>
+    <div id="nextStepText" class="stat">Loading...</div>
+  </div>
 
-<div class="row" id="modulesRow"></div>
-
-
-
-  
+  <!-- ✅ MODULES -->
+  <div class="row" id="modulesRow"></div>
 </div>
 
 <script type="module">
 import { db, auth } from "./firebase.js";
+import { getMemory } from "./memory.js";
 
-import { 
-  doc, 
-  onSnapshot 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-import { 
-  onAuthStateChanged, 
-  signOut 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-// AUTH GUARD
+// AUTH
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "./login.html";
@@ -171,8 +156,8 @@ onAuthStateChanged(auth, (user) => {
   initDashboard();
 });
 
-// MAIN APP
-function initDashboard() {
+// MAIN
+async function initDashboard() {
   const params = new URLSearchParams(window.location.search);
   const eventId = params.get("eventId");
 
@@ -181,6 +166,25 @@ function initDashboard() {
     throw new Error("No eventId");
   }
 
+  // ✅ LOAD MEMORY
+  const memory = await getMemory();
+  console.log("MEMORY:", memory);
+
+  if (memory) {
+    const nextStepEl = document.getElementById("nextStepText");
+
+    if (nextStepEl) {
+      nextStepEl.innerText = memory.current_state.next_task;
+
+      // OPTIONAL: show remaining
+      const remaining = memory.roadmap.filter(r => r.status !== "complete");
+      if (remaining.length > 0) {
+        nextStepEl.innerText += ` (${remaining.length} remaining)`;
+      }
+    }
+  }
+
+  // ✅ LOAD EVENT
   const ref = doc(db, "events", eventId);
 
   onSnapshot(ref, (snap) => {
@@ -249,34 +253,16 @@ window.goToCheckIn = function () {
   window.location.href = "./checkin.html?eventId=" + eventId;
 };
 
-// LOGOUT
 window.logout = async function () {
   await signOut(auth);
   window.location.href = "./login.html";
 };
 </script>
 
-  <script>
+<script>
 function goHome() {
   window.location.href = "./index.html";
 }
-</script>
-
-<script type="module">
-  import { getMemory } from "./memory.js";
-
-  const memory = await getMemory();
-
-  console.log("MEMORY:", memory);
-
-  if (!memory) return;
-
-  // SET NEXT STEP TEXT
-  const nextStepEl = document.getElementById("nextStepText");
-
-  if (nextStepEl) {
-    nextStepEl.innerText = memory.current_state.next_task;
-  }
 </script>
 
 </body>
