@@ -197,7 +197,7 @@ async function initDashboard() {
 
       try {
         btn.innerText = "Updating...";
-        btn.disabled = true;
+        
 
         // 1. Mark current module complete
         const updatedRoadmap = memory.roadmap.map(step => {
@@ -225,6 +225,7 @@ async function initDashboard() {
           roadmap: updatedRoadmap,
           current_state: newState
         });
+        location.reload();
 
         btn.innerText = "Done";
 
