@@ -142,32 +142,17 @@ button:hover {
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { db, auth } from "./firebase.js";
+
 import { 
-  getFirestore, 
   doc, 
   onSnapshot 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 import { 
-  getAuth, 
   onAuthStateChanged, 
   signOut 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
-  authDomain: "avora-fc8b4.firebaseapp.com",
-  projectId: "avora-fc8b4",
-  storageBucket: "avora-fc8b4.firebasestorage.app",
-  messagingSenderId: "520572013150",
-  appId: "1:520572013150:web:a7efe5fce0a4e26df342cf"
-};
-
-// INIT
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
 
 // AUTH GUARD
 onAuthStateChanged(auth, (user) => {
