@@ -136,6 +136,13 @@ button:hover {
   <h1 id="eventName">Loading...</h1>
   <p id="eventDate"></p>
 
+  <div id="nextStepCard" class="card" style="margin-bottom:20px;">
+  <div style="color:var(--text-muted)">Next Step</div>
+  <div id="nextStepText" class="stat">Loading...</div>
+</div>
+
+<div class="row" id="modulesRow"></div>
+
   <div class="row" id="modulesRow"></div>
 
   
@@ -255,12 +262,21 @@ function goHome() {
 }
 </script>
 
-  <script type="module">
+<script type="module">
   import { getMemory } from "./memory.js";
 
   const memory = await getMemory();
 
   console.log("MEMORY:", memory);
+
+  if (!memory) return;
+
+  // SET NEXT STEP TEXT
+  const nextStepEl = document.getElementById("nextStepText");
+
+  if (nextStepEl) {
+    nextStepEl.innerText = memory.current_state.next_task;
+  }
 </script>
 
 </body>
