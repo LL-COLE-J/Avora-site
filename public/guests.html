@@ -66,7 +66,7 @@ button {
 <body>
 
 <div class="nav">
-  <div onclick="goBack()">← Back</div>
+  <div onclick="goDashboard()">← Dashboard</div>
   <div>Guests</div>
 </div>
 
@@ -175,8 +175,11 @@ deleteBtn.onclick = async () => {
   });
 });
 
-window.goBack = function () {
-  window.history.back();
+window.goDashboard = function () {
+  const params = new URLSearchParams(window.location.search);
+  const eventId = params.get("eventId");
+
+  window.location.href = "./dashboard.html?eventId=" + eventId;
 };
 </script>
 
