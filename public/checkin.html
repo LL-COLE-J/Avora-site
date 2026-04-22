@@ -123,15 +123,6 @@ body {
 </div>
 
 <script type="module">
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-const auth = getAuth(app);
-
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.href = "./login.html";
-  }
-});
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { 
   getFirestore, 
@@ -139,17 +130,31 @@ import {
   collection, 
   onSnapshot, 
   updateDoc, 
-  increment 
+  increment,
+  addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+// 🔥 CONFIG FIRST
 const firebaseConfig = {
   apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
   authDomain: "avora-fc8b4.firebaseapp.com",
   projectId: "avora-fc8b4"
 };
 
+// 🔥 INIT ONCE
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+// 🔥 AUTH PROTECTION
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "./login.html";
+  }
+});
+
+
 
 const params = new URLSearchParams(window.location.search);
 const eventId = params.get("eventId");
@@ -274,6 +279,23 @@ window.goHome = function () {
 
 /* INIT */
 renderResults();
+
+window.addGuest = async function () {
+  const nameInput = document.getElementById("guestNameInput");
+  const name = nameInput.value.trim();
+
+  if (!name) return;
+
+  const guestRef = collection(db, "events", eventId, "guests");
+
+  await addDoc(guestRef, {
+    name: name,
+    checkedIn: false
+  });
+
+  nameInput.value = "";
+};
+  
 </script>
 
 </body>
