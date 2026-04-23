@@ -346,26 +346,22 @@ onSnapshot(ref, async (snap) => {
 
   let totalDonations = 0;
 
-  onSnapshot(donationRef, (snap) => {
-    totalDonations = 0;
+  const donationSnap = await getDocs(donationRef);
 
-    snap.forEach(d => {
-      const donation = d.data();
-      totalDonations += donation.amount || 0;
-    });
-
-    const existing = document.getElementById("donationCard");
-    if (existing) existing.remove();
-
-    row.innerHTML += `
-      <div id="donationCard" class="card col clickable" onclick="goToDonations()">
-        <div>Donations</div>
-        <div class="stat">$${totalDonations}</div>
-        <div style="color:var(--text-muted); margin-top:8px;">Total Raised</div>
-      </div>
-    `;
+  donationSnap.forEach(d => {
+    const donation = d.data();
+    totalDonations += donation.amount || 0;
   });
+
+  row.innerHTML += `
+    <div class="card col clickable" onclick="goToDonations()">
+      <div>Donations</div>
+      <div class="stat">$${totalDonations}</div>
+      <div style="color:var(--text-muted); margin-top:8px;">Total Raised</div>
+    </div>
+  `;
 }
+
 
   // 🔥 GUESTS (always available)
   row.innerHTML += `
