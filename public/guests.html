@@ -66,7 +66,7 @@ button {
 <body>
 
 <div class="nav">
-  <div onclick="goDashboard()">← Dashboard</div>
+  <div onclick="goEvents()" style="cursor:pointer;">← Events</div>
   <div>Guests</div>
 </div>
 
@@ -180,6 +180,10 @@ window.goDashboard = function () {
   const eventId = params.get("eventId");
 
   window.location.href = "./dashboard.html?eventId=" + eventId;
+};
+
+  window.goEvents = function () {
+  window.location.href = "./events.html";
 };
 </script>
 
