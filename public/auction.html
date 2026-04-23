@@ -94,24 +94,30 @@ import {
   getFirestore, 
   collection, 
   addDoc, 
-  onSnapshot 
+  onSnapshot,
+  doc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+// CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyAA2Tl7kWuX1RQcqeVgRR5cf_Mwt-DZX-w",
   authDomain: "avora-fc8b4.firebaseapp.com",
   projectId: "avora-fc8b4"
 };
 
+// INIT
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+// AUTH
 onAuthStateChanged(auth, (user) => {
   if (!user) window.location.href = "./login.html";
 });
 
+// EVENT ID
 const params = new URLSearchParams(window.location.search);
 const eventId = params.get("eventId");
 
@@ -120,10 +126,21 @@ if (!eventId) {
   throw new Error("No eventId");
 }
 
+// COLLECTION
 const itemRef = collection(db, "events", eventId, "auction");
-
 const list = document.getElementById("itemList");
 
+// 🔥 DYNAMIC BID INCREMENT
+let bidIncrement = 5;
+
+onSnapshot(doc(db, "events", eventId), (snap) => {
+  const data = snap.data();
+  if (data && data.bidIncrement) {
+    bidIncrement = data.bidIncrement;
+  }
+});
+
+// ADD ITEM
 window.addItem = async function () {
   const name = document.getElementById("itemName").value.trim();
   const bid = Number(document.getElementById("startingBid").value);
@@ -139,6 +156,7 @@ window.addItem = async function () {
   document.getElementById("startingBid").value = "";
 };
 
+// LISTEN ITEMS
 onSnapshot(itemRef, (snap) => {
   list.innerHTML = "";
 
@@ -150,10 +168,28 @@ onSnapshot(itemRef, (snap) => {
 
     div.innerHTML = `
       <div style="font-size:18px;">${item.name}</div>
+
       <div style="color:var(--text-muted); margin-top:6px;">
         Current Bid: $${item.currentBid}
       </div>
+
+      <button class="bidBtn" style="margin-top:10px;">
+        Bid +$${bidIncrement}
+      </button>
     `;
+
+    const bidBtn = div.querySelector(".bidBtn");
+
+    bidBtn.onclick = async () => {
+      const newBid = (item.currentBid || 0) + bidIncrement;
+
+      await updateDoc(
+        doc(db, "events", eventId, "auction", d.id),
+        {
+          currentBid: newBid
+        }
+      );
+    };
 
     list.appendChild(div);
   });
@@ -175,6 +211,5 @@ window.goCheckIn = () => {
   window.location.href = "./checkin.html?eventId=" + eventId;
 };
 </script>
-
 </body>
 </html>
