@@ -297,11 +297,12 @@ onSnapshot(ref, async (snap) => {
   const data = snap.data();
   if (!data) return;
 
-  const modules = data.modules || {
+  const modules = {
   checkIn: true,
   donations: true,
   auction: false,
-  planner: true
+  planner: true,
+  ...(data.modules || {})
 };
 
   const row = document.getElementById("modulesRow");
