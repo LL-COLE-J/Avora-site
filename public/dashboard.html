@@ -118,11 +118,9 @@ button:hover {
 <body>
 
 <div class="nav">
-  <div class="logo" onclick="goHome()">AVORA</div>
-  <div class="nav-links">
-    <a href="./index.html">Home</a>
-    <button onclick="logout()" style="width:auto; padding:8px 12px;">Logout</button>
-  </div>
+  <div onclick="goEvents()" style="cursor:pointer;">← Events</div>
+  <div>Dashboard</div>
+</div>
 </div>
 
 <div class="container">
@@ -316,6 +314,10 @@ window.logout = async function () {
 function goHome() {
   window.location.href = "./index.html";
 }
+
+  window.goEvents = function () {
+  window.location.href = "./events.html";
+};
 </script>
 
 </body>
