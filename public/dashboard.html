@@ -292,57 +292,54 @@ nextStepEl.innerText = "Next: " + suggestion;
   // 🔥 LOAD EVENT DATA
   const ref = doc(db, "events", eventId);
 
-  onSnapshot(ref, (snap) => {
-    const data = snap.data();
-    if (!data) return;
+ onSnapshot(ref, (snap) => {
+  const data = snap.data();
+  if (!data) return;
 
-    const modules = data.modules || {
-      checkIn: true,
-      donations: true,
-      auction: false
-    };
+  const modules = data.modules || {
+    checkIn: true,
+    donations: true,
+    auction: false
+  };
 
-    const row = document.getElementById("modulesRow");
-row.innerHTML = "";
+  const row = document.getElementById("modulesRow");
+  row.innerHTML = "";
 
-if (modules.checkIn) {
+  if (modules.checkIn) {
+    row.innerHTML += `
+      <div class="card col clickable" onclick="goToCheckIn()">
+        <div>Guests Checked In</div>
+        <div class="stat">${data.checkedIn || 0}</div>
+        <div style="color:var(--text-muted); margin-top:8px;">Tap to open</div>
+      </div>
+    `;
+  }
+
+  if (modules.donations) {
+    row.innerHTML += `
+      <div class="card col">
+        <div>Revenue</div>
+        <div class="stat">$${data.revenue || 0}</div>
+      </div>
+    `;
+  }
+
   row.innerHTML += `
-    <div class="card col clickable" onclick="goToCheckIn()">
-      <div>Guests Checked In</div>
-      <div class="stat">${data.checkedIn || 0}</div>
+    <div class="card col clickable" onclick="goToAuction()">
+      <div>Silent Auction</div>
+      <div class="stat">Manage</div>
       <div style="color:var(--text-muted); margin-top:8px;">Tap to open</div>
     </div>
   `;
-}
 
-if (modules.donations) {
   row.innerHTML += `
-    <div class="card col">
-      <div>Revenue</div>
-      <div class="stat">$${data.revenue || 0}</div>
+    <div class="card col clickable" onclick="goToGuests()">
+      <div>Guests</div>
+      <div class="stat">Manage</div>
+      <div style="color:var(--text-muted); margin-top:8px;">Add / Edit List</div>
     </div>
   `;
-}
-
-// AUCTION
-row.innerHTML += `
-  <div class="card col clickable" onclick="goToAuction()">
-    <div>Silent Auction</div>
-    <div class="stat">Manage</div>
-    <div style="color:var(--text-muted); margin-top:8px;">Tap to open</div>
-  </div>
-`;
-
-// GUESTS
-row.innerHTML += `
-  <div class="card col clickable" onclick="goToGuests()">
-    <div>Guests</div>
-    <div class="stat">Manage</div>
-    <div style="color:var(--text-muted); margin-top:8px;">Add / Edit List</div>
-  </div>
-`;
-
-    });
+});
 
 // NAV
 window.goToGuests = function () {
@@ -389,7 +386,9 @@ window.goCheckIn = function () {
   const eventId = new URLSearchParams(window.location.search).get("eventId");
   window.location.href = "./auction.html?eventId=" + eventId;
 };
-  
+  window.goHome = function () {
+  window.location.href = "./index.html";
+};
 </script>
 
 </body>
