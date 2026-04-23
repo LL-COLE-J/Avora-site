@@ -115,6 +115,10 @@ onAuthStateChanged(auth, (user) => {
 
 const params = new URLSearchParams(window.location.search);
 const eventId = params.get("eventId");
+  if (!eventId) {
+  window.location.href = "./events.html";
+  throw new Error("No eventId");
+}
 
 const guestRef = collection(db, "events", eventId, "guests");
 
