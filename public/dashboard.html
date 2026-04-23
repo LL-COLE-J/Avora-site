@@ -361,6 +361,17 @@ onSnapshot(ref, async (snap) => {
     </div>
   `;
 }
+   if (modules.planner) {
+  row.innerHTML += `
+    <div class="card col clickable" onclick="goToPlanner()">
+      <div>Seating Planner</div>
+      <div class="stat">Setup</div>
+      <div style="color:var(--text-muted); margin-top:8px;">
+        Tables & seating
+      </div>
+    </div>
+  `;
+}
 
 
   // 🔥 GUESTS (always available)
@@ -374,17 +385,7 @@ onSnapshot(ref, async (snap) => {
 });
  }
 
-  if (modules.planner) {
-  row.innerHTML += `
-    <div class="card col clickable" onclick="goToPlanner()">
-      <div>Seating Planner</div>
-      <div class="stat">Setup</div>
-      <div style="color:var(--text-muted); margin-top:8px;">
-        Tables & seating
-      </div>
-    </div>
-  `;
-}
+ 
 
 // NAV
 window.goToGuests = function () {
