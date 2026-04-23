@@ -167,29 +167,53 @@ onSnapshot(itemRef, (snap) => {
     div.className = "card";
 
     div.innerHTML = `
-      <div style="font-size:18px;">${item.name}</div>
+  <div style="font-size:18px;">${item.name}</div>
 
-      <div style="color:var(--text-muted); margin-top:6px;">
-        Current Bid: $${item.currentBid}
-      </div>
+  <div style="color:var(--text-muted); margin-top:6px;">
+    Current Bid: $${item.currentBid}
+  </div>
 
-      <button class="bidBtn" style="margin-top:10px;">
-        Bid +$${bidIncrement}
-      </button>
-    `;
+  <div style="color:var(--text-muted); margin-top:4px;">
+    Leading: ${item.leadingBidder || "No bids yet"}
+  </div>
+
+  <input class="bidderName" placeholder="Your name" />
+  <input class="bidInput" placeholder="Enter bid amount" />
+
+  <button class="bidBtn" style="margin-top:10px;">
+    Place Bid
+  </button>
+`;
 
     const bidBtn = div.querySelector(".bidBtn");
+const bidInput = div.querySelector(".bidInput");
+const bidderName = div.querySelector(".bidderName");
 
-    bidBtn.onclick = async () => {
-      const newBid = (item.currentBid || 0) + bidIncrement;
+bidBtn.onclick = async () => {
+  const bidValue = Number(bidInput.value);
+  const name = bidderName.value.trim();
 
-      await updateDoc(
-        doc(db, "events", eventId, "auction", d.id),
-        {
-          currentBid: newBid
-        }
-      );
-    };
+  if (!bidValue || !name) {
+    alert("Enter name and bid");
+    return;
+  }
+
+  if (bidValue <= (item.currentBid || 0)) {
+    alert("Bid must be higher than current bid");
+    return;
+  }
+
+  await updateDoc(
+    doc(db, "events", eventId, "auction", d.id),
+    {
+      currentBid: bidValue,
+      leadingBidder: name
+    }
+  );
+
+  bidInput.value = "";
+  bidderName.value = "";
+};    };
 
     list.appendChild(div);
   });
