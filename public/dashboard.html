@@ -159,6 +159,8 @@ import { doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/1
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  
 // AUTH
 onAuthStateChanged(auth, (user) => {
   if (!user) {
@@ -295,6 +297,7 @@ nextStepEl.innerText = "Next: " + suggestion;
 
  onSnapshot(ref, async (snap) => {
   const data = snap.data();
+   const modules = data.modules || {};
   if (!data) return;
 
   const modules = data.modules || {
@@ -356,6 +359,27 @@ row.innerHTML += `
 });
 }
 
+  if (modules.donations) {
+  const donationRef = collection(db, "events", eventId, "donations");
+
+  let totalDonations = 0;
+
+  const donationSnap = await getDocs(donationRef);
+
+  donationSnap.forEach(d => {
+    const donation = d.data();
+    totalDonations += donation.amount || 0;
+  });
+
+  row.innerHTML += `
+    <div class="card col clickable" onclick="goToDonations()">
+      <div>Donations</div>
+      <div class="stat">$${totalDonations}</div>
+      <div style="color:var(--text-muted); margin-top:8px;">Total Raised</div>
+    </div>
+  `;
+}
+
 // NAV
 window.goToGuests = function () {
   const eventId = new URLSearchParams(window.location.search).get("eventId");
@@ -403,6 +427,10 @@ window.goCheckIn = function () {
 };
   window.goHome = function () {
   window.location.href = "./index.html";
+};
+
+  window.goToDonations = function () {
+  window.location.href = "./donations.html?eventId=" + eventId;
 };
   
 </script>
