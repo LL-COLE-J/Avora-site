@@ -135,6 +135,7 @@ button:hover {
   <div id="nextStepCard" class="card" style="margin-bottom:20px;">
   <div style="color:var(--text-muted)">Next Step</div>
   <div id="nextStepText" class="stat">Loading...</div>
+  <div id="progressText" style="margin-top:8px; color:var(--text-muted);"></div>
 
   <!-- 👇 THIS IS THE BUTTON -->
   <button id="completeStepBtn" style="margin-top:12px;">
@@ -179,9 +180,16 @@ async function initDashboard() {
   // 🔥 SET NEXT STEP TEXT
   if (memory) {
     const nextStepEl = document.getElementById("nextStepText");
+    const total = memory.roadmap.length;
+const complete = memory.roadmap.filter(r => r.status === "complete").length;
+
+const progressEl = document.getElementById("progressText");
+if (progressEl) {
+  progressEl.innerText = `${complete} / ${total} complete`;
+}
 
     if (nextStepEl) {
-      nextStepEl.innerText = memory.current_state.next_task;
+      nextStepEl.innerText = "Next: " + memory.current_state.next_task;
 
       const remaining = memory.roadmap.filter(r => r.status !== "complete");
       if (remaining.length > 0) {
