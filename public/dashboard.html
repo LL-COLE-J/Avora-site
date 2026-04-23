@@ -158,7 +158,6 @@ import { getMemory } from "./memory.js";
 import { doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
   
 // AUTH
@@ -342,26 +341,31 @@ onSnapshot(ref, async (snap) => {
   }
 
   // 🔥 DONATIONS (REAL DATA)
-  if (modules.donations) {
-    const donationRef = collection(db, "events", eventId, "donations");
+ if (modules.donations) {
+  const donationRef = collection(db, "events", eventId, "donations");
 
-    let totalDonations = 0;
+  let totalDonations = 0;
 
-    const donationSnap = await getDocs(donationRef);
+  onSnapshot(donationRef, (snap) => {
+    totalDonations = 0;
 
-    donationSnap.forEach(d => {
+    snap.forEach(d => {
       const donation = d.data();
       totalDonations += donation.amount || 0;
     });
 
+    const existing = document.getElementById("donationCard");
+    if (existing) existing.remove();
+
     row.innerHTML += `
-      <div class="card col clickable" onclick="goToDonations()">
+      <div id="donationCard" class="card col clickable" onclick="goToDonations()">
         <div>Donations</div>
         <div class="stat">$${totalDonations}</div>
         <div style="color:var(--text-muted); margin-top:8px;">Total Raised</div>
       </div>
     `;
-  }
+  });
+}
 
   // 🔥 GUESTS (always available)
   row.innerHTML += `
