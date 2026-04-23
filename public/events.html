@@ -82,7 +82,9 @@ import {
   collection, 
   query, 
   where, 
-  onSnapshot 
+  onSnapshot,
+  deleteDoc,
+  doc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
@@ -135,11 +137,26 @@ if (snap.empty) {
       div.className = "card";
 
       div.innerHTML = `
-        <div style="font-size:18px; font-weight:600;">${data.name}</div>
-        <div style="color:var(--text-muted); margin-top:4px;">
-          ${data.date || "No date"}
-        </div>
-      `;
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div>
+      <div style="font-size:18px; font-weight:600;">${data.name}</div>
+      <div style="color:var(--text-muted); margin-top:4px;">
+        ${data.date || "No date"}
+      </div>
+    </div>
+    <button class="deleteBtn" style="background:#dc2626;">Delete</button>
+  </div>
+`;
+
+      const deleteBtn = div.querySelector(".deleteBtn");
+
+deleteBtn.onclick = async (e) => {
+  e.stopPropagation();
+
+  if (!confirm("Delete this event?")) return;
+
+  await deleteDoc(doc(db, "events", docSnap.id));
+};
 
       div.onclick = () => {
         window.location.href = "./dashboard.html?eventId=" + docSnap.id;
