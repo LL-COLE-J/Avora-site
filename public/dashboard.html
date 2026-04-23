@@ -327,14 +327,13 @@ nextStepEl.innerText = "Next: " + suggestion;
       `;
     }
 
-    if (modules.auction) {
-      row.innerHTML += `
-        <div class="card col">
-          <div>Silent Auction</div>
-          <div class="stat">Coming Soon</div>
-          <button disabled>Setup Auction</button>
-        </div>
-      `;
+    row.innerHTML += `
+  <div class="card col clickable" onclick="goToAuction()">
+    <div>Silent Auction</div>
+    <div class="stat">Manage</div>
+    <div style="color:var(--text-muted); margin-top:8px;">Tap to open</div>
+  </div>
+`;
     }
 
     row.innerHTML += `
@@ -386,6 +385,11 @@ window.goGuests = function () {
 window.goCheckIn = function () {
   if (!eventId) return;
   window.location.href = "./checkin.html?eventId=" + eventId;
+};
+
+  window.goToAuction = function () {
+  const eventId = new URLSearchParams(window.location.search).get("eventId");
+  window.location.href = "./auction.html?eventId=" + eventId;
 };
   
 </script>
