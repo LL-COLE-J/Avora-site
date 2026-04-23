@@ -84,6 +84,7 @@ button {
 </div>
 
 <script type="module">
+  let guests = [];
 import { db } from "./firebase.js";
 import {
   collection, addDoc, getDocs, doc, updateDoc
@@ -99,6 +100,38 @@ let guests = [];
 // LOAD GUESTS
 async function loadGuests() {
   const snap = await getDocs(guestRef);
+  guests = [];
+  snap.forEach(d => {
+    guests.push({ id: d.id, ...d.data() });
+  });
+}
+
+  window.assignGuest = async function (tableId) {
+  const select = document.getElementById("guest-" + tableId);
+  const guestId = select.value;
+
+  const ref = doc(db, "events", eventId, "tables", tableId);
+  const snap = await getDoc(ref);
+  const table = snap.data();
+
+  if (!table) return;
+
+  if (table.guests.includes(guestId)) return;
+
+  if (table.guests.length >= table.seats) {
+    alert("Table full");
+    return;
+  }
+
+  const updated = [...table.guests, guestId];
+
+  await updateDoc(ref, { guests: updated });
+
+  loadTables();
+};
+
+  async function loadGuests() {
+  const snap = await getDocs(collection(db, "events", eventId, "guests"));
   guests = [];
   snap.forEach(d => {
     guests.push({ id: d.id, ...d.data() });
@@ -136,24 +169,23 @@ async function loadTables() {
     ).join("");
 
     container.innerHTML += `
-      <div class="table-card">
-        <strong>${t.name}</strong> (${t.guests.length}/${t.seats})
+  <div class="card">
+    <strong>${t.name} (${t.guests.length}/${t.seats})</strong>
 
-        <select id="guest-${d.id}">
-          ${guestOptions}
-        </select>
+    <select id="guest-${d.id}">
+      ${guests.map(g => `<option value="${g.id}">${g.name}</option>`).join("")}
+    </select>
 
-        <button onclick="assignGuest('${d.id}')">Add Guest</button>
+    <button onclick="assignGuest('${d.id}')">Add Guest</button>
 
-        <div style="margin-top:8px; color:var(--text-muted)">
-          ${t.guests.map(gid => {
-            const g = guests.find(x => x.id === gid);
-            return g ? g.name : "";
-          }).join(", ")}
-        </div>
-      </div>
-    `;
-  });
+    <div style="margin-top:8px; color:var(--text-muted)">
+      ${t.guests.map(gid => {
+        const g = guests.find(x => x.id === gid);
+        return g ? g.name : "";
+      }).join(", ")}
+    </div>
+  </div>
+`;  });
 }
 
 // ASSIGN GUEST
