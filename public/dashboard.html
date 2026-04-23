@@ -295,9 +295,8 @@ nextStepEl.innerText = "Next: " + suggestion;
   // 🔥 LOAD EVENT DATA
   const ref = doc(db, "events", eventId);
 
- onSnapshot(ref, async (snap) => {
+onSnapshot(ref, async (snap) => {
   const data = snap.data();
-   const modules = data.modules || {};
   if (!data) return;
 
   const modules = data.modules || {
@@ -309,26 +308,29 @@ nextStepEl.innerText = "Next: " + suggestion;
   const row = document.getElementById("modulesRow");
   row.innerHTML = "";
 
-   // 🔥 AUCTION TOTAL (single render)
-const auctionRef = collection(db, "events", eventId, "auction");
+  // 🔥 AUCTION
+  if (modules.auction) {
+    const auctionRef = collection(db, "events", eventId, "auction");
 
-let total = 0;
+    let total = 0;
 
-const auctionSnap = await getDocs(auctionRef);
+    const auctionSnap = await getDocs(auctionRef);
 
-auctionSnap.forEach(d => {
-  const item = d.data();
-  total += item.currentBid || 0;
-});
+    auctionSnap.forEach(d => {
+      const item = d.data();
+      total += item.currentBid || 0;
+    });
 
-row.innerHTML += `
-  <div class="card col clickable" onclick="goToAuction()">
-    <div>Silent Auction</div>
-    <div class="stat">$${total}</div>
-    <div style="color:var(--text-muted); margin-top:8px;">Total Value</div>
-  </div>
-`;
-  
+    row.innerHTML += `
+      <div class="card col clickable" onclick="goToAuction()">
+        <div>Silent Auction</div>
+        <div class="stat">$${total}</div>
+        <div style="color:var(--text-muted); margin-top:8px;">Total Value</div>
+      </div>
+    `;
+  }
+
+  // 🔥 CHECK-IN
   if (modules.checkIn) {
     row.innerHTML += `
       <div class="card col clickable" onclick="goToCheckIn()">
@@ -339,16 +341,29 @@ row.innerHTML += `
     `;
   }
 
+  // 🔥 DONATIONS (REAL DATA)
   if (modules.donations) {
+    const donationRef = collection(db, "events", eventId, "donations");
+
+    let totalDonations = 0;
+
+    const donationSnap = await getDocs(donationRef);
+
+    donationSnap.forEach(d => {
+      const donation = d.data();
+      totalDonations += donation.amount || 0;
+    });
+
     row.innerHTML += `
-      <div class="card col">
-        <div>Revenue</div>
-        <div class="stat">$${data.revenue || 0}</div>
+      <div class="card col clickable" onclick="goToDonations()">
+        <div>Donations</div>
+        <div class="stat">$${totalDonations}</div>
+        <div style="color:var(--text-muted); margin-top:8px;">Total Raised</div>
       </div>
     `;
   }
 
- 
+  // 🔥 GUESTS (always available)
   row.innerHTML += `
     <div class="card col clickable" onclick="goToGuests()">
       <div>Guests</div>
@@ -357,28 +372,9 @@ row.innerHTML += `
     </div>
   `;
 });
-}
+ 
 
-  if (modules.donations) {
-  const donationRef = collection(db, "events", eventId, "donations");
 
-  let totalDonations = 0;
-
-  const donationSnap = await getDocs(donationRef);
-
-  donationSnap.forEach(d => {
-    const donation = d.data();
-    totalDonations += donation.amount || 0;
-  });
-
-  row.innerHTML += `
-    <div class="card col clickable" onclick="goToDonations()">
-      <div>Donations</div>
-      <div class="stat">$${totalDonations}</div>
-      <div style="color:var(--text-muted); margin-top:8px;">Total Raised</div>
-    </div>
-  `;
-}
 
 // NAV
 window.goToGuests = function () {
