@@ -136,6 +136,11 @@ button:hover {
   <div style="color:var(--text-muted)">Next Step</div>
   <div id="nextStepText" class="stat">Loading...</div>
   <div id="progressText" style="margin-top:8px; color:var(--text-muted);"></div>
+   <div id="actionHint" style="margin-top:6px; font-size:13px; color:var(--text-muted);"></div> 
+
+    
+
+
 
   <!-- 👇 THIS IS THE BUTTON -->
   <button id="completeStepBtn" style="margin-top:12px;">
@@ -201,6 +206,27 @@ if (suggestion.toLowerCase().includes("guest")) {
 
 if (suggestion.toLowerCase().includes("auction")) {
   suggestion = "🏷️ Build auction module (high value feature)";
+}
+
+      if (hintEl) {
+  let hint = "";
+
+  const task = memory.current_state.next_task.toLowerCase();
+
+  if (task.includes("donation")) {
+    hint = "Add a simple donation input + update dashboard revenue";
+  } 
+  else if (task.includes("guest")) {
+    hint = "Improve guest flow or add bulk import";
+  } 
+  else if (task.includes("auction")) {
+    hint = "Start with item list and basic bidding";
+  } 
+  else {
+    hint = "Continue building core functionality";
+  }
+const hintEl = document.getElementById("actionHint");
+  hintEl.innerText = hint;
 }
 
 nextStepEl.innerText = "Next: " + suggestion;
