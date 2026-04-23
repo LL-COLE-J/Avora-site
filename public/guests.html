@@ -175,12 +175,7 @@ deleteBtn.onclick = async () => {
   });
 });
 
-window.goDashboard = function () {
-  const params = new URLSearchParams(window.location.search);
-  const eventId = params.get("eventId");
 
-  window.location.href = "./dashboard.html?eventId=" + eventId;
-};
 
   window.goEvents = function () {
   window.location.href = "./events.html";
