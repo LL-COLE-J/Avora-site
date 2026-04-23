@@ -208,7 +208,9 @@ if (suggestion.toLowerCase().includes("auction")) {
   suggestion = "🏷️ Build auction module (high value feature)";
 }
 
-      if (hintEl) {
+     const hintEl = document.getElementById("actionHint");
+
+if (hintEl) {
   let hint = "";
 
   const task = memory.current_state.next_task.toLowerCase();
@@ -225,7 +227,7 @@ if (suggestion.toLowerCase().includes("auction")) {
   else {
     hint = "Continue building core functionality";
   }
-const hintEl = document.getElementById("actionHint");
+
   hintEl.innerText = hint;
 }
 
