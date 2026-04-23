@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planner - Avora</title>
+
+<style>
+:root {
+  --bg-main:#050a18;
+  --bg-card:#0f172a;
+  --accent:#6366f1;
+  --text-main:#e5e7eb;
+  --text-muted:#9ca3af;
+  --border-soft:rgba(255,255,255,0.08);
+}
+
+body {
+  margin:0;
+  font-family:-apple-system, sans-serif;
+  background:var(--bg-main);
+  color:var(--text-main);
+}
+
+.container {
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+
+.card {
+  background:var(--bg-card);
+  padding:16px;
+  border-radius:12px;
+  margin-bottom:16px;
+  border:1px solid var(--border-soft);
+}
+
+input, select {
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:8px;
+  border:1px solid var(--border-soft);
+  background:#020617;
+  color:white;
+}
+
+button {
+  padding:10px;
+  background:var(--accent);
+  border:none;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+}
+
+.table-card {
+  margin-bottom:12px;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid var(--border-soft);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Event Planner</h2>
+
+<!-- CREATE TABLE -->
+<div class="card">
+  <h3>Create Table</h3>
+  <input id="tableName" placeholder="Table Name">
+  <input id="tableSeats" type="number" placeholder="Seats">
+  <button onclick="createTable()">Add Table</button>
+</div>
+
+<!-- TABLE LIST -->
+<div id="tables"></div>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection, addDoc, getDocs, doc, updateDoc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const eventId = new URLSearchParams(window.location.search).get("eventId");
+
+const tableRef = collection(db, "events", eventId, "tables");
+const guestRef = collection(db, "events", eventId, "guests");
+
+let guests = [];
+
+// LOAD GUESTS
+async function loadGuests() {
+  const snap = await getDocs(guestRef);
+  guests = [];
+  snap.forEach(d => {
+    guests.push({ id: d.id, ...d.data() });
+  });
+}
+
+// CREATE TABLE
+window.createTable = async function () {
+  const name = document.getElementById("tableName").value;
+  const seats = parseInt(document.getElementById("tableSeats").value);
+
+  if (!name || !seats) return;
+
+  await addDoc(tableRef, {
+    name,
+    seats,
+    guests: []
+  });
+
+  loadTables();
+};
+
+// LOAD TABLES
+async function loadTables() {
+  const container = document.getElementById("tables");
+  container.innerHTML = "";
+
+  const snap = await getDocs(tableRef);
+
+  snap.forEach(d => {
+    const t = d.data();
+
+    const guestOptions = guests.map(g =>
+      `<option value="${g.id}">${g.name}</option>`
+    ).join("");
+
+    container.innerHTML += `
+      <div class="table-card">
+        <strong>${t.name}</strong> (${t.guests.length}/${t.seats})
+
+        <select id="guest-${d.id}">
+          ${guestOptions}
+        </select>
+
+        <button onclick="assignGuest('${d.id}')">Add Guest</button>
+
+        <div style="margin-top:8px; color:var(--text-muted)">
+          ${t.guests.map(gid => {
+            const g = guests.find(x => x.id === gid);
+            return g ? g.name : "";
+          }).join(", ")}
+        </div>
+      </div>
+    `;
+  });
+}
+
+// ASSIGN GUEST
+window.assignGuest = async function (tableId) {
+  const select = document.getElementById("guest-" + tableId);
+  const guestId = select.value;
+
+  const ref = doc(db, "events", eventId, "tables", tableId);
+  const snap = await getDocs(tableRef);
+
+  let table;
+
+  snap.forEach(d => {
+    if (d.id === tableId) table = d.data();
+  });
+
+  if (!table) return;
+
+  if (table.guests.includes(guestId)) return;
+
+  if (table.guests.length >= table.seats) {
+    alert("Table full");
+    return;
+  }
+
+  const updated = [...table.guests, guestId];
+
+  await updateDoc(ref, { guests: updated });
+
+  loadTables();
+};
+
+// INIT
+await loadGuests();
+await loadTables();
+
+</script>
+
+</body>
+</html>
