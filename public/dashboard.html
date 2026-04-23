@@ -118,9 +118,12 @@ button:hover {
 <body>
 
 <div class="nav">
-  <div onclick="goEvents()" style="cursor:pointer;">← Events</div>
-  <div>Dashboard</div>
-</div>
+  <div style="display:flex; gap:15px;">
+    <span onclick="goEvents()" style="cursor:pointer;">Events</span>
+    <span onclick="goDashboard()" style="cursor:pointer;">Dashboard</span>
+    <span onclick="goGuests()" style="cursor:pointer;">Guests</span>
+    <span onclick="goCheckIn()" style="cursor:pointer;">Check-In</span>
+  </div>
 </div>
 
 <div class="container">
@@ -318,6 +321,9 @@ function goHome() {
   window.goEvents = function () {
   window.location.href = "./events.html";
 };
+
+
+  
 </script>
 
 </body>
