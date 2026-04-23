@@ -298,10 +298,11 @@ onSnapshot(ref, async (snap) => {
   if (!data) return;
 
   const modules = data.modules || {
-    checkIn: true,
-    donations: true,
-    auction: false
-  };
+  checkIn: true,
+  donations: true,
+  auction: false,
+  planner: true
+};
 
   const row = document.getElementById("modulesRow");
   row.innerHTML = "";
@@ -371,8 +372,18 @@ onSnapshot(ref, async (snap) => {
     </div>
   `;
 });
- 
+ }
 
+  if (modules.planner) {
+  row.innerHTML += `
+    <div class="card col clickable" onclick="goToPlanner()">
+      <div>Seating Planner</div>
+      <div class="stat">Setup</div>
+      <div style="color:var(--text-muted); margin-top:8px;">
+        Tables & seating
+      </div>
+    </div>
+  `;
 }
 
 // NAV
@@ -426,6 +437,10 @@ window.goCheckIn = function () {
 
   window.goToDonations = function () {
   window.location.href = "./donations.html?eventId=" + eventId;
+};
+  window.goToPlanner = function () {
+  const eventId = new URLSearchParams(window.location.search).get("eventId");
+  window.location.href = "./planner.html?eventId=" + eventId;
 };
   
 </script>
