@@ -157,7 +157,7 @@ import { db, auth } from "./firebase.js";
 import { getMemory } from "./memory.js";
 import { doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
+import { collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 // AUTH
 onAuthStateChanged(auth, (user) => {
   if (!user) {
@@ -305,6 +305,27 @@ nextStepEl.innerText = "Next: " + suggestion;
   const row = document.getElementById("modulesRow");
   row.innerHTML = "";
 
+   // 🔥 AUCTION TOTAL (LIVE)
+const auctionRef = collection(db, "events", eventId, "auction");
+
+onSnapshot(auctionRef, (auctionSnap) => {
+  let total = 0;
+
+  auctionSnap.forEach(d => {
+    const item = d.data();
+    total += item.currentBid || 0;
+  });
+
+  // add auction card
+  row.innerHTML += `
+    <div class="card col clickable" onclick="goToAuction()">
+      <div>Silent Auction</div>
+      <div class="stat">$${total}</div>
+      <div style="color:var(--text-muted); margin-top:8px;">Total Value</div>
+    </div>
+  `;
+});
+
   if (modules.checkIn) {
     row.innerHTML += `
       <div class="card col clickable" onclick="goToCheckIn()">
@@ -324,14 +345,7 @@ nextStepEl.innerText = "Next: " + suggestion;
     `;
   }
 
-  row.innerHTML += `
-    <div class="card col clickable" onclick="goToAuction()">
-      <div>Silent Auction</div>
-      <div class="stat">Manage</div>
-      <div style="color:var(--text-muted); margin-top:8px;">Tap to open</div>
-    </div>
-  `;
-
+ 
   row.innerHTML += `
     <div class="card col clickable" onclick="goToGuests()">
       <div>Guests</div>
