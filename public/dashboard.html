@@ -322,7 +322,23 @@ function goHome() {
   window.location.href = "./events.html";
 };
 
+const params = new URLSearchParams(window.location.search);
+const eventId = params.get("eventId");
 
+window.goDashboard = function () {
+  if (!eventId) return;
+  window.location.href = "./dashboard.html?eventId=" + eventId;
+};
+
+window.goGuests = function () {
+  if (!eventId) return;
+  window.location.href = "./guests.html?eventId=" + eventId;
+};
+
+window.goCheckIn = function () {
+  if (!eventId) return;
+  window.location.href = "./checkin.html?eventId=" + eventId;
+};
   
 </script>
 
