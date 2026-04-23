@@ -121,6 +121,14 @@ function loadEvents(uid) {
   onSnapshot(q, (snap) => {
     list.innerHTML = "";
 
+if (snap.empty) {
+  list.innerHTML = `
+    <div style="color:var(--text-muted); margin-top:20px;">
+      No events yet. Create your first event.
+    </div>
+  `;
+  return;
+}
     snap.forEach(docSnap => {
       const data = docSnap.data();
 
