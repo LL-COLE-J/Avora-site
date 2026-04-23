@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Donations - Avora</title>
+
+<style>
+:root {
+  --bg-main:#050a18;
+  --bg-card:#0f172a;
+  --accent:#6366f1;
+  --text-main:#e5e7eb;
+  --text-muted:#9ca3af;
+  --border-soft:rgba(255,255,255,0.08);
+}
+
+body {
+  margin:0;
+  font-family:-apple-system;
+  background:var(--bg-main);
+  color:var(--text-main);
+}
+
+.nav {
+  display:flex;
+  justify-content:space-between;
+  padding:20px;
+  border-bottom:1px solid var(--border-soft);
+}
+
+.container {
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+}
+
+.card {
+  background:var(--bg-card);
+  padding:14px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+input {
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:10px;
+  border:1px solid var(--border-soft);
+  background:#020617;
+  color:white;
+}
+
+button {
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+  <div onclick="goHome()" style="cursor:pointer;">AVORA</div>
+
+  <div style="display:flex; gap:15px;">
+    <span onclick="goEvents()" style="cursor:pointer;">Events</span>
+    <span onclick="goDashboard()" style="cursor:pointer;">Dashboard</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <h2>Donations</h2>
+
+  <input id="donorName" placeholder="Donor name">
+  <input id="donationAmount" placeholder="Amount">
+  <button onclick="addDonation()">Add Donation</button>
+
+  <div id="donationList"></div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  onSnapshot 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+// CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "avora-fc8b4.firebaseapp.com",
+  projectId: "avora-fc8b4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// AUTH
+onAuthStateChanged(auth, (user) => {
+  if (!user) window.location.href = "./login.html";
+});
+
+// EVENT ID
+const params = new URLSearchParams(window.location.search);
+const eventId = params.get("eventId");
+
+if (!eventId) {
+  window.location.href = "./events.html";
+  throw new Error("No eventId");
+}
+
+// COLLECTION
+const donationRef = collection(db, "events", eventId, "donations");
+const list = document.getElementById("donationList");
+
+// ADD
+window.addDonation = async function () {
+  const name = document.getElementById("donorName").value.trim();
+  const amount = Number(document.getElementById("donationAmount").value);
+
+  if (!name || !amount) return;
+
+  await addDoc(donationRef, {
+    name,
+    amount
+  });
+
+  document.getElementById("donorName").value = "";
+  document.getElementById("donationAmount").value = "";
+};
+
+// LISTEN
+onSnapshot(donationRef, (snap) => {
+  list.innerHTML = "";
+
+  snap.forEach(d => {
+    const data = d.data();
+
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <div style="font-size:16px;">${data.name}</div>
+      <div style="color:var(--text-muted);">$${data.amount}</div>
+    `;
+
+    list.appendChild(div);
+  });
+});
+
+// NAV
+window.goHome = () => window.location.href = "./index.html";
+window.goEvents = () => window.location.href = "./events.html";
+window.goDashboard = () => {
+  window.location.href = "./dashboard.html?eventId=" + eventId;
+};
+</script>
+
+</body>
+</html>
