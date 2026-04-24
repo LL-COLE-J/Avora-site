@@ -84,10 +84,9 @@ button {
 </div>
 
 <script type="module">
-  let guests = [];
 import { db } from "./firebase.js";
 import {
-  collection, addDoc, getDocs, doc, updateDoc
+  collection, addDoc, getDocs, doc, updateDoc, getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const eventId = new URLSearchParams(window.location.search).get("eventId");
@@ -106,7 +105,27 @@ async function loadGuests() {
   });
 }
 
-  window.assignGuest = async function (tableId) {
+// CREATE TABLE
+window.createTable = async function () {
+  const name = document.getElementById("tableName").value;
+  const seats = parseInt(document.getElementById("tableSeats").value);
+
+  if (!name || !seats) return;
+
+  await addDoc(tableRef, {
+    name,
+    seats,
+    guests: []
+  });
+
+  document.getElementById("tableName").value = "";
+  document.getElementById("tableSeats").value = "";
+
+  loadTables();
+};
+
+// ASSIGN GUEST
+window.assignGuest = async function (tableId) {
   const select = document.getElementById("guest-" + tableId);
   const guestId = select.value;
 
@@ -130,30 +149,6 @@ async function loadGuests() {
   loadTables();
 };
 
-  async function loadGuests() {
-  const snap = await getDocs(collection(db, "events", eventId, "guests"));
-  guests = [];
-  snap.forEach(d => {
-    guests.push({ id: d.id, ...d.data() });
-  });
-}
-
-// CREATE TABLE
-window.createTable = async function () {
-  const name = document.getElementById("tableName").value;
-  const seats = parseInt(document.getElementById("tableSeats").value);
-
-  if (!name || !seats) return;
-
-  await addDoc(tableRef, {
-    name,
-    seats,
-    guests: []
-  });
-
-  loadTables();
-};
-
 // LOAD TABLES
 async function loadTables() {
   const container = document.getElementById("tables");
@@ -164,65 +159,30 @@ async function loadTables() {
   snap.forEach(d => {
     const t = d.data();
 
-    const guestOptions = guests.map(g =>
-      `<option value="${g.id}">${g.name}</option>`
-    ).join("");
-
     container.innerHTML += `
-  <div class="card">
-    <strong>${t.name} (${t.guests.length}/${t.seats})</strong>
+      <div class="card">
+        <strong>${t.name} (${t.guests.length}/${t.seats})</strong>
 
-    <select id="guest-${d.id}">
-      ${guests.map(g => `<option value="${g.id}">${g.name}</option>`).join("")}
-    </select>
+        <select id="guest-${d.id}">
+          ${guests.map(g => `<option value="${g.id}">${g.name}</option>`).join("")}
+        </select>
 
-    <button onclick="assignGuest('${d.id}')">Add Guest</button>
+        <button onclick="assignGuest('${d.id}')">Add Guest</button>
 
-    <div style="margin-top:8px; color:var(--text-muted)">
-      ${t.guests.map(gid => {
-        const g = guests.find(x => x.id === gid);
-        return g ? g.name : "";
-      }).join(", ")}
-    </div>
-  </div>
-`;  });
-}
-
-// ASSIGN GUEST
-window.assignGuest = async function (tableId) {
-  const select = document.getElementById("guest-" + tableId);
-  const guestId = select.value;
-
-  const ref = doc(db, "events", eventId, "tables", tableId);
-  const snap = await getDocs(tableRef);
-
-  let table;
-
-  snap.forEach(d => {
-    if (d.id === tableId) table = d.data();
+        <div style="margin-top:8px; color:var(--text-muted)">
+          ${t.guests.map(gid => {
+            const g = guests.find(x => x.id === gid);
+            return g ? g.name : "";
+          }).join(", ")}
+        </div>
+      </div>
+    `;
   });
-
-  if (!table) return;
-
-  if (table.guests.includes(guestId)) return;
-
-  if (table.guests.length >= table.seats) {
-    alert("Table full");
-    return;
-  }
-
-  const updated = [...table.guests, guestId];
-
-  await updateDoc(ref, { guests: updated });
-
-  loadTables();
-};
+}
 
 // INIT
 await loadGuests();
 await loadTables();
-
 </script>
-
 </body>
 </html>
