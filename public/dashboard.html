@@ -193,6 +193,10 @@ const progressEl = document.getElementById("progressText");
 if (progressEl) {
   progressEl.innerText = `${complete} / ${total} complete`;
 }
+    if (memory.planner_insights && memory.planner_insights.length > 0) {
+  nextStepEl.innerText = memory.planner_insights[0];
+  return; // stop normal roadmap logic
+}
 
     if (nextStepEl) {
      let suggestion = memory.current_state.next_task;
