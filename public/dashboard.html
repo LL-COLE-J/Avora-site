@@ -193,66 +193,28 @@ const progressEl = document.getElementById("progressText");
 if (progressEl) {
   progressEl.innerText = `${complete} / ${total} complete`;
 }
-   if (nextStepEl) {
+  if (nextStepEl) {
 
-  // 🔥 planner insight override
+  // ✅ MAIN ROADMAP TEXT
+  const nextTask = memory.current_state?.next_task || "Continue building";
+  nextStepEl.innerText = "Next: " + nextTask;
 
-
-  let suggestion = memory.current_state.next_task;
-     // 🔥 PRIORITY: planner insights override
-if (memory.planner_insights && memory.planner_insights.length > 0) {
-  suggestion = memory.planner_insights[0];
-}
-
-if (suggestion.toLowerCase().includes("donation")) {
-  suggestion = "💰 Add donations to start generating revenue";
-}
-
-if (suggestion.toLowerCase().includes("guest")) {
-  suggestion = "👥 Improve guest experience / management";
-}
-
-if (suggestion.toLowerCase().includes("auction")) {
-  suggestion = "🏷️ Build auction module (high value feature)";
-}
-
-     const hintEl = document.getElementById("actionHint");
-
-if (hintEl) {
-  if (memory.planner_insights && memory.planner_insights.length > 0) {
-    hintEl.innerText = memory.planner_insights[0];
-  } else {
-    hintEl.innerText = "Continue building core functionality";
-  }
-}
-
-  const task = memory.current_state.next_task.toLowerCase();
-
-  if (task.includes("donation")) {
-    hint = "Add a simple donation input + update dashboard revenue";
-  } 
-  else if (task.includes("guest")) {
-    hint = "Improve guest flow or add bulk import";
-  } 
-  else if (task.includes("auction")) {
-    hint = "Start with item list and basic bidding";
-  } 
-  else {
-    hint = "Continue building core functionality";
+  const remaining = memory.roadmap.filter(r => r.status !== "complete");
+  if (remaining.length > 0) {
+    nextStepEl.innerText += ` (${remaining.length} remaining)`;
   }
 
-  hintEl.innerText = hint;
-}
+  // ✅ INSIGHT (SEPARATE, NOT OVERRIDING)
+  const hintEl = document.getElementById("actionHint");
 
-const isInsight = suggestion.startsWith("⚠️") || suggestion.startsWith("ℹ️") || suggestion.startsWith("⚖️") || suggestion.startsWith("💡") || suggestion.startsWith("🚨") || suggestion.startsWith("🎯");
-
-nextStepEl.innerText = "Next: " + (memory.current_state?.next_task || "Continue building");
-      const remaining = memory.roadmap.filter(r => r.status !== "complete");
-      if (remaining.length > 0) {
-        nextStepEl.innerText += ` (${remaining.length} remaining)`;
-      }
+  if (hintEl) {
+    if (memory.planner_insights && memory.planner_insights.length > 0) {
+      hintEl.innerText = memory.planner_insights[0];
+    } else {
+      hintEl.innerText = "Continue building core functionality";
     }
   }
+}
 
   // 🔥 BUTTON LOGIC (CORRECT PLACE)
   const btn = document.getElementById("completeStepBtn");
