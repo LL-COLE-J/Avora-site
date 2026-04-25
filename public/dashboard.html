@@ -137,6 +137,9 @@ button:hover {
   <div id="nextStepText" class="stat">Loading...</div>
   <div id="progressText" style="margin-top:8px; color:var(--text-muted);"></div>
    <div id="actionHint" style="margin-top:6px; font-size:13px; color:var(--text-muted);"></div> 
+    <button id="fixSeatingBtn" style="margin-top:8px; display:none;">
+  ⚡ Fix Seating
+</button>
 
     
 
@@ -205,16 +208,45 @@ if (progressEl) {
   }
 
   // ✅ INSIGHT (SEPARATE, NOT OVERRIDING)
-  const hintEl = document.getElementById("actionHint");
+  // ✅ INSIGHT (SEPARATE, NOT OVERRIDING)
+const hintEl = document.getElementById("actionHint");
 
-  if (hintEl) {
-    if (memory.planner_insights && memory.planner_insights.length > 0) {
-      hintEl.innerText = memory.planner_insights[0];
-    } else {
-      hintEl.innerText = "Continue building core functionality";
-    }
+if (hintEl) {
+  if (memory.planner_insights && memory.planner_insights.length > 0) {
+    hintEl.innerText = memory.planner_insights[0];
+  } else {
+    hintEl.innerText = "Continue building core functionality";
   }
 }
+
+// ✅ FIX SEATING BUTTON (OUTSIDE OF HINT LOGIC)
+const fixBtn = document.getElementById("fixSeatingBtn");
+
+if (fixBtn) {
+  const hasSeatingIssue =
+    memory.planner_insights &&
+    memory.planner_insights.some(i =>
+      i.toLowerCase().includes("empty") ||
+      i.toLowerCase().includes("uneven")
+    );
+
+  fixBtn.style.display = hasSeatingIssue ? "block" : "none";
+
+  fixBtn.onclick = () => {
+    const eventId = new URLSearchParams(window.location.search).get("eventId");
+    window.location.href = "./planner.html?eventId=" + eventId;
+  };
+}
+    
+    
+    }
+    
+
+
+  }
+}
+
+    
 
   // 🔥 BUTTON LOGIC (CORRECT PLACE)
   const btn = document.getElementById("completeStepBtn");
