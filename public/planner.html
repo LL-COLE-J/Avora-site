@@ -186,6 +186,38 @@ async function loadTables() {
   });
 }
 
+  function generateInsights(tables) {
+  const insights = [];
+
+  let totalSeats = 0;
+  let totalGuests = 0;
+
+  tables.forEach(t => {
+    totalSeats += t.seats;
+    totalGuests += t.guests.length;
+
+    if (t.guests.length === 0) {
+      insights.push(`⚠️ ${t.name} is empty`);
+    }
+
+    if (t.guests.length === t.seats) {
+      insights.push(`✅ ${t.name} is full`);
+    }
+  });
+
+  const remaining = totalSeats - totalGuests;
+
+  if (remaining > 0) {
+    insights.push(`ℹ️ ${remaining} seats open`);
+  }
+
+  if (totalGuests === 0) {
+    insights.push(`👀 No guests assigned yet`);
+  }
+
+  return insights;
+}
+
 // INIT
 await loadGuests();
 await loadTables();
