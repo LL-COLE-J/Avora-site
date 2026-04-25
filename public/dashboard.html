@@ -158,9 +158,9 @@ button:hover {
 <script type="module">
 import { db, auth } from "./firebase.js";
 import { getMemory } from "./memory.js";
-import { doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, onSnapshot, updateDoc, getDocs, collection } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
   
 // AUTH
 onAuthStateChanged(auth, (user) => {
@@ -208,7 +208,7 @@ if (progressEl) {
   }
 
   // ✅ INSIGHT (SEPARATE, NOT OVERRIDING)
-  // ✅ INSIGHT (SEPARATE, NOT OVERRIDING)
+  
 const hintEl = document.getElementById("actionHint");
 
 if (hintEl) {
@@ -232,10 +232,54 @@ if (fixBtn) {
 
   fixBtn.style.display = hasSeatingIssue ? "block" : "none";
 
-  fixBtn.onclick = () => {
-    const eventId = new URLSearchParams(window.location.search).get("eventId");
-    window.location.href = "./planner.html?eventId=" + eventId;
-  };
+ fixBtn.onclick = async () => {
+  const eventId = new URLSearchParams(window.location.search).get("eventId");
+
+  const tableRef = collection(db, "events", eventId, "tables");
+  const snap = await getDocs(tableRef);
+
+  const tables = [];
+
+  snap.forEach(d => {
+    tables.push({ id: d.id, ...d.data() });
+  });
+
+  // sort least full → most full
+  tables.sort((a, b) => a.guests.length - b.guests.length);
+
+  let i = 0;
+  let j = tables.length - 1;
+
+  while (i < j) {
+    const low = tables[i];
+    const high = tables[j];
+
+    if (low.guests.length >= low.seats) {
+      i++;
+      continue;
+    }
+
+    if (high.guests.length <= Math.ceil(high.seats / 2)) {
+      j--;
+      continue;
+    }
+
+    if (high.guests.length === 0) break;
+
+    const guest = high.guests.pop();
+    low.guests.push(guest);
+  }
+
+  // save updates
+  for (const t of tables) {
+    await updateDoc(doc(db, "events", eventId, "tables", t.id), {
+      guests: t.guests
+    });
+  }
+
+  alert("⚡ Seating optimized");
+  location.reload();
+};
 }
   }
   }
