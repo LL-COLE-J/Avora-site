@@ -188,6 +188,7 @@ async function loadTables() {
     `;
   });
   const insights = generateInsights(tablesData);
+  await saveInsightsToAgent(insights);
 
 const el = document.getElementById("insights");
 
@@ -266,6 +267,19 @@ if (insights.length === 0) {
   }
 
   return insights;
+}
+
+  async function saveInsightsToAgent(insights) {
+  const ref = doc(db, "agent_memory", "main");
+
+  try {
+    await updateDoc(ref, {
+      planner_insights: insights,
+      planner_last_updated: Date.now()
+    });
+  } catch (e) {
+    console.log("Agent memory not ready yet");
+  }
 }
 
 // INIT
