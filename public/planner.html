@@ -198,33 +198,71 @@ if (insights.length === 0) {
 }
 }
 
-  function generateInsights(tables) {
+ function generateInsights(tables) {
   const insights = [];
 
   let totalSeats = 0;
   let totalGuests = 0;
+
+  const emptyTables = [];
+  const fullTables = [];
+  const underfilled = [];
 
   tables.forEach(t => {
     totalSeats += t.seats;
     totalGuests += t.guests.length;
 
     if (t.guests.length === 0) {
+      emptyTables.push(t);
       insights.push(`⚠️ ${t.name} is empty`);
     }
 
     if (t.guests.length === t.seats) {
+      fullTables.push(t);
       insights.push(`✅ ${t.name} is full`);
+    }
+
+    if (t.guests.length > 0 && t.guests.length < t.seats) {
+      underfilled.push(t);
     }
   });
 
   const remaining = totalSeats - totalGuests;
 
+  // 🔥 NEW: Capacity insight
   if (remaining > 0) {
-    insights.push(`ℹ️ ${remaining} seats open`);
+    insights.push(`ℹ️ ${remaining} total open seats`);
   }
 
-  if (totalGuests === 0) {
-    insights.push(`👀 No guests assigned yet`);
+  // 🔥 NEW: Consolidation insight
+  if (emptyTables.length > 0 && underfilled.length > 1) {
+    insights.push(`💡 You can consolidate guests into fewer tables`);
+  }
+
+  // 🔥 NEW: Imbalance detection
+  if (underfilled.length > 1) {
+    const sizes = underfilled.map(t => t.guests.length);
+    const max = Math.max(...sizes);
+    const min = Math.min(...sizes);
+
+    if (max - min >= 2) {
+      insights.push(`⚖️ Tables are uneven — consider redistributing guests`);
+    }
+  }
+
+  // 🔥 NEW: Over-table warning
+  if (emptyTables.length >= 2) {
+    insights.push(`🚨 Too many empty tables — reduce table count`);
+  }
+
+  // 🔥 NEW: Optimization hint
+  if (totalGuests > 0 && remaining > 0) {
+    insights.push(`🎯 You can optimize seating for better density`);
+  }
+
+  // 🔥 NEW: Completion signal
+  if (remaining === 0) {
+    insights.push(`🔥 Perfect seating — all seats filled`);
   }
 
   return insights;
