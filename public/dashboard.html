@@ -196,11 +196,13 @@ if (progressEl) {
    if (nextStepEl) {
 
   // 🔥 planner insight override
- if (memory.planner_insights && memory.planner_insights.length > 0) {
-  nextStepEl.innerText = memory.planner_insights[0];
-}
+
 
   let suggestion = memory.current_state.next_task;
+     // 🔥 PRIORITY: planner insights override
+if (memory.planner_insights && memory.planner_insights.length > 0) {
+  suggestion = memory.planner_insights[0];
+}
 
 if (suggestion.toLowerCase().includes("donation")) {
   suggestion = "💰 Add donations to start generating revenue";
@@ -237,8 +239,9 @@ if (hintEl) {
   hintEl.innerText = hint;
 }
 
-nextStepEl.innerText = "Next: " + suggestion;
+const isInsight = suggestion.startsWith("⚠️") || suggestion.startsWith("ℹ️") || suggestion.startsWith("⚖️") || suggestion.startsWith("💡") || suggestion.startsWith("🚨") || suggestion.startsWith("🎯");
 
+nextStepEl.innerText = isInsight ? suggestion : "Next: " + suggestion;
       const remaining = memory.roadmap.filter(r => r.status !== "complete");
       if (remaining.length > 0) {
         nextStepEl.innerText += ` (${remaining.length} remaining)`;
