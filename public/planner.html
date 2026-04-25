@@ -270,7 +270,7 @@ if (insights.length === 0) {
 }
 
   async function saveInsightsToAgent(insights) {
-  const ref = doc(db, "agent_memory", "main");
+  const ref = doc(db, "agent_memory", "avora_main");
 
   try {
     await updateDoc(ref, {
