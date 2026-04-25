@@ -196,10 +196,9 @@ if (progressEl) {
    if (nextStepEl) {
 
   // 🔥 planner insight override
-  if (memory.planner_insights && memory.planner_insights.length > 0) {
-    nextStepEl.innerText = memory.planner_insights[0];
-    return;
-  }
+ if (memory.planner_insights && memory.planner_insights.length > 0) {
+  nextStepEl.innerText = memory.planner_insights[0];
+}
 
   let suggestion = memory.current_state.next_task;
 
