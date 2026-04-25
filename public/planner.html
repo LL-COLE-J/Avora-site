@@ -119,10 +119,10 @@ window.createTable = async function () {
   if (!name || !seats) return;
 
   await addDoc(tableRef, {
-    name,
-    seats,
-    guests: []
-  });
+  name: name || "Table",
+  seats,
+  guests: []
+});
 
   document.getElementById("tableName").value = "";
   document.getElementById("tableSeats").value = "";
@@ -160,10 +160,13 @@ async function loadTables() {
   const container = document.getElementById("tables");
   container.innerHTML = "";
 
+   const tablesData = [];
+
   const snap = await getDocs(tableRef);
 
   snap.forEach(d => {
     const t = d.data();
+    tablesData.push(t);
 
     container.innerHTML += `
       <div class="card">
@@ -184,6 +187,15 @@ async function loadTables() {
       </div>
     `;
   });
+  const insights = generateInsights(tablesData);
+
+const el = document.getElementById("insights");
+
+if (insights.length === 0) {
+  el.innerText = "All tables perfectly balanced 👍";
+} else {
+  el.innerHTML = insights.map(i => `<div>${i}</div>`).join("");
+}
 }
 
   function generateInsights(tables) {
