@@ -219,7 +219,12 @@ if (suggestion.toLowerCase().includes("auction")) {
      const hintEl = document.getElementById("actionHint");
 
 if (hintEl) {
-  let hint = "";
+  if (memory.planner_insights && memory.planner_insights.length > 0) {
+    hintEl.innerText = memory.planner_insights[0];
+  } else {
+    hintEl.innerText = "Continue building core functionality";
+  }
+}
 
   const task = memory.current_state.next_task.toLowerCase();
 
@@ -241,7 +246,7 @@ if (hintEl) {
 
 const isInsight = suggestion.startsWith("⚠️") || suggestion.startsWith("ℹ️") || suggestion.startsWith("⚖️") || suggestion.startsWith("💡") || suggestion.startsWith("🚨") || suggestion.startsWith("🎯");
 
-nextStepEl.innerText = isInsight ? suggestion : "Next: " + suggestion;
+nextStepEl.innerText = "Next: " + (memory.current_state?.next_task || "Continue building");
       const remaining = memory.roadmap.filter(r => r.status !== "complete");
       if (remaining.length > 0) {
         nextStepEl.innerText += ` (${remaining.length} remaining)`;
