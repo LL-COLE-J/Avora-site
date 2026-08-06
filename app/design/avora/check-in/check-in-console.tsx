@@ -25,6 +25,8 @@ export function CheckInConsole() {
   const party = selected ? source.parties.find((item) => item.id === selected.partyId) : undefined;
   const table = selected ? source.tables.find((item) => item.id === selected.tableId) : undefined;
   const partyGuests = party ? guests.filter((guest) => party.guestIds.includes(guest.id)) : [];
+  const selectedName = selected ? guestFullName(selected) : "";
+  const lastActionGuest = lastAction ? guests.find((guest) => guest.id === lastAction.guestId) : undefined;
 
   function replaceGuest(next: Guest) {
     setGuests((current) => current.map((guest) => guest.id === next.id ? next : guest));
@@ -49,27 +51,36 @@ export function CheckInConsole() {
   return (
     <main className="console-shell">
       <header className="event-header">
-        <div>
-          <p className="eyebrow">Avora live operations</p>
-          <h1>{source.event.name}</h1>
-          <p className="venue">{source.event.venueName} · Synthetic review</p>
+        <div className="event-identity">
+          <div className="brand-mark" aria-hidden="true"><span>A</span></div>
+          <div>
+            <p className="eyebrow">Avora · Guest arrival</p>
+            <h1>{source.event.name}</h1>
+            <p className="venue">{source.event.venueName} <span aria-hidden="true">·</span> Synthetic review</p>
+          </div>
         </div>
         <div className="status-cluster" aria-label="Event status">
-          <span className="sync-pill"><span className="sync-dot" /> Local demo</span>
-          <span className="count"><strong>{checkedInCount}</strong> / {guests.length} arrived</span>
+          <span className="sync-pill"><span className="sync-dot" /> Ready on this device</span>
+          <span className="count"><strong>{checkedInCount}</strong><span> of {guests.length} arrived</span></span>
         </div>
       </header>
 
       <section className="workspace" aria-label="Guest check-in workspace">
         <div className="search-panel">
-          <label htmlFor="guest-search">Find a guest</label>
+          <div className="panel-heading">
+            <div>
+              <p className="step-label">Arrival 01</p>
+              <h2>Find a guest</h2>
+            </div>
+            <span>Search by first or last name</span>
+          </div>
           <div className="search-wrap">
-            <span aria-hidden="true">⌕</span>
+            <span className="search-icon" aria-hidden="true" />
             <input
               id="guest-search"
               autoComplete="off"
               autoFocus
-              placeholder="Start typing a name…"
+              placeholder="Type a guest name…"
               value={query}
               onChange={(event) => { setQuery(event.target.value); setSelectedId(null); }}
             />
@@ -77,12 +88,12 @@ export function CheckInConsole() {
           </div>
 
           <div className="result-summary" aria-live="polite">
-            {query ? `${results.length} ${results.length === 1 ? "match" : "matches"}` : "Search by first or last name"}
+            {query ? `${results.length} ${results.length === 1 ? "match" : "matches"}` : "Guest results will appear here"}
           </div>
 
           <div className="results">
             {!query && <EmptySearch />}
-            {query && results.length === 0 && <NoResults query={query} />}
+            {query && results.length === 0 && <NoResults query={query} onClear={() => setQuery("")} />}
             {results.map((guest) => {
               const guestParty = source.parties.find((item) => item.id === guest.partyId);
               const guestTable = source.tables.find((item) => item.id === guest.tableId);
@@ -105,9 +116,10 @@ export function CheckInConsole() {
         <aside className={`detail-panel ${selected ? "active" : ""}`} aria-live="polite">
           {!selected ? <SelectPrompt /> : (
             <>
+              <button className="mobile-close" onClick={() => setSelectedId(null)} aria-label="Close guest details">Close</button>
               <div className="detail-heading">
-                <p className="eyebrow">Confirm identity</p>
-                <h2>{guestFullName(selected)}</h2>
+                <p className="step-label">Arrival 02 · Confirm identity</p>
+                <h2>{selectedName}</h2>
                 {duplicates.has(selected.id) && <span className="warning-badge">Duplicate name—verify party and table</span>}
               </div>
 
@@ -132,26 +144,26 @@ export function CheckInConsole() {
                 ) : (
                   <button className="primary-action" onClick={() => checkIn(selected)} disabled={selected.status === "needs_attention"}>Check in {selected.firstName}</button>
                 )}
-                <button className="text-action" onClick={() => setSelectedId(null)}>Back to results</button>
+                <button className="text-action" onClick={() => setSelectedId(null)}>Back to guest results</button>
               </div>
             </>
           )}
         </aside>
       </section>
 
-      {lastAction && <div className="undo-toast" role="status"><span>Check-in updated.</span><button onClick={undo}>Undo</button></div>}
+      {lastAction && <div className="undo-toast" role="status"><span><strong>{lastActionGuest ? guestFullName(lastActionGuest) : "Guest"}</strong> updated.</span><button onClick={undo}>Undo</button></div>}
     </main>
   );
 }
 
 function EmptySearch() {
-  return <div className="empty-state"><span>⌕</span><h2>Ready for the next arrival</h2><p>Search by first or last name. Results appear as you type.</p></div>;
+  return <div className="empty-state"><span>✦</span><h2>Ready for the next arrival</h2><p>Welcome guests, confirm their party and table, then record their arrival.</p></div>;
 }
 
-function NoResults({ query }: { query: string }) {
-  return <div className="empty-state warning"><span>!</span><h2>No match for “{query}”</h2><p>Check the spelling or ask the event lead to handle an exception.</p><button>Open exception flow</button></div>;
+function NoResults({ query, onClear }: { query: string; onClear: () => void }) {
+  return <div className="empty-state warning"><span>!</span><h2>No match for “{query}”</h2><p>Check the spelling. If the guest still cannot be found, ask the event lead for help.</p><button onClick={onClear}>Clear and search again</button></div>;
 }
 
 function SelectPrompt() {
-  return <div className="select-prompt"><span>01</span><p>Select a guest to confirm their party, table, and arrival status.</p></div>;
+  return <div className="select-prompt"><span>02</span><h2>Confirm the guest</h2><p>Select a guest to verify their party, table, and arrival status.</p></div>;
 }
