@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { CheckInConsole } from "./design/avora/check-in/check-in-console";
 
 export default function Home() {
-  redirect("/design/avora/check-in");
+  return <CheckInConsole />;
 }
