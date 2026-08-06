@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Premium event operations, beginning with Pink Gala 2027 check-in.",
 };
 
-export const viewport: Viewport = { themeColor: "#160b16", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#f8f2ef", colorScheme: "light" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en"><body>{children}</body></html>;
