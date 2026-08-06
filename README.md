@@ -1,32 +1,23 @@
 # Avora
 
-Avora is the canonical event-platform product from NowySystems.
-
-## Current focus
-
-Pink Gala 2027 is Avora's first production deployment. The active product scope is a premium, staff-facing guest check-in experience. Auction functionality is not part of the 2027 release.
-
-The previous static Firebase prototype has been removed from the active tree. Its full implementation remains recoverable through this repository's Git history.
+Avora is the NowySystems event-operations product. Pink Gala 2027 is its first production deployment and check-in is its first focused workflow.
 
 ## Product boundaries
 
-- **Avora** — reusable event-platform architecture, models, modules, and product code.
-- **Pink Gala 2027** — the first branded Avora implementation and proving ground.
-- **NowySystems Brain (NSB)** — reusable standards, design systems, workflows, decisions, and validated lessons.
-- **PINKGALA2026** — historical workflow reference.
-- **pg-auction** — historical implementation pending separately authorized security cleanup and archival.
+- **Avora** owns reusable event-platform architecture, models, modules, and product code.
+- **Pink Gala 2027** is Avora's first branded implementation and proving ground.
+- **NowySystems Brain** owns reusable standards, decisions, and validated lessons.
+- **PINKGALA2026** and **pg-auction** remain historical references outside this active codebase.
 
-## Guardrails
+## Current milestone
 
-- Build around real event-day workflows, not a generic dashboard.
-- Use synthetic guest data for design and rehearsal before connecting live data.
-- Keep consequential corrections visible, reversible, and auditable.
-- Design for phones and tablets, weak networks, exceptions, and reconciliation.
-- Preserve clean extension points for future Avora modules without shipping unused features.
-- Promote validated reusable patterns back into NSB.
+The repository starts with a synthetic staff check-in review at `/design/avora/check-in`, foundational event/guest/party/table/staff/audit contracts, and automated quality gates.
 
-## Next milestone
+```bash
+npm install
+npm run dev
+```
 
-Define the foundational event, guest, party, seating, staff, check-in, and audit models, then build the first synthetic Pink Gala 2027 check-in journey.
+Before a change is accepted, `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build` must pass.
 
-Live guest data, Firebase resources, deployments, and historical repositories are outside this reset.
+Live guest data, Firebase resources, deployments, and historical repositories remain disconnected.
