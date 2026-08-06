@@ -20,10 +20,10 @@ npm run dev
 
 Before a change is accepted, `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build` must pass.
 
-## Cloudflare runtime
+## Cloudflare deployment
 
-Avora targets Cloudflare Workers through the OpenNext adapter. `npm run build:cloudflare` creates the production Worker artifact, while `npm run preview` runs that artifact locally in the Workers runtime.
+The synthetic check-in milestone is exported as a static Next.js site for the existing Cloudflare Pages project. `npm run build:cloudflare` writes the deployable site to `.open-next/assets`, preserving the project's current output-directory setting while serving real HTML routes instead of an unbound Worker bundle.
 
-For Cloudflare Workers Builds, use `npm run deploy` as the deploy command. The Worker configuration lives in `wrangler.jsonc`; secrets and environment-specific values belong in Cloudflare, never in Git.
+Move Avora to Cloudflare Workers only when a server-side requirement is introduced. Secrets and environment-specific values belong in Cloudflare, never in Git.
 
 Live guest data, Firebase resources, deployments, and historical repositories remain disconnected.
