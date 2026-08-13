@@ -16,6 +16,6 @@ Every consequential synthetic action now creates an `AuditRecord` with an actor,
 
 The local session is versioned and persisted in browser storage. Guest, party, table, exception, audit, and outbox state survive refreshes and browser restarts. Rehearsal mode uses real browser connectivity plus an optional forced-offline switch. Pending mutations are deduplicated by operation ID and by entity/action while unsynced.
 
-The `Sync now` action is still a synthetic acknowledgement. The Firebase adapter must exchange the same idempotency key with the remote store, retry automatically, and define conflict handling before event use.
+`Sync now` uses the Firebase adapter when deployment configuration is present. It exchanges the same idempotency key with Firestore, acknowledges only successful mutations, and leaves rejected or conflicting operations in the device outbox for reconciliation. An unconfigured deployment never discards pending actions.
 
 The synthetic dataset is the only active data source. Firebase and real guest data remain disconnected until the synthetic workflow and production adapter contract are approved.

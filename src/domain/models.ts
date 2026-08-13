@@ -77,6 +77,7 @@ export interface PendingMutation {
   action: CheckInAction;
   createdAt: string;
   attempts: number;
+  audit?: AuditRecord;
   guest?: Guest;
   guests?: Guest[];
   parties?: Party[];

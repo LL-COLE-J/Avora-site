@@ -32,6 +32,7 @@ describe("local check-in session", () => {
       id: "operation_1",
     });
     const mutation = createPendingMutation({ id: "operation_1", audit: result.audit, guest: result.guest });
+    expect(mutation.audit).toEqual(result.audit);
     expect(enqueueMutation([mutation], mutation)).toHaveLength(1);
     expect(enqueueMutation([mutation], { ...mutation, id: "operation_2" })).toHaveLength(1);
   });
