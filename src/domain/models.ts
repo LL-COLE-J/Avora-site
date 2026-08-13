@@ -1,7 +1,10 @@
 export type EntityId = string;
 export type EventStatus = "draft" | "ready" | "live" | "closed";
 export type GuestStatus = "expected" | "checked_in" | "needs_attention";
-export type CheckInAction = "check_in" | "undo_check_in";
+export type CheckInAction = "check_in" | "undo_check_in" | "create_exception" | "resolve_exception";
+export type SyncStatus = "synced" | "pending";
+export type ExceptionStatus = "open" | "resolved";
+export type ExceptionReason = "guest_not_found" | "missing_assignment" | "identity_question" | "other";
 
 export interface Event {
   id: EntityId;
@@ -44,11 +47,27 @@ export interface StaffUser {
 export interface AuditRecord {
   id: EntityId;
   eventId: EntityId;
-  guestId: EntityId;
+  guestId?: EntityId;
   staffUserId: EntityId;
   action: CheckInAction;
   occurredAt: string;
+  subject: string;
+  syncStatus: SyncStatus;
   reason?: string;
+}
+
+export interface GuestException {
+  id: EntityId;
+  eventId: EntityId;
+  guestId?: EntityId;
+  guestName: string;
+  reason: ExceptionReason;
+  details: string;
+  status: ExceptionStatus;
+  createdAt: string;
+  createdByStaffId: EntityId;
+  resolvedAt?: string;
+  resolvedByStaffId?: EntityId;
 }
 
 export interface CheckInDataset {
