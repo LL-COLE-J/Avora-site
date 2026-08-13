@@ -1,7 +1,7 @@
 export type EntityId = string;
 export type EventStatus = "draft" | "ready" | "live" | "closed";
 export type GuestStatus = "expected" | "checked_in" | "needs_attention";
-export type CheckInAction = "check_in" | "undo_check_in" | "create_exception" | "resolve_exception";
+export type CheckInAction = "check_in" | "undo_check_in" | "create_exception" | "resolve_exception" | "import_guests";
 export type SyncStatus = "synced" | "pending";
 export type ExceptionStatus = "open" | "resolved";
 export type ExceptionReason = "guest_not_found" | "missing_assignment" | "identity_question" | "other";
@@ -78,6 +78,9 @@ export interface PendingMutation {
   createdAt: string;
   attempts: number;
   guest?: Guest;
+  guests?: Guest[];
+  parties?: Party[];
+  tables?: Table[];
   exception?: GuestException;
 }
 
@@ -86,6 +89,8 @@ export interface CheckInSession {
   eventId: EntityId;
   updatedAt: string;
   guests: Guest[];
+  parties: Party[];
+  tables: Table[];
   exceptions: GuestException[];
   auditRecords: AuditRecord[];
   outbox: PendingMutation[];

@@ -21,6 +21,8 @@ export function defaultCheckInSession(dataset: CheckInDataset): CheckInSession {
     eventId: dataset.event.id,
     updatedAt: dataset.event.startsAt,
     guests: dataset.guests,
+    parties: dataset.parties,
+    tables: dataset.tables,
     exceptions: [],
     auditRecords: [],
     outbox: [],
@@ -35,6 +37,8 @@ export function parseStoredSession(raw: string | null, fallback: CheckInSession)
       value.version !== CHECK_IN_SESSION_VERSION
       || value.eventId !== fallback.eventId
       || !Array.isArray(value.guests)
+      || !Array.isArray(value.parties)
+      || !Array.isArray(value.tables)
       || !Array.isArray(value.exceptions)
       || !Array.isArray(value.auditRecords)
       || !Array.isArray(value.outbox)
@@ -76,6 +80,9 @@ export function createPendingMutation(input: {
   id: string;
   audit: AuditRecord;
   guest?: PendingMutation["guest"];
+  guests?: PendingMutation["guests"];
+  parties?: PendingMutation["parties"];
+  tables?: PendingMutation["tables"];
   exception?: GuestException;
 }): PendingMutation {
   return {
@@ -86,6 +93,9 @@ export function createPendingMutation(input: {
     createdAt: input.audit.occurredAt,
     attempts: 0,
     guest: input.guest,
+    guests: input.guests,
+    parties: input.parties,
+    tables: input.tables,
     exception: input.exception,
   };
 }
