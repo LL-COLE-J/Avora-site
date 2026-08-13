@@ -19,12 +19,13 @@ import {
   type OperationContext,
 } from "@/src/domain/check-in-operations";
 import { duplicateNameIds, guestFullName, searchGuests } from "@/src/domain/guest-search";
+import { buildGuestImportPreview, type GuestImportPreview } from "@/src/domain/guest-import";
 import type { AuditRecord, Guest, GuestException } from "@/src/domain/models";
 
 const source = pinkGala2027Synthetic;
 const staff = source.staff[0];
 const checkInStore = createLocalCheckInStore(defaultCheckInSession(source));
-type WorkspaceView = "arrivals" | "exceptions" | "activity";
+type WorkspaceView = "arrivals" | "exceptions" | "activity" | "import";
 
 function formatTime(value?: string) {
   if (!value) return "";
@@ -37,17 +38,20 @@ function actionLabel(action: AuditRecord["action"]) {
     undo_check_in: "Corrected check-in",
     create_exception: "Sent to event lead",
     resolve_exception: "Resolved exception",
+    import_guests: "Imported guest list",
   }[action];
 }
 
 export function CheckInConsole() {
   const session = useSyncExternalStore(checkInStore.subscribe, checkInStore.getSnapshot, checkInStore.getServerSnapshot);
   const browserOnline = useSyncExternalStore(subscribeToNetworkStatus, getNetworkStatus, () => true);
-  const { guests, exceptions, auditRecords, outbox } = session;
+  const { guests, parties, tables, exceptions, auditRecords, outbox } = session;
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [view, setView] = useState<WorkspaceView>("arrivals");
   const [forceOffline, setForceOffline] = useState(false);
+  const [importPreview, setImportPreview] = useState<GuestImportPreview | null>(null);
+  const [importFileName, setImportFileName] = useState("");
   const [correctionOpen, setCorrectionOpen] = useState(false);
   const [correctionReason, setCorrectionReason] = useState("");
   const [lastCheckIn, setLastCheckIn] = useState<{ guestId: string; previous: Guest } | null>(null);
@@ -60,8 +64,8 @@ export function CheckInConsole() {
   const checkedInCount = guests.filter((guest) => guest.status === "checked_in").length;
   const openExceptions = exceptions.filter((item) => item.status === "open");
   const pendingCount = outbox.length;
-  const party = selected ? source.parties.find((item) => item.id === selected.partyId) : undefined;
-  const table = selected ? source.tables.find((item) => item.id === selected.tableId) : undefined;
+  const party = selected ? parties.find((item) => item.id === selected.partyId) : undefined;
+  const table = selected ? tables.find((item) => item.id === selected.tableId) : undefined;
   const partyGuests = party ? guests.filter((guest) => party.guestIds.includes(guest.id)) : [];
   const selectedName = selected ? guestFullName(selected) : "";
   const lastActionGuest = lastCheckIn ? guests.find((guest) => guest.id === lastCheckIn.guestId) : undefined;
@@ -184,6 +188,60 @@ export function CheckInConsole() {
     setLastCheckIn(null);
   }
 
+  async function loadImport(file?: File) {
+    if (!file) return;
+    const text = await file.text();
+    setImportPreview(buildGuestImportPreview(text, source.event.id));
+    setImportFileName(file.name);
+  }
+
+  function loadSampleImport() {
+    const sample = [
+      "first_name,last_name,party,table,zone,note",
+      "Amelia,Bennett,Bennett party,Rose 1,Main floor,",
+      "Marcus,Bennett,Bennett party,Rose 1,Main floor,",
+      "Jordan,Carter,Carter / Lewis party,Rose 2,Main floor,Confirm party before check-in",
+      "Jordan,Carter,Carter party,Magnolia 3,East wing,Dietary note on file",
+      "Sam,Reed,Reed party,,,Table assignment missing",
+    ].join("\n");
+    setImportPreview(buildGuestImportPreview(sample, source.event.id));
+    setImportFileName("pink-gala-sample.csv");
+  }
+
+  function applyImport(preview: GuestImportPreview) {
+    if (preview.issues.some((issue) => issue.severity === "error") || auditRecords.length > 0) return;
+    const context = operationContext();
+    const audit: AuditRecord = {
+      id: `audit_${context.id}`,
+      eventId: source.event.id,
+      staffUserId: staff.id,
+      action: "import_guests",
+      occurredAt: context.occurredAt,
+      subject: `${preview.guests.length} guests`,
+      syncStatus: "pending",
+      reason: `Imported from ${importFileName || "CSV file"}`,
+    };
+    const mutation = createPendingMutation({
+      id: context.id,
+      audit,
+      guests: preview.guests,
+      parties: preview.parties,
+      tables: preview.tables,
+    });
+    checkInStore.update((current) => ({
+      ...current,
+      updatedAt: context.occurredAt,
+      guests: preview.guests,
+      parties: preview.parties,
+      tables: preview.tables,
+      exceptions: [],
+      auditRecords: [audit],
+      outbox: enqueueMutation(current.outbox, mutation),
+    }));
+    setImportPreview(null);
+    setView("arrivals");
+  }
+
   return (
     <main className="console-shell">
       <header className="event-header">
@@ -207,6 +265,7 @@ export function CheckInConsole() {
         <button className={view === "arrivals" ? "active" : ""} onClick={() => setView("arrivals")}>Guest arrivals</button>
         <button className={view === "exceptions" ? "active" : ""} onClick={() => setView("exceptions")}>Event lead <span>{openExceptions.length}</span></button>
         <button className={view === "activity" ? "active" : ""} onClick={() => setView("activity")}>Activity <span>{auditRecords.length}</span></button>
+        <button className={view === "import" ? "active" : ""} onClick={() => setView("import")}>Guest import</button>
         <div className={`queue-state ${pendingCount ? "pending" : ""}`}>
           {pendingCount ? `${pendingCount} saved on this device` : "All actions synced"}
           {pendingCount > 0 && isOnline && <button onClick={syncPending}>Sync now</button>}
@@ -241,8 +300,8 @@ export function CheckInConsole() {
               {!query && <EmptySearch />}
               {query && results.length === 0 && <NoResults query={query} onClear={() => setQuery("")} onEscalate={queueMissingGuest} />}
               {results.map((guest) => {
-                const guestParty = source.parties.find((item) => item.id === guest.partyId);
-                const guestTable = source.tables.find((item) => item.id === guest.tableId);
+                const guestParty = parties.find((item) => item.id === guest.partyId);
+                const guestTable = tables.find((item) => item.id === guest.tableId);
                 return (
                   <button key={guest.id} className={`guest-result ${selectedId === guest.id ? "selected" : ""}`} onClick={() => { setSelectedId(guest.id); setCorrectionOpen(false); }}>
                     <span><strong>{guestFullName(guest)}</strong><small>{guestParty?.displayName}{guestTable ? ` · ${guestTable.label}` : " · No table"}</small></span>
@@ -313,6 +372,7 @@ export function CheckInConsole() {
 
       {view === "exceptions" && <ExceptionQueue items={exceptions} onResolve={resolveException} />}
       {view === "activity" && <ActivityLog records={auditRecords} onReset={resetReview} />}
+      {view === "import" && <GuestImportPanel preview={importPreview} fileName={importFileName} activityCount={auditRecords.length} onFile={loadImport} onSample={loadSampleImport} onApply={applyImport} />}
 
       {lastCheckIn && <div className="undo-toast" role="status"><span><strong>{lastActionGuest ? guestFullName(lastActionGuest) : "Guest"}</strong> checked in.</span><button onClick={undoLastCheckIn}>Undo</button></div>}
     </main>
@@ -349,6 +409,51 @@ function ActivityLog({ records, onReset }: { records: AuditRecord[]; onReset: ()
       <div className="operations-heading"><div><p className="step-label">Accountability</p><h2>Event activity</h2></div><div className="operations-heading-actions"><p>Every check-in, correction, escalation, and resolution identifies its actor and sync state.</p><button onClick={onReset}>Reset synthetic review</button></div></div>
       {records.length === 0 ? <div className="empty-state compact"><span>↗</span><h2>No activity yet</h2><p>Event actions will be recorded here as staff work.</p></div> : (
         <div className="activity-list">{records.map((record) => <article key={record.id}><span className={`audit-sync ${record.syncStatus}`}>{record.syncStatus}</span><div><strong>{actionLabel(record.action)} · {record.subject}</strong><p>{record.reason ?? `Recorded by ${staff.displayName}`}</p></div><time>{formatTime(record.occurredAt)}</time></article>)}</div>
+      )}
+    </section>
+  );
+}
+
+function GuestImportPanel({
+  preview,
+  fileName,
+  activityCount,
+  onFile,
+  onSample,
+  onApply,
+}: {
+  preview: GuestImportPreview | null;
+  fileName: string;
+  activityCount: number;
+  onFile: (file?: File) => Promise<void>;
+  onSample: () => void;
+  onApply: (preview: GuestImportPreview) => void;
+}) {
+  const errors = preview?.issues.filter((issue) => issue.severity === "error") ?? [];
+  const warnings = preview?.issues.filter((issue) => issue.severity === "warning") ?? [];
+  const blockedByActivity = activityCount > 0;
+  return (
+    <section className="operations-panel import-panel">
+      <div className="operations-heading"><div><p className="step-label">Guest data</p><h2>Review before import</h2></div><p>Required columns: first_name, last_name, and party. Optional columns: table, zone, and note.</p></div>
+      <div className="import-controls">
+        <label className="file-picker">Choose CSV<input type="file" accept=".csv,text/csv" onChange={(event) => void onFile(event.target.files?.[0])} /></label>
+        <button onClick={onSample}>Load realistic sample</button>
+        <span>{fileName || "No file selected"}</span>
+      </div>
+
+      {!preview ? <div className="empty-state compact"><span>↓</span><h2>Import stays in review</h2><p>No guest record changes until validation passes and you explicitly apply the preview.</p></div> : (
+        <>
+          <div className="import-summary">
+            <div><strong>{preview.guests.length}</strong><span>valid guests</span></div>
+            <div><strong>{preview.parties.length}</strong><span>parties</span></div>
+            <div><strong>{preview.tables.length}</strong><span>tables</span></div>
+            <div className={errors.length ? "has-errors" : ""}><strong>{errors.length}</strong><span>blocking errors</span></div>
+            <div className={warnings.length ? "has-warnings" : ""}><strong>{warnings.length}</strong><span>warnings</span></div>
+          </div>
+          {preview.issues.length > 0 && <div className="import-issues">{preview.issues.map((issue, index) => <article key={`${issue.message}_${index}`} className={issue.severity}><strong>{issue.severity}{issue.row ? ` · Row ${issue.row}` : ""}</strong><span>{issue.message}</span></article>)}</div>}
+          {blockedByActivity && <div className="import-blocker"><strong>Import locked after event activity begins.</strong><span>Reset the synthetic review from Activity before replacing the guest list.</span></div>}
+          <div className="import-actions"><button className="primary-action" disabled={errors.length > 0 || blockedByActivity || preview.guests.length === 0} onClick={() => onApply(preview)}>Apply {preview.guests.length} validated guests</button><p>Warnings may be imported; affected guests enter the event-lead workflow.</p></div>
+        </>
       )}
     </section>
   );
