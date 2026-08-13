@@ -17,6 +17,7 @@ import type {
 import { getFirebaseConfig } from "@/src/data/firebase/config";
 import type { PendingMutation, StaffUser } from "@/src/domain/models";
 import { hasStaffRole, requiredRole } from "@/src/domain/staff-permissions";
+import { remoteWriteIsNewer } from "@/src/domain/rehearsal-readiness";
 
 const IMPORT_BATCH_SIZE = 400;
 
@@ -109,7 +110,7 @@ async function syncOperationalMutation(
         : null;
     const target = targetRef ? await transaction.get(targetRef) : null;
     const lastOperationAt = target?.data()?.lastOperationAt;
-    if (typeof lastOperationAt === "string" && lastOperationAt > mutation.createdAt) {
+    if (remoteWriteIsNewer(lastOperationAt, mutation.createdAt)) {
       throw new MutationConflictError("A newer device update already exists for this record.");
     }
 

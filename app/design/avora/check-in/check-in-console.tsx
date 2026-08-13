@@ -21,12 +21,14 @@ import {
 } from "@/src/domain/check-in-operations";
 import { duplicateNameIds, guestFullName, searchGuests } from "@/src/domain/guest-search";
 import { buildGuestImportPreview, type GuestImportPreview } from "@/src/domain/guest-import";
-import type { AuditRecord, Guest, GuestException } from "@/src/domain/models";
+import { buildReconciliationCsv } from "@/src/domain/reconciliation-export";
+import { evaluateRehearsalReadiness } from "@/src/domain/rehearsal-readiness";
+import type { AuditRecord, CheckInSession, Guest, GuestException } from "@/src/domain/models";
 
 const source = pinkGala2027Synthetic;
 const staff = source.staff[0];
 const checkInStore = createLocalCheckInStore(defaultCheckInSession(source));
-type WorkspaceView = "arrivals" | "exceptions" | "activity" | "import";
+type WorkspaceView = "arrivals" | "exceptions" | "activity" | "import" | "rehearsal";
 
 function formatTime(value?: string) {
   if (!value) return "";
@@ -264,6 +266,16 @@ export function CheckInConsole() {
     setView("arrivals");
   }
 
+  function downloadReconciliation() {
+    const blob = new Blob([buildReconciliationCsv(session)], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "avora-pink-gala-2027-reconciliation.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <main className="console-shell">
       <header className="event-header">
@@ -288,6 +300,7 @@ export function CheckInConsole() {
         <button className={view === "exceptions" ? "active" : ""} onClick={() => setView("exceptions")}>Event lead <span>{openExceptions.length}</span></button>
         <button className={view === "activity" ? "active" : ""} onClick={() => setView("activity")}>Activity <span>{auditRecords.length}</span></button>
         <button className={view === "import" ? "active" : ""} onClick={() => setView("import")}>Guest import</button>
+        <button className={view === "rehearsal" ? "active" : ""} onClick={() => setView("rehearsal")}>Rehearsal</button>
         <div className={`queue-state ${pendingCount ? "pending" : ""}`}>
           {pendingCount ? `${pendingCount} saved on this device` : "All actions synced"}
           {pendingCount > 0 && isOnline && <button onClick={syncPending} disabled={syncing}>{syncing ? "Syncing…" : "Sync now"}</button>}
@@ -397,9 +410,38 @@ export function CheckInConsole() {
       {view === "exceptions" && <ExceptionQueue items={exceptions} onResolve={resolveException} />}
       {view === "activity" && <ActivityLog records={auditRecords} onReset={resetReview} />}
       {view === "import" && <GuestImportPanel preview={importPreview} fileName={importFileName} activityCount={auditRecords.length} onFile={loadImport} onSample={loadSampleImport} onApply={applyImport} />}
+      {view === "rehearsal" && <RehearsalPanel session={session} onExport={downloadReconciliation} />}
 
       {lastCheckIn && <div className="undo-toast" role="status"><span><strong>{lastActionGuest ? guestFullName(lastActionGuest) : "Guest"}</strong> checked in.</span><button onClick={undoLastCheckIn}>Undo</button></div>}
     </main>
+  );
+}
+
+function RehearsalPanel({ session, onExport }: { session: CheckInSession; onExport: () => void }) {
+  const checks = evaluateRehearsalReadiness(session, isFirebaseConfigured());
+  const readyCount = checks.filter((item) => item.status === "ready").length;
+  return (
+    <section className="operations-panel rehearsal-panel">
+      <div className="operations-heading">
+        <div><p className="step-label">Event readiness</p><h2>Two-device rehearsal</h2></div>
+        <p>Deterministic safeguards are checked here. Complete the live device run after Firebase activation.</p>
+      </div>
+      <div className="rehearsal-summary">
+        <div><strong>{readyCount}/{checks.length}</strong><span>checks ready</span></div>
+        <div><strong>{session.outbox.length}</strong><span>pending operations</span></div>
+        <div><strong>{session.auditRecords.length}</strong><span>audit records</span></div>
+        <button onClick={onExport}>Download reconciliation CSV</button>
+      </div>
+      <div className="rehearsal-checks">
+        {checks.map((check) => (
+          <article key={check.id} className={check.status}>
+            <span>{check.status === "ready" ? "Ready" : "Action required"}</span>
+            <div><h3>{check.label}</h3><p>{check.detail}</p></div>
+          </article>
+        ))}
+      </div>
+      <div className="rehearsal-note"><strong>Live signoff sequence</strong><p>Device A offline check-in → device B newer online check-in → device A reconnects and holds the stale operation → retry an acknowledged ID → resolve an exception with a lead device → export closeout.</p></div>
+    </section>
   );
 }
 
