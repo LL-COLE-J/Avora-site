@@ -1,7 +1,16 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { pinkGala2027Synthetic } from "@/src/data/synthetic/pink-gala-2027";
+import {
+  acknowledgeMutations,
+  createLocalCheckInStore,
+  createPendingMutation,
+  defaultCheckInSession,
+  enqueueMutation,
+  getNetworkStatus,
+  subscribeToNetworkStatus,
+} from "@/src/data/local-check-in-session";
 import {
   createGuestException,
   recordCheckIn,
@@ -14,6 +23,7 @@ import type { AuditRecord, Guest, GuestException } from "@/src/domain/models";
 
 const source = pinkGala2027Synthetic;
 const staff = source.staff[0];
+const checkInStore = createLocalCheckInStore(defaultCheckInSession(source));
 type WorkspaceView = "arrivals" | "exceptions" | "activity";
 
 function formatTime(value?: string) {
@@ -31,24 +41,25 @@ function actionLabel(action: AuditRecord["action"]) {
 }
 
 export function CheckInConsole() {
-  const [guests, setGuests] = useState<Guest[]>(source.guests);
+  const session = useSyncExternalStore(checkInStore.subscribe, checkInStore.getSnapshot, checkInStore.getServerSnapshot);
+  const browserOnline = useSyncExternalStore(subscribeToNetworkStatus, getNetworkStatus, () => true);
+  const { guests, exceptions, auditRecords, outbox } = session;
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [view, setView] = useState<WorkspaceView>("arrivals");
-  const [isOnline, setIsOnline] = useState(true);
-  const [auditRecords, setAuditRecords] = useState<AuditRecord[]>([]);
-  const [exceptions, setExceptions] = useState<GuestException[]>([]);
+  const [forceOffline, setForceOffline] = useState(false);
   const [correctionOpen, setCorrectionOpen] = useState(false);
   const [correctionReason, setCorrectionReason] = useState("");
   const [lastCheckIn, setLastCheckIn] = useState<{ guestId: string; previous: Guest } | null>(null);
   const operationSequence = useRef(0);
+  const isOnline = browserOnline && !forceOffline;
 
   const duplicates = useMemo(() => duplicateNameIds(guests), [guests]);
   const results = useMemo(() => searchGuests(guests, query), [guests, query]);
   const selected = guests.find((guest) => guest.id === selectedId);
   const checkedInCount = guests.filter((guest) => guest.status === "checked_in").length;
   const openExceptions = exceptions.filter((item) => item.status === "open");
-  const pendingCount = auditRecords.filter((record) => record.syncStatus === "pending").length;
+  const pendingCount = outbox.length;
   const party = selected ? source.parties.find((item) => item.id === selected.partyId) : undefined;
   const table = selected ? source.tables.find((item) => item.id === selected.tableId) : undefined;
   const partyGuests = party ? guests.filter((guest) => party.guestIds.includes(guest.id)) : [];
@@ -64,31 +75,48 @@ export function CheckInConsole() {
       eventId: source.event.id,
       staff,
       occurredAt: new Date().toISOString(),
-      syncStatus: isOnline ? "synced" : "pending",
+      syncStatus: "pending",
       id: `${Date.now()}_${operationSequence.current}`,
     };
   }
 
-  function replaceGuest(next: Guest) {
-    setGuests((current) => current.map((guest) => guest.id === next.id ? next : guest));
-  }
-
-  function appendAudit(audit: AuditRecord) {
-    setAuditRecords((current) => [audit, ...current]);
+  function persistOperation(input: { id: string; audit: AuditRecord; guest?: Guest; exception?: GuestException }) {
+    const mutation = createPendingMutation(input);
+    checkInStore.update((current) => {
+      const nextGuests = input.guest
+        ? current.guests.map((guest) => guest.id === input.guest?.id ? input.guest : guest)
+        : current.guests;
+      const hasException = input.exception && current.exceptions.some((item) => item.id === input.exception?.id);
+      const nextExceptions = input.exception
+        ? hasException
+          ? current.exceptions.map((item) => item.id === input.exception?.id ? input.exception : item)
+          : [input.exception, ...current.exceptions]
+        : current.exceptions;
+      return {
+        ...current,
+        updatedAt: input.audit.occurredAt,
+        guests: nextGuests,
+        exceptions: nextExceptions,
+        auditRecords: current.auditRecords.some((record) => record.id === input.audit.id)
+          ? current.auditRecords
+          : [input.audit, ...current.auditRecords],
+        outbox: enqueueMutation(current.outbox, mutation),
+      };
+    });
   }
 
   function checkIn(guest: Guest) {
-    const result = recordCheckIn(guest, operationContext());
+    const context = operationContext();
+    const result = recordCheckIn(guest, context);
     setLastCheckIn({ guestId: guest.id, previous: guest });
-    replaceGuest(result.guest);
-    appendAudit(result.audit);
+    persistOperation({ id: context.id, audit: result.audit, guest: result.guest });
   }
 
   function confirmCorrection(guest: Guest) {
     if (!correctionReason.trim()) return;
-    const result = recordCorrection(guest, correctionReason, operationContext());
-    replaceGuest(result.guest);
-    appendAudit(result.audit);
+    const context = operationContext();
+    const result = recordCorrection(guest, correctionReason, context);
+    persistOperation({ id: context.id, audit: result.audit, guest: result.guest });
     setCorrectionOpen(false);
     setCorrectionReason("");
     setLastCheckIn(null);
@@ -98,48 +126,62 @@ export function CheckInConsole() {
     if (!lastCheckIn) return;
     const currentGuest = guests.find((guest) => guest.id === lastCheckIn.guestId);
     if (!currentGuest) return;
-    const result = recordCorrection(currentGuest, "Immediate undo by staff", operationContext());
-    replaceGuest({ ...lastCheckIn.previous, status: result.guest.status, checkedInAt: result.guest.checkedInAt });
-    appendAudit(result.audit);
+    const context = operationContext();
+    const result = recordCorrection(currentGuest, "Immediate undo by staff", context);
+    persistOperation({
+      id: context.id,
+      audit: result.audit,
+      guest: { ...lastCheckIn.previous, status: result.guest.status, checkedInAt: result.guest.checkedInAt },
+    });
     setLastCheckIn(null);
   }
 
   function queueGuestException(guest: Guest) {
+    const context = operationContext();
     const result = createGuestException({
       guest,
       guestName: guestFullName(guest),
       reason: guest.tableId ? "identity_question" : "missing_assignment",
       details: guest.note ?? "Guest requires review before check-in.",
-    }, operationContext());
-    setExceptions((current) => [result.exception, ...current]);
-    appendAudit(result.audit);
+    }, context);
+    persistOperation({ id: context.id, audit: result.audit, exception: result.exception });
     setSelectedId(null);
     setView("exceptions");
   }
 
   function queueMissingGuest() {
+    const context = operationContext();
     const result = createGuestException({
       guestName: query,
       reason: "guest_not_found",
       details: "No matching guest record after staff verified the spelling.",
-    }, operationContext());
-    setExceptions((current) => [result.exception, ...current]);
-    appendAudit(result.audit);
+    }, context);
+    persistOperation({ id: context.id, audit: result.audit, exception: result.exception });
     setQuery("");
     setView("exceptions");
   }
 
   function resolveException(item: GuestException, note: string) {
-    const result = resolveGuestException(item, note, operationContext());
-    setExceptions((current) => current.map((exception) => exception.id === item.id ? result.exception : exception));
-    appendAudit(result.audit);
+    const context = operationContext();
+    const result = resolveGuestException(item, note, context);
+    persistOperation({ id: context.id, audit: result.audit, exception: result.exception });
   }
 
   function syncPending() {
     if (!isOnline) return;
-    setAuditRecords((current) => current.map((record) => (
-      record.syncStatus === "pending" ? { ...record, syncStatus: "synced" } : record
-    )));
+    checkInStore.update((current) => acknowledgeMutations(
+      current,
+      current.outbox.map((mutation) => mutation.id),
+      new Date().toISOString(),
+    ));
+  }
+
+  function resetReview() {
+    checkInStore.reset();
+    setQuery("");
+    setSelectedId(null);
+    setView("arrivals");
+    setLastCheckIn(null);
   }
 
   return (
@@ -154,8 +196,8 @@ export function CheckInConsole() {
           </div>
         </div>
         <div className="status-cluster" aria-label="Event status">
-          <button className={`sync-pill ${isOnline ? "online" : "offline"}`} onClick={() => setIsOnline((current) => !current)}>
-            <span className="sync-dot" /> {isOnline ? "Online" : "Offline simulation"}
+          <button className={`sync-pill ${isOnline ? "online" : "offline"}`} onClick={() => setForceOffline((current) => !current)}>
+            <span className="sync-dot" /> {isOnline ? "Online · rehearsal" : browserOnline ? "Forced offline" : "Device offline"}
           </button>
           <span className="count"><strong>{checkedInCount}</strong><span> of {guests.length} arrived</span></span>
         </div>
@@ -166,7 +208,7 @@ export function CheckInConsole() {
         <button className={view === "exceptions" ? "active" : ""} onClick={() => setView("exceptions")}>Event lead <span>{openExceptions.length}</span></button>
         <button className={view === "activity" ? "active" : ""} onClick={() => setView("activity")}>Activity <span>{auditRecords.length}</span></button>
         <div className={`queue-state ${pendingCount ? "pending" : ""}`}>
-          {pendingCount ? `${pendingCount} pending in this session` : "All actions synced"}
+          {pendingCount ? `${pendingCount} saved on this device` : "All actions synced"}
           {pendingCount > 0 && isOnline && <button onClick={syncPending}>Sync now</button>}
         </div>
       </nav>
@@ -270,7 +312,7 @@ export function CheckInConsole() {
       )}
 
       {view === "exceptions" && <ExceptionQueue items={exceptions} onResolve={resolveException} />}
-      {view === "activity" && <ActivityLog records={auditRecords} />}
+      {view === "activity" && <ActivityLog records={auditRecords} onReset={resetReview} />}
 
       {lastCheckIn && <div className="undo-toast" role="status"><span><strong>{lastActionGuest ? guestFullName(lastActionGuest) : "Guest"}</strong> checked in.</span><button onClick={undoLastCheckIn}>Undo</button></div>}
     </main>
@@ -301,10 +343,10 @@ function ExceptionCard({ item, onResolve }: { item: GuestException; onResolve: (
   );
 }
 
-function ActivityLog({ records }: { records: AuditRecord[] }) {
+function ActivityLog({ records, onReset }: { records: AuditRecord[]; onReset: () => void }) {
   return (
     <section className="operations-panel">
-      <div className="operations-heading"><div><p className="step-label">Accountability</p><h2>Event activity</h2></div><p>Every check-in, correction, escalation, and resolution identifies its actor and sync state.</p></div>
+      <div className="operations-heading"><div><p className="step-label">Accountability</p><h2>Event activity</h2></div><div className="operations-heading-actions"><p>Every check-in, correction, escalation, and resolution identifies its actor and sync state.</p><button onClick={onReset}>Reset synthetic review</button></div></div>
       {records.length === 0 ? <div className="empty-state compact"><span>↗</span><h2>No activity yet</h2><p>Event actions will be recorded here as staff work.</p></div> : (
         <div className="activity-list">{records.map((record) => <article key={record.id}><span className={`audit-sync ${record.syncStatus}`}>{record.syncStatus}</span><div><strong>{actionLabel(record.action)} · {record.subject}</strong><p>{record.reason ?? `Recorded by ${staff.displayName}`}</p></div><time>{formatTime(record.occurredAt)}</time></article>)}</div>
       )}

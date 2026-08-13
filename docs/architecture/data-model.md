@@ -12,8 +12,10 @@ The first check-in milestone uses stable string IDs and explicit status values. 
 | `AuditRecord` | Consequential check-in action | corrections, imports, seating changes |
 | `GuestException` | Event-lead queue for missing guests, assignments, and identity questions | configurable exception policies |
 
-Every consequential synthetic action now creates an `AuditRecord` with an actor, timestamp, subject, optional reason, and `synced` or `pending` status. Corrections and exception resolutions require a reason.
+Every consequential synthetic action now creates an `AuditRecord` with an actor, timestamp, subject, optional reason, and `synced` or `pending` status. Corrections and exception resolutions require a reason. A `PendingMutation` contains the complete guest or exception payload needed by the future remote adapter, plus a stable operation ID for retry safety.
 
-The current offline switch is a review simulator: it demonstrates pending-action behavior within the active browser session. Durable IndexedDB persistence, automatic retry, conflict handling, and a production sync adapter remain required before event use.
+The local session is versioned and persisted in browser storage. Guest state, exceptions, audit records, and the outbox survive refreshes and browser restarts. Rehearsal mode uses real browser connectivity plus an optional forced-offline switch. Pending mutations are deduplicated by operation ID and by entity/action while unsynced.
+
+The `Sync now` action is still a synthetic acknowledgement. The Firebase adapter must exchange the same idempotency key with the remote store, retry automatically, and define conflict handling before event use.
 
 The synthetic dataset is the only active data source. Firebase and real guest data remain disconnected until the synthetic workflow and production adapter contract are approved.
