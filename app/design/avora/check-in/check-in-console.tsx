@@ -11,6 +11,7 @@ import {
   getNetworkStatus,
   subscribeToNetworkStatus,
 } from "@/src/data/local-check-in-session";
+import { isFirebaseConfigured } from "@/src/data/firebase/config";
 import {
   createGuestException,
   recordCheckIn,
@@ -50,6 +51,8 @@ export function CheckInConsole() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [view, setView] = useState<WorkspaceView>("arrivals");
   const [forceOffline, setForceOffline] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncNotice, setSyncNotice] = useState("");
   const [importPreview, setImportPreview] = useState<GuestImportPreview | null>(null);
   const [importFileName, setImportFileName] = useState("");
   const [correctionOpen, setCorrectionOpen] = useState(false);
@@ -171,13 +174,32 @@ export function CheckInConsole() {
     persistOperation({ id: context.id, audit: result.audit, exception: result.exception });
   }
 
-  function syncPending() {
-    if (!isOnline) return;
-    checkInStore.update((current) => acknowledgeMutations(
-      current,
-      current.outbox.map((mutation) => mutation.id),
-      new Date().toISOString(),
-    ));
+  async function syncPending() {
+    if (!isOnline || syncing) return;
+    if (!isFirebaseConfigured()) {
+      setSyncNotice("Firebase setup is required; saved actions remain safely on this device.");
+      return;
+    }
+    setSyncing(true);
+    setSyncNotice("");
+    try {
+      const { createFirebaseCheckInAdapter } = await import("@/src/data/firebase/check-in-adapter");
+      const result = await createFirebaseCheckInAdapter().sync(session.eventId, outbox);
+      const acknowledged = result.outcomes
+        .filter((outcome) => outcome.status === "acknowledged")
+        .map((outcome) => outcome.mutationId);
+      if (acknowledged.length) {
+        checkInStore.update((current) => acknowledgeMutations(current, acknowledged, new Date().toISOString()));
+      }
+      const held = result.outcomes.filter((outcome) => outcome.status !== "acknowledged");
+      setSyncNotice(held.length
+        ? `${acknowledged.length} synced; ${held.length} held for review. ${held[0].message ?? ""}`.trim()
+        : `${acknowledged.length} ${acknowledged.length === 1 ? "action" : "actions"} synced as ${result.staff.displayName}.`);
+    } catch (error) {
+      setSyncNotice(error instanceof Error ? error.message : "Sync could not be completed.");
+    } finally {
+      setSyncing(false);
+    }
   }
 
   function resetReview() {
@@ -255,7 +277,7 @@ export function CheckInConsole() {
         </div>
         <div className="status-cluster" aria-label="Event status">
           <button className={`sync-pill ${isOnline ? "online" : "offline"}`} onClick={() => setForceOffline((current) => !current)}>
-            <span className="sync-dot" /> {isOnline ? "Online · rehearsal" : browserOnline ? "Forced offline" : "Device offline"}
+            <span className="sync-dot" /> {isOnline ? isFirebaseConfigured() ? "Online · Firebase" : "Online · local" : browserOnline ? "Forced offline" : "Device offline"}
           </button>
           <span className="count"><strong>{checkedInCount}</strong><span> of {guests.length} arrived</span></span>
         </div>
@@ -268,9 +290,11 @@ export function CheckInConsole() {
         <button className={view === "import" ? "active" : ""} onClick={() => setView("import")}>Guest import</button>
         <div className={`queue-state ${pendingCount ? "pending" : ""}`}>
           {pendingCount ? `${pendingCount} saved on this device` : "All actions synced"}
-          {pendingCount > 0 && isOnline && <button onClick={syncPending}>Sync now</button>}
+          {pendingCount > 0 && isOnline && <button onClick={syncPending} disabled={syncing}>{syncing ? "Syncing…" : "Sync now"}</button>}
         </div>
       </nav>
+
+      {syncNotice && <div className="sync-notice" role="status">{syncNotice}<button onClick={() => setSyncNotice("")}>Dismiss</button></div>}
 
       {view === "arrivals" && (
         <section className="workspace" aria-label="Guest check-in workspace">

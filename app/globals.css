@@ -84,6 +84,8 @@ button { cursor: pointer; }
 .sync-pill.offline { border-color: #e2bb94; background: #fff5e8; color: #75441f; }
 .sync-dot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 50%; background: #6d9c78; box-shadow: 0 0 0 4px rgba(109, 156, 120, .13); }
 .sync-pill.offline .sync-dot { background: #bd6e2f; box-shadow: 0 0 0 4px rgba(189, 110, 47, .13); }
+.sync-notice { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 12px 0 0; border: 1px solid #e2bb94; border-radius: 14px; padding: 11px 14px; background: #fff8ef; color: #75441f; font-size: .78rem; font-weight: 700; }
+.sync-notice button { flex: 0 0 auto; border: 0; background: transparent; color: inherit; font: inherit; text-decoration: underline; }
 .count strong { margin-right: 2px; color: var(--rose-deep); font-family: var(--font-display), Georgia, serif; font-size: 1.2rem; }
 .count span { color: var(--muted); }
 

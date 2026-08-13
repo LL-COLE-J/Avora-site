@@ -1,0 +1,90 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function staffPath(eventId) {
+      return /databases/$(database)/documents/events/$(eventId)/staff/$(request.auth.uid);
+    }
+
+    function isStaff(eventId) {
+      return signedIn()
+        && exists(staffPath(eventId))
+        && get(staffPath(eventId)).data.active == true;
+    }
+
+    function role(eventId) {
+      return get(staffPath(eventId)).data.role;
+    }
+
+    function isLead(eventId) {
+      return isStaff(eventId) && role(eventId) in ['lead', 'admin'];
+    }
+
+    function isAdmin(eventId) {
+      return isStaff(eventId) && role(eventId) == 'admin';
+    }
+
+    function volunteerGuestFieldsOnly() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'status', 'checkedInAt', 'lastOperationId', 'lastOperationAt'
+      ]);
+    }
+
+    match /events/{eventId} {
+      allow read: if isStaff(eventId);
+      allow create, update, delete: if isAdmin(eventId);
+
+      match /staff/{uid} {
+        allow read: if isStaff(eventId);
+        allow create, update, delete: if isAdmin(eventId);
+      }
+
+      match /guests/{guestId} {
+        allow read: if isStaff(eventId);
+        allow create, delete: if isAdmin(eventId);
+        allow update: if isAdmin(eventId) || (isStaff(eventId) && volunteerGuestFieldsOnly());
+      }
+
+      match /parties/{partyId} {
+        allow read: if isStaff(eventId);
+        allow write: if isAdmin(eventId);
+      }
+
+      match /tables/{tableId} {
+        allow read: if isStaff(eventId);
+        allow write: if isAdmin(eventId);
+      }
+
+      match /exceptions/{exceptionId} {
+        allow read: if isStaff(eventId);
+        allow create: if isStaff(eventId)
+          && request.resource.data.createdByStaffId == request.auth.uid;
+        allow update: if isLead(eventId);
+        allow delete: if isAdmin(eventId);
+      }
+
+      match /auditRecords/{auditId} {
+        allow read: if isLead(eventId);
+        allow create: if isStaff(eventId)
+          && request.resource.data.staffUserId == request.auth.uid
+          && request.resource.data.eventId == eventId;
+        allow update, delete: if false;
+      }
+
+      match /operations/{operationId} {
+        allow read: if isStaff(eventId);
+        allow create: if isStaff(eventId)
+          && request.resource.data.actorUid == request.auth.uid;
+        allow update: if isAdmin(eventId)
+          && request.resource.data.actorUid == resource.data.actorUid
+          && request.resource.data.createdAt == resource.data.createdAt;
+        allow delete: if false;
+      }
+    }
+  }
+}
+

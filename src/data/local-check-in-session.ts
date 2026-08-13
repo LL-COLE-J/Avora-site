@@ -92,6 +92,7 @@ export function createPendingMutation(input: {
     action: input.audit.action,
     createdAt: input.audit.occurredAt,
     attempts: 0,
+    audit: input.audit,
     guest: input.guest,
     guests: input.guests,
     parties: input.parties,
