@@ -45,6 +45,10 @@ function actionLabel(action: AuditRecord["action"]) {
   }[action];
 }
 
+function initials(value: string) {
+  return value.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+}
+
 export function CheckInConsole() {
   const session = useSyncExternalStore(checkInStore.subscribe, checkInStore.getSnapshot, checkInStore.getServerSnapshot);
   const browserOnline = useSyncExternalStore(subscribeToNetworkStatus, getNetworkStatus, () => true);
@@ -279,15 +283,18 @@ export function CheckInConsole() {
   return (
     <main className="console-shell">
       <header className="event-header">
+        <div className="gala-flourish" aria-hidden="true"><span /><span /><span /></div>
         <div className="event-identity">
           <div className="brand-mark" aria-hidden="true"><span>A</span></div>
           <div>
-            <p className="eyebrow">Avora · Guest arrival</p>
+            <p className="eyebrow">Avora · Guest operations</p>
             <h1>{source.event.name}</h1>
-            <p className="venue">{source.event.venueName} <span aria-hidden="true">·</span> Synthetic review</p>
+            <p className="venue">{source.event.venueName} <span aria-hidden="true">·</span> Saturday, April 17 <span aria-hidden="true">·</span> 6:00 PM CT</p>
+            <span className="environment-badge">Rehearsal dataset</span>
           </div>
         </div>
         <div className="status-cluster" aria-label="Event status">
+          <span className="staff-chip"><span aria-hidden="true">{initials(staff.displayName)}</span><span><strong>{staff.displayName}</strong><small>{staff.role}</small></span></span>
           <button className={`sync-pill ${isOnline ? "online" : "offline"}`} onClick={() => setForceOffline((current) => !current)}>
             <span className="sync-dot" /> {isOnline ? isFirebaseConfigured() ? "Online · Firebase" : "Online · local" : browserOnline ? "Forced offline" : "Device offline"}
           </button>

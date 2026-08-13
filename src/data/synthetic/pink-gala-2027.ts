@@ -30,5 +30,5 @@ export const pinkGala2027Synthetic: CheckInDataset = {
     { id: "guest_07", eventId: "event_pg27_demo", partyId: "party_morgan", firstName: "David", lastName: "Morgan", tableId: "table_03", status: "expected" },
     { id: "guest_08", eventId: "event_pg27_demo", partyId: "party_reed", firstName: "Sam", lastName: "Reed", status: "needs_attention", note: "Table assignment missing—send to event lead." },
   ],
-  staff: [{ id: "staff_demo", displayName: "Demo volunteer", role: "volunteer" }],
+  staff: [{ id: "staff_demo", displayName: "Arrival Team 01", role: "volunteer" }],
 };
