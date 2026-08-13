@@ -70,6 +70,27 @@ export interface GuestException {
   resolvedByStaffId?: EntityId;
 }
 
+export interface PendingMutation {
+  id: EntityId;
+  eventId: EntityId;
+  auditId: EntityId;
+  action: CheckInAction;
+  createdAt: string;
+  attempts: number;
+  guest?: Guest;
+  exception?: GuestException;
+}
+
+export interface CheckInSession {
+  version: 1;
+  eventId: EntityId;
+  updatedAt: string;
+  guests: Guest[];
+  exceptions: GuestException[];
+  auditRecords: AuditRecord[];
+  outbox: PendingMutation[];
+}
+
 export interface CheckInDataset {
   event: Event;
   guests: Guest[];

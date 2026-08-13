@@ -174,6 +174,9 @@ button { cursor: pointer; }
 .operations-heading { margin-bottom: 25px; display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; }
 .operations-heading h2 { margin: 0; font-family: var(--font-display), Georgia, serif; font-size: 2.25rem; font-weight: 500; letter-spacing: -.025em; }
 .operations-heading > p { max-width: 520px; margin: 0; color: var(--muted); line-height: 1.5; text-align: right; }
+.operations-heading-actions { max-width: 520px; text-align: right; }
+.operations-heading-actions p { margin: 0; color: var(--muted); line-height: 1.5; }
+.operations-heading-actions button { margin-top: 9px; border: 0; border-bottom: 1px solid currentColor; padding: 3px 0; background: transparent; color: var(--rose-deep); font-size: .72rem; font-weight: 850; }
 .empty-state.compact { min-height: 350px; }
 .exception-list { display: grid; gap: 12px; }
 .exception-card { border: 1px solid var(--line); border-radius: 14px; padding: 19px; display: grid; grid-template-columns: minmax(0,1fr) minmax(300px,.7fr); gap: 28px; background: white; }
@@ -224,6 +227,7 @@ button { cursor: pointer; }
   .operations-heading { display: block; }
   .operations-heading h2 { font-size: 1.85rem; }
   .operations-heading > p { margin-top: 10px; text-align: left; }
+  .operations-heading-actions { margin-top: 10px; text-align: left; }
   .exception-card { grid-template-columns: 1fr; gap: 18px; }
   .activity-list article { grid-template-columns: 68px minmax(0,1fr); }
   .activity-list time { grid-column: 2; }
