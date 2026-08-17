@@ -49,6 +49,17 @@ function initials(value: string) {
   return value.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
 }
 
+function NavigationIcon({ name }: { name: WorkspaceView }) {
+  const paths: Record<WorkspaceView, React.ReactNode> = {
+    arrivals: <><circle cx="8" cy="7" r="2.5" /><circle cx="16" cy="7" r="2.5" /><path d="M3 18v-2.3C3 13.7 5 12 8 12s5 1.7 5 3.7V18M11 13c.8-.7 2.2-1 3.6-1 3.5 0 5.4 1.7 5.4 3.7V18" /></>,
+    exceptions: <><path d="M12 3 2.8 19h18.4L12 3Z" /><path d="M12 8v5M12 16.5h.01" /></>,
+    activity: <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h5" /></>,
+    import: <><path d="M12 3v12M7.5 10.5 12 15l4.5-4.5" /><path d="M4 17v3h16v-3" /></>,
+    rehearsal: <><path d="M4 5h16v12H4z" /><path d="m8 21 4-4 4 4M8 9h8M8 13h5" /></>,
+  };
+  return <svg viewBox="0 0 24 24" aria-hidden="true">{paths[name]}</svg>;
+}
+
 export function CheckInConsole() {
   const session = useSyncExternalStore(checkInStore.subscribe, checkInStore.getSnapshot, checkInStore.getServerSnapshot);
   const browserOnline = useSyncExternalStore(subscribeToNetworkStatus, getNetworkStatus, () => true);
@@ -282,39 +293,48 @@ export function CheckInConsole() {
 
   return (
     <main className="console-shell">
-      <header className="event-header">
-        <div className="gala-flourish" aria-hidden="true"><span /><span /><span /></div>
-        <div className="event-identity">
-          <div className="brand-mark" aria-hidden="true"><span>A</span></div>
-          <div>
-            <p className="eyebrow">Avora · Guest operations</p>
+      <aside className="gala-rail">
+        <div className="rail-brand" aria-label="Avora">
+          <span className="rail-ornament" aria-hidden="true" />
+          <span className="rail-monogram" aria-hidden="true">A</span>
+          <strong>Avora</strong>
+        </div>
+        <nav className="operation-nav" aria-label="Check-in sections">
+          <button className={view === "arrivals" ? "active" : ""} onClick={() => setView("arrivals")}><NavigationIcon name="arrivals" /><span>Check-in</span></button>
+          <button className={view === "exceptions" ? "active" : ""} onClick={() => setView("exceptions")}><NavigationIcon name="exceptions" /><span>Event lead</span>{openExceptions.length > 0 && <em>{openExceptions.length}</em>}</button>
+          <button className={view === "activity" ? "active" : ""} onClick={() => setView("activity")}><NavigationIcon name="activity" /><span>Activity</span>{auditRecords.length > 0 && <em>{auditRecords.length}</em>}</button>
+          <button className={view === "import" ? "active" : ""} onClick={() => setView("import")}><NavigationIcon name="import" /><span>Guest import</span></button>
+          <button className={view === "rehearsal" ? "active" : ""} onClick={() => setView("rehearsal")}><NavigationIcon name="rehearsal" /><span>Rehearsal</span></button>
+        </nav>
+        <div className="rail-footer" aria-hidden="true"><span>✦</span></div>
+      </aside>
+
+      <div className="console-main">
+        <header className="event-header">
+          <div className="header-botanical botanical-left" aria-hidden="true"><span /><span /><span /></div>
+          <div className="event-identity">
+            <p className="eyebrow">Guest arrival desk</p>
             <h1>{source.event.name}</h1>
-            <p className="venue">{source.event.venueName} <span aria-hidden="true">·</span> Saturday, April 17 <span aria-hidden="true">·</span> 6:00 PM CT</p>
+            <span className="title-flourish" aria-hidden="true">◇</span>
+            <p className="venue">{source.event.venueName} <span aria-hidden="true">·</span> Saturday, April 17, 2027 <span aria-hidden="true">·</span> 6:00 PM CT</p>
             <span className="environment-badge">Rehearsal dataset</span>
           </div>
-        </div>
-        <div className="status-cluster" aria-label="Event status">
-          <span className="staff-chip"><span aria-hidden="true">{initials(staff.displayName)}</span><span><strong>{staff.displayName}</strong><small>{staff.role}</small></span></span>
-          <button className={`sync-pill ${isOnline ? "online" : "offline"}`} onClick={() => setForceOffline((current) => !current)}>
-            <span className="sync-dot" /> {isOnline ? isFirebaseConfigured() ? "Online · Firebase" : "Online · local" : browserOnline ? "Forced offline" : "Device offline"}
-          </button>
-          <span className="count"><strong>{checkedInCount}</strong><span> of {guests.length} arrived</span></span>
-        </div>
-      </header>
+          <div className="status-cluster" aria-label="Event status">
+            <span className="staff-chip"><span aria-hidden="true">{initials(staff.displayName)}</span><span><strong>{staff.displayName}</strong><small>{staff.role}</small></span></span>
+            <div className="event-stats">
+              <span className="count"><small>Guest arrivals</small><strong>{checkedInCount}</strong><span>of {guests.length}</span></span>
+              <button className={`sync-pill ${isOnline ? "online" : "offline"}`} onClick={() => setForceOffline((current) => !current)}>
+                <small>Sync status</small><span><i className="sync-dot" /> {isOnline ? isFirebaseConfigured() ? "Firebase" : "All saved" : browserOnline ? "Forced offline" : "Device offline"}</span>
+              </button>
+            </div>
+            <div className={`queue-state ${pendingCount ? "pending" : ""}`}>
+              {pendingCount ? `${pendingCount} saved on this device` : "No pending actions"}
+              {pendingCount > 0 && isOnline && <button onClick={syncPending} disabled={syncing}>{syncing ? "Syncing…" : "Sync now"}</button>}
+            </div>
+          </div>
+        </header>
 
-      <nav className="operation-nav" aria-label="Check-in sections">
-        <button className={view === "arrivals" ? "active" : ""} onClick={() => setView("arrivals")}>Guest arrivals</button>
-        <button className={view === "exceptions" ? "active" : ""} onClick={() => setView("exceptions")}>Event lead <span>{openExceptions.length}</span></button>
-        <button className={view === "activity" ? "active" : ""} onClick={() => setView("activity")}>Activity <span>{auditRecords.length}</span></button>
-        <button className={view === "import" ? "active" : ""} onClick={() => setView("import")}>Guest import</button>
-        <button className={view === "rehearsal" ? "active" : ""} onClick={() => setView("rehearsal")}>Rehearsal</button>
-        <div className={`queue-state ${pendingCount ? "pending" : ""}`}>
-          {pendingCount ? `${pendingCount} saved on this device` : "All actions synced"}
-          {pendingCount > 0 && isOnline && <button onClick={syncPending} disabled={syncing}>{syncing ? "Syncing…" : "Sync now"}</button>}
-        </div>
-      </nav>
-
-      {syncNotice && <div className="sync-notice" role="status">{syncNotice}<button onClick={() => setSyncNotice("")}>Dismiss</button></div>}
+        {syncNotice && <div className="sync-notice" role="status">{syncNotice}<button onClick={() => setSyncNotice("")}>Dismiss</button></div>}
 
       {view === "arrivals" && (
         <section className="workspace" aria-label="Guest check-in workspace">
@@ -348,11 +368,8 @@ export function CheckInConsole() {
                 const guestTable = tables.find((item) => item.id === guest.tableId);
                 return (
                   <button key={guest.id} className={`guest-result ${selectedId === guest.id ? "selected" : ""}`} onClick={() => { setSelectedId(guest.id); setCorrectionOpen(false); }}>
-                    <span><strong>{guestFullName(guest)}</strong><small>{guestParty?.displayName}{guestTable ? ` · ${guestTable.label}` : " · No table"}</small></span>
-                    <span className={`guest-status ${guest.status}`}>
-                      {duplicates.has(guest.id) && <em>Same name</em>}
-                      {guest.status === "checked_in" ? "Arrived" : guest.status === "needs_attention" ? "Attention" : "Expected"}
-                    </span>
+                    <span className="result-person"><span className="guest-monogram" aria-hidden="true">{initials(guestFullName(guest))}</span><span><strong>{guestFullName(guest)}</strong><small>{guestParty?.displayName}{guestTable ? ` · ${guestTable.label}` : " · No table"}</small></span></span>
+                    <span className="result-edge"><span className={`guest-status ${guest.status}`}>{duplicates.has(guest.id) && <em>Same name</em>}{guest.status === "checked_in" ? "Arrived" : guest.status === "needs_attention" ? "Attention" : "Expected"}</span><span className="result-arrow" aria-hidden="true">›</span></span>
                   </button>
                 );
               })}
@@ -365,7 +382,9 @@ export function CheckInConsole() {
                 <button className="mobile-close" onClick={() => setSelectedId(null)} aria-label="Close guest details">Close</button>
                 <div className="detail-heading">
                   <p className="step-label">Arrival 02 · Confirm identity</p>
+                  <span className="selected-monogram" aria-hidden="true">{initials(selectedName)}</span>
                   <h2>{selectedName}</h2>
+                  <span className="guest-ornament" aria-hidden="true">◇</span>
                   {duplicates.has(selected.id) && <span className="warning-badge">Duplicate name—verify party and table</span>}
                 </div>
 
@@ -420,6 +439,7 @@ export function CheckInConsole() {
       {view === "rehearsal" && <RehearsalPanel session={session} onExport={downloadReconciliation} />}
 
       {lastCheckIn && <div className="undo-toast" role="status"><span><strong>{lastActionGuest ? guestFullName(lastActionGuest) : "Guest"}</strong> checked in.</span><button onClick={undoLastCheckIn}>Undo</button></div>}
+      </div>
     </main>
   );
 }
